@@ -3,9 +3,6 @@ D:\Code\POS\Blackend\src>nodemon server.js
 
 
 
-Username = admin
-Password = dummy
-Role = admin
 
 Username = admin1
 Password = 1234
