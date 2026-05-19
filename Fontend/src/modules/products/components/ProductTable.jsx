@@ -21,7 +21,7 @@ export default function ProductTable({ products, onDelete }) {
 
             <td className="px-6 py-4 font-medium">{item.Category_name}</td>
 
-            <td className="px-6 py-4">${item.Product_price}</td>
+            <td className="px-6 py-4">{item.Product_price} ฿</td>
 
             <td className="px-6 py-4 text-center">
               <ConfirmButton

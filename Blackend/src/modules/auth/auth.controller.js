@@ -18,4 +18,10 @@ const register = async (req , res) => {
         res.status(400).json({ error: err.message });
     }
 };
-module.exports = { login, register };
+
+const me = (req, res) => {
+    res.json(req.user);
+};
+
+
+module.exports = { login, register, me };
