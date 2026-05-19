@@ -8,4 +8,9 @@ const createCategory = async (name) => {
     return result;
 };
 
-module.exports = { createCategory } ;
+const getAllCategories = async () => {
+    const [rows] = await db.query('SELECT * FROM Category');
+    return rows;
+};
+
+module.exports = { createCategory, getAllCategories };

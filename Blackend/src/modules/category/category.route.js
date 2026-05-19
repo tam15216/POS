@@ -5,5 +5,6 @@ const auth = require('../../middleware/auth');
 const role = require('../../middleware/role');
 
 router.post('/', auth , role('admin') , controllre.createCategory)
+router.get('/', auth , role('admin') ,controllre.getAllCategories);
 
 module.exports = router;

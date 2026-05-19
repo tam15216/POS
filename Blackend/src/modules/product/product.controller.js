@@ -39,8 +39,27 @@ const getProductById = async (req , res) =>{
     }
 };
 
+const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ error: 'Product ID is required' });
+    }
+
+    try {
+        const deleted = await productService.deleteProduct(id);
+        if (!deleted) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        res.json({ message: 'Product deleted' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 module.exports = {
     getProducts,
     createProduct,
     getProductById,
+    deleteProduct
 };

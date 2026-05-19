@@ -11,6 +11,7 @@ const getAllProducts = async () =>{
             c.Category_name
         FROM Product p
         LEFT JOIN Category c ON p.Category_id = c.Category_id
+        WHERE p.status = '1'
         `);
         return rows;
 };
@@ -37,8 +38,18 @@ const createProduct = async (data) => {
      return result;
 };
 
+// ลบสินค้า
+const deleteProduct = async (id) => {
+    const [result] = await db.query(
+        'DELETE FROM Product WHERE Product_id = ?',
+        [id]
+    );
+    return result;
+};
+
 module.exports = {
     getAllProducts,
     createProduct,
     getProductById,
+    deleteProduct
 };

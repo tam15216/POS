@@ -57,10 +57,9 @@ export default function LoginForm(){
 
      return (
 
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-white px-4">
-            <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8 border border-purple-100">
+            <div className="w-full max-w-sm p-8 bg-white border border-purple-100 shadow-lg rounded-2xl">
                 
-                    <h1 className="text-3xl font-bold text-center text-purple-700 mb-8">
+                    <h1 className="mb-8 text-3xl font-bold text-center text-purple-700">
                         Login
                     </h1>
 
@@ -72,26 +71,11 @@ export default function LoginForm(){
                             placeholder="Username"
                             value={form.username}
                             onChange={handleChange}
-                            className="
-                                w-full
-                                px-4
-                                py-3
-                                rounded-xl
-                                border
-                                border-purple-200
-                                bg-purple-50
-                                text-gray-700
-                                placeholder-gray-400
-                                outline-none
-                                focus:ring-2
-                                focus:ring-purple-300
-                                focus:border-purple-300
-                                transition
-                            "
+                            className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
                             />
                              {
                                 error.username &&
-                                <p className="text-red-500 text-sm mt-1">
+                                <p className="mt-1 text-sm text-red-500">
                                     {error.username[0]}
                                 </p>
                             }
@@ -104,55 +88,29 @@ export default function LoginForm(){
                             placeholder="Password"
                             value={form.password}
                             onChange={handleChange}
-                            className="
-                                w-full
-                                px-4
-                                py-3
-                                rounded-xl
-                                border
-                                border-purple-200
-                                bg-purple-50
-                                text-gray-700
-                                placeholder-gray-400
-                                outline-none
-                                focus:ring-2
-                                focus:ring-purple-300
-                                focus:border-purple-300
-                                transition
-                            "
+                            className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
                             />
                             {
                                 error.password &&
-                                <p className="text-red-500 text-sm mt-1">
+                                <p className="mt-1 text-sm text-red-500">
                                     {error.password[0]}
                                 </p>
                             }
                         </div>
                               {
                                     error.general &&
-                                    <p className="text-red-500 text-sm text-center">
+                                    <p className="text-sm text-center text-red-500">
                                         {error.general[0]}
                                     </p>
                                 }
                         <button
                             type="submit"
                             disabled={loading}
-                            className="
-                            w-full
-                            py-3
-                            rounded-xl
-                            bg-purple-500
-                            hover:bg-purple-600
-                            text-white
-                            font-medium
-                            transition
-                            shadow-md
-                            "
+                            className="w-full py-3 font-medium text-white transition bg-purple-500 shadow-md rounded-xl hover:bg-purple-600"
                         >
                             {loading ? "Loading..." : "Sign In"}
                         </button>
                     </form>
             </div>
-        </div>
      );
 }

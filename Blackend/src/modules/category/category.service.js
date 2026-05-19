@@ -5,4 +5,8 @@ const addCategory = async (name) => {
     return await repo.createCategory(name);
 };
 
-module.exports = { addCategory }; 
+const getCategories = async () => {
+    return await repo.getAllCategories();
+};
+
+module.exports = { addCategory, getCategories }; 
