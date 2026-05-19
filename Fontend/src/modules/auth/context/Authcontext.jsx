@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
     const [user , setuser] = useState(null);
 
     const login = (userData , token ) => {
+        console.log(userData);
         localStorage.setItem('token' , token);
         setuser(userData);
     };
