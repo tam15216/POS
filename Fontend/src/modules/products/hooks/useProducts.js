@@ -4,11 +4,13 @@ import {
     getProducts,
     createProduct,
     deleteProduct,
+    updateProduct
 } from '../services/product.service';
 
 export default function useProducts() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [search , setSearch] = useState('');
 
     useEffect(() => {
         loadProducts();
@@ -43,10 +45,28 @@ export default function useProducts() {
             console.error(err);
         }
     };
+
+    const editProduct = async (id, data) => {
+        try {
+            await updateProduct(id, data);
+            loadProducts();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const filteredProducts = products.filter((item) => {
+        return (item.Product_name || '').toLowerCase().includes(search.toLowerCase());
+    });
+
     return {
         products,
         loading,
         addProduct,
-        removeProduct
+        removeProduct,
+        editProduct,
+        search,
+        setSearch,
+        filteredProducts
     };
 }

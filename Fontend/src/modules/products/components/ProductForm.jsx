@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import useCategories from "../hooks/useCategories";
-export default function ProductForm({ onSubmit }) {
+import { validateProduct } from "../validations/product.schema";
+export default function ProductForm({
+  onSubmit,
+  initialData = {},
+  submitText = "Add Product",
+}) {
   const [form, setform] = useState({
     name: "",
     price: "",
     category_id: "",
   });
 
-  const { categories , loading } = useCategories();
+  const { categories, loading } = useCategories();
 
   const handleChange = (e) => {
     setform({
@@ -16,19 +21,26 @@ export default function ProductForm({ onSubmit }) {
     });
   };
 
+  const [errors, setError] = useState({});
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = validateProduct(form);
+    if (Object.keys(validationErrors).length > 0) {
+      setError(validationErrors);
+      return;
+    }
 
-    console.log("FORM DATA =", form);
     onSubmit(form);
-
-    setform({
-      name: "",
-      price: "",
-      category_id: "",
-    });
   };
 
+  useEffect(() => {
+    setform({
+      name: initialData.Product_name || "",
+      price: initialData.Product_price || "",
+      category_id: initialData.Category_id || "",
+    });
+  }, [initialData]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -45,6 +57,8 @@ export default function ProductForm({ onSubmit }) {
           onChange={handleChange}
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
         />
+
+        {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
       </div>
 
       <div>
@@ -60,6 +74,7 @@ export default function ProductForm({ onSubmit }) {
           onChange={handleChange}
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
         />
+        {errors.price && <p className="mt-1 text-sm text-red-500">{errors.price}</p>}
       </div>
 
       <div>
@@ -70,8 +85,8 @@ export default function ProductForm({ onSubmit }) {
         <select
           name="category_id"
           value={form.category_id}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-xl"
+          onChange={handleChange}
+          className="w-full px-4 py-3 border rounded-xl"
         >
           <option value="">Select category</option>
 
@@ -81,13 +96,17 @@ export default function ProductForm({ onSubmit }) {
             </option>
           ))}
         </select>
+
+        {errors.category_id && (
+          <p className="mt-1 text-sm text-red-500">{errors.category_id}</p>
+        )}
       </div>
 
       <button
         type="submit"
         className="w-full py-3 font-medium text-white transition bg-purple-500 shadow-md rounded-xl hover:bg-purple-600"
       >
-        Add Product
+        {submitText}
       </button>
     </form>
   );

@@ -8,7 +8,8 @@ const getAllProducts = async () =>{
             p.Product_name,
             p.Product_code,
             p.Product_price,
-            c.Category_name
+            c.Category_name,
+            c.Category_id
         FROM Product p
         LEFT JOIN Category c ON p.Category_id = c.Category_id
         WHERE p.status = '1'
@@ -47,9 +48,23 @@ const deleteProduct = async (id) => {
     return result;
 };
 
+// อัพเดตสินค้า
+const updateProduct = async (id, data) => {
+    const { name, code, price, category_id } = data;
+
+    const [result] = await db.query(
+        `UPDATE Product
+        SET Product_name = ?, Product_code = ?, Product_price = ?, Category_id = ?
+        WHERE Product_id = ?`,
+        [name, code, price, category_id, id]
+    );
+    return result;
+};
+
 module.exports = {
     getAllProducts,
     createProduct,
     getProductById,
-    deleteProduct
+    deleteProduct,
+    updateProduct
 };

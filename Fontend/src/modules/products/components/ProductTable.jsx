@@ -1,5 +1,5 @@
 import ConfirmButton from "../../../shared/components/ConfirmButton";
-export default function ProductTable({ products, onDelete }) {
+export default function ProductTable({ products, onDelete , onEdit }) {
   return (
     <table className="w-full overflow-hidden bg-white border border-gray-200 shadow-md rounded-2xl">
       <thead className="text-white bg-purple-500">
@@ -33,6 +33,13 @@ export default function ProductTable({ products, onDelete }) {
               >
                 Delete
               </ConfirmButton>
+              
+              <button
+                onClick={() => onEdit(item)}
+                className="px-4 py-2 ml-2 text-sm font-medium text-white transition bg-blue-500 rounded-xl hover:bg-blue-600"
+              >
+                Edit
+              </button>
             </td>
           </tr>
         ))}
