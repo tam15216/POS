@@ -5,7 +5,7 @@ import { confirmProductAction } from "../../../shared/utils/confirm";
 export default function ProductForm({
   onSubmit,
   initialData = {},
-  submitText = "Add Product",
+  submitText = "เพิ่มสินค้าใหม่",
 }) {
   const [form, setform] = useState({
     name: "",
@@ -51,13 +51,13 @@ export default function ProductForm({
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label className="block mb-2 text-sm font-medium text-purple-700">
-          Product Name
+          ชื่อสินค้า
         </label>
 
         <input
           type="text"
           name="name"
-          placeholder="Enter product name"
+          placeholder="ชื่อสินค้า"
           value={form.name}
           onChange={handleChange}
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
@@ -70,13 +70,13 @@ export default function ProductForm({
 
       <div>
         <label className="block mb-2 text-sm font-medium text-purple-700">
-          Price
+          ราคา
         </label>
 
         <input
           type="number"
           name="price"
-          placeholder="Enter price"
+          placeholder="ราคา"
           value={form.price}
           onChange={handleChange}
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
@@ -88,7 +88,7 @@ export default function ProductForm({
 
       <div>
         <label className="block mb-2 text-sm font-medium text-purple-700">
-          Category
+          หมวดหมู่
         </label>
 
         <select
@@ -97,7 +97,7 @@ export default function ProductForm({
           onChange={handleChange}
           className="w-full px-4 py-3 border rounded-xl"
         >
-          <option value="">Select category</option>
+          <option value="">เลือกหมวดหมู่</option>
 
           {categories.map((item) => (
             <option key={item.Category_id} value={item.Category_id}>

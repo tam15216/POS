@@ -48,7 +48,7 @@ export default function Products() {
             onClick={() => setOpen(true)}
             className="px-5 py-3 font-medium text-white transition bg-purple-500 shadow-md hover:bg-purple-600 rounded-xl"
           >
-            + Add Product
+            + เพิ่มสินค้า
           </button>
         </div>
       </div>
@@ -75,12 +75,12 @@ export default function Products() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-purple-700">
-                  {editingProduct ? "Edit Product" : "Add Product"}
+                  {editingProduct ? "แก้ไขสินค้า" : "เพิ่มสินค้าใหม่"}
                 </h2>
                 <p className="mt-1 text-sm text-gray-400">
                   {editingProduct
-                    ? "Edit product item"
-                    : "Create new product item"}
+                    ? "แก้ไขรายการสินค้า"
+                    : "สร้างรายการสินค้าใหม่"}
                 </p>
               </div>
 
@@ -108,7 +108,7 @@ export default function Products() {
                   await handleAddProduct(data);
                 }
               }}
-              submitText={editingProduct ? "Edit Product" : "Add Product"}
+              submitText={editingProduct ? "แก้ไขสินค้า" : "เพิ่มสินค้าใหม่"}
             />
           </div>
         </div>
