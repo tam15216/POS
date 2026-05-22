@@ -1,4 +1,4 @@
-import  {use, useEffect , useState} from 'react';
+import  {useEffect , useState} from 'react';
 import { getCategoriesApi } from "../../categories/api/category.api";
 
 export default function useCategories() {

@@ -1,6 +1,7 @@
 import { use, useEffect, useState } from "react";
 import useCategories from "../hooks/useCategories";
 import { validateProduct } from "../validations/product.schema";
+import { confirmProductAction } from "../../../shared/utils/confirm";
 export default function ProductForm({
   onSubmit,
   initialData = {},
@@ -23,13 +24,17 @@ export default function ProductForm({
 
   const [errors, setError] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateProduct(form);
     if (Object.keys(validationErrors).length > 0) {
       setError(validationErrors);
       return;
     }
+
+    const isEdit = !!initialData.Product_id;
+    const result = await confirmProductAction(isEdit);
+    if (!result.isConfirmed) return;
 
     onSubmit(form);
   };
@@ -58,7 +63,9 @@ export default function ProductForm({
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
         />
 
-        {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+        )}
       </div>
 
       <div>
@@ -74,7 +81,9 @@ export default function ProductForm({
           onChange={handleChange}
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
         />
-        {errors.price && <p className="mt-1 text-sm text-red-500">{errors.price}</p>}
+        {errors.price && (
+          <p className="mt-1 text-sm text-red-500">{errors.price}</p>
+        )}
       </div>
 
       <div>
