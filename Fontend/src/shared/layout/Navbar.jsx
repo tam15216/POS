@@ -4,7 +4,7 @@ import { useAuth } from "../../modules/auth/hooks/useAuth";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -17,7 +17,7 @@ export default function Navbar() {
         <h3 className="text-2xl font-bold text-purple-700">Dashboard</h3>
 
         <p className="text-sm text-gray-400">
-          Welcome back, here is your dashboard overview.
+          Welcome back, {user?.username}
         </p>
       </div>
 

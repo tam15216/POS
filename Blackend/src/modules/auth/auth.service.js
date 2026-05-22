@@ -56,4 +56,20 @@ const register = async (data) => {
             userId
         }
 };
-module.exports = { login, register };
+
+const me = async (userId) => {
+
+    const user = await authRepo.findById(userId);
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    return {
+        user_id: user.User_id,
+        username: user.Username,
+        role: user.Role,
+        full_name: user.Full_name
+    };
+};
+module.exports = { login, register, me };

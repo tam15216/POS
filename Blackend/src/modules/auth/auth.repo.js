@@ -16,4 +16,18 @@ const createUser = async (data) =>{
     return result.insertId;
 }
 
-module.exports = { findByUsername, createUser };
+const findById = async (id) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM User
+        WHERE User_id = ?
+        `,
+        [id]
+    );
+
+    return rows[0];
+};
+
+module.exports = { findByUsername, createUser, findById };
