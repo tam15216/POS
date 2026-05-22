@@ -35,12 +35,10 @@ export default function Products() {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        {/* Left */}
         <div>
           <h1 className="text-3xl font-bold text-purple-700">Products</h1>
         </div>
 
-        {/* Right */}
         <div className="flex items-center gap-4">
           <ProductSearch value={search} onChange={setSearch} />
 
