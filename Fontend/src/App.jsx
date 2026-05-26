@@ -15,6 +15,8 @@ import PrivateRoute from './routes/PrivateRoute';
 import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MianLayout';
 
+import Categories from './modules/categories/pages/Categories';
+
 
 
 export default function App() {
@@ -25,6 +27,7 @@ export default function App() {
                 <Route path="/register" element={<AuthLayout><Register /></AuthLayout>} />
                 <Route path ="/dashboard" element={ <PrivateRoute> <MainLayout><Dashboard /></MainLayout> </PrivateRoute> } />
                 <Route path ="/products" element={ <PrivateRoute> <MainLayout><Products /></MainLayout> </PrivateRoute> } />
+                <Route path ="/categories" element={ <PrivateRoute> <MainLayout><Categories /></MainLayout> </PrivateRoute> } />
             </Routes>
 
         </BrowserRouter>

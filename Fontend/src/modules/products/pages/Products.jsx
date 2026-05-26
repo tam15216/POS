@@ -5,9 +5,12 @@ import EmptyState from "../components/EmptyState";
 import { useState } from "react";
 
 import useProducts from "../hooks/useProducts";
+import ProductCategory from "../components/ProductCategory";
+import useCategories from "../../categories/hooks/useCategories";
 
 export default function Products() {
   const [open, setOpen] = useState(false);
+  const { categories } = useCategories();
 
   const {
     products,
@@ -18,6 +21,9 @@ export default function Products() {
     setSearch,
     filteredProducts,
     editProduct,
+    selectedCategory,
+    setSelectedCategory,
+    displayProducts
   } = useProducts();
 
   const [editingProduct, setEditingProduct] = useState(null);
@@ -41,6 +47,11 @@ export default function Products() {
 
         <div className="flex items-center gap-4">
           <ProductSearch value={search} onChange={setSearch} />
+          <ProductCategory
+            value={selectedCategory}
+            onChange={setSelectedCategory}
+            categories={categories}
+          />
 
           <button
             onClick={() => setOpen(true)}
@@ -56,11 +67,11 @@ export default function Products() {
       <div className="p-5 bg-white border border-purple-100 shadow-sm rounded-2xl">
         {loading ? (
           <div className="py-10 text-center text-gray-400">Loading...</div>
-        ) : filteredProducts.length === 0 ? (
+        ) : displayProducts.length === 0 ? (
           <EmptyState />
         ) : (
           <ProductTable
-            products={filteredProducts}
+            products={displayProducts}
             onDelete={removeProduct}
             onEdit={handleEditProduct}
           />

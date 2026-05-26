@@ -11,6 +11,7 @@ export default function useProducts() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search , setSearch] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     useEffect(() => {
         loadProducts();
@@ -59,6 +60,11 @@ export default function useProducts() {
         return (item.Product_name || '').toLowerCase().includes(search.toLowerCase());
     });
 
+    const displayProducts = filteredProducts.filter((item) => {
+        if (!selectedCategory) return true;
+        return item.Category_id === Number(selectedCategory);
+    });
+
     return {
         products,
         loading,
@@ -67,6 +73,9 @@ export default function useProducts() {
         editProduct,
         search,
         setSearch,
-        filteredProducts
+        filteredProducts,
+        displayProducts,
+        selectedCategory,
+        setSelectedCategory
     };
 }

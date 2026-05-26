@@ -1,5 +1,5 @@
 import { use, useEffect, useState } from "react";
-import useCategories from "../hooks/useCategories";
+import useCategories from "../../categories/hooks/useCategories";
 import { validateProduct } from "../validations/product.schema";
 import { confirmProductAction } from "../../../shared/utils/confirm";
 export default function ProductForm({

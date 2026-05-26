@@ -1,9 +1,9 @@
 const db = require('../../config/database');
 
-const createCategory = async (name) => {
+const createCategory = async (category_name) => {
     const [result] = await db.query(
         'INSERT INTO Category (Category_name) VALUES (?)',
-        [name]
+        [category_name]
     );
     return result;
 };
@@ -13,4 +13,12 @@ const getAllCategories = async () => {
     return rows;
 };
 
-module.exports = { createCategory, getAllCategories };
+const deleteCategory = async (id) => {
+    const [result] = await db.query(
+        'DELETE FROM Category WHERE Category_id = ?',
+        [id]
+    );
+    return result;
+};
+
+module.exports = { createCategory, getAllCategories, deleteCategory };

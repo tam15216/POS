@@ -6,5 +6,5 @@ const role = require('../../middleware/role');
 
 router.post('/', auth , role('admin') , controllre.createCategory)
 router.get('/', auth , role('admin') ,controllre.getAllCategories);
-
+router.delete('/:id', auth , role('admin') , controllre.deleteCategory);
 module.exports = router;
