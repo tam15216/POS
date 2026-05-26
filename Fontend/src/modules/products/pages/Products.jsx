@@ -23,7 +23,7 @@ export default function Products() {
     editProduct,
     selectedCategory,
     setSelectedCategory,
-    displayProducts
+    displayProducts,
   } = useProducts();
 
   const [editingProduct, setEditingProduct] = useState(null);
@@ -47,11 +47,13 @@ export default function Products() {
 
         <div className="flex items-center gap-4">
           <ProductSearch value={search} onChange={setSearch} />
-          <ProductCategory
-            value={selectedCategory}
-            onChange={setSelectedCategory}
-            categories={categories}
-          />
+          <div className="w-72">
+            <ProductCategory
+              value={selectedCategory}
+              onChange={setSelectedCategory}
+              categories={categories}
+            />
+          </div>
 
           <button
             onClick={() => setOpen(true)}
