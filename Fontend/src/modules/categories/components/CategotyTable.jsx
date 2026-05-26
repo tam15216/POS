@@ -1,3 +1,4 @@
+import ConfirmButton from "../../../shared/components/ConfirmButton";
 export default function CategoryTable({ categories, onDelete }) {
   return (
     <div className="overflow-hidden border border-purple-100 rounded-2xl">
@@ -25,12 +26,15 @@ export default function CategoryTable({ categories, onDelete }) {
               </td>
 
               <td className="px-6 py-4 text-center">
-                <button
+                <ConfirmButton
+                  title="ลบหมวดหมู่"
+                  text="คุณต้องการลบหมวดหมู่นี้หรือไม่"
+                  icon="question"
                   onClick={() => onDelete(item.Category_id)}
                   className="px-4 py-2 text-sm font-medium text-white transition bg-red-500 shadow-sm rounded-xl hover:bg-red-600"
                 >
                   ลบ
-                </button>
+                </ConfirmButton>
               </td>
             </tr>
           ))}
