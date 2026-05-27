@@ -35,27 +35,27 @@ const login = async (data) => {
     };
 };
 
-const register = async (data) => {
-    const exist =await authRepo.findByUsername(data.username);
+// const register = async (data) => {
+//     const exist = await authRepo.findByUsername(data.username);
 
-    if (exist){
-        throw new Error('Username already exists');
-    }
+//     if (exist){
+//         throw new Error('Username already exists');
+//     }
 
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+//     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    const userId = await authRepo.createUser({
-        username: data.username,
-        password_hash: hashedPassword,
-        role: data.role || 'admin',  // ตั้งเป็น admin  ไว้ก่อนเพื่อทดสอบ
-        full_name: data.full_name
-    });
+//     const userId = await authRepo.createUser({
+//         username: data.username,
+//         password_hash: hashedPassword,
+//         role: data.role,  
+//         full_name: data.full_name
+//     });
 
-        return {
-            message: 'User registered successfully',
-            userId
-        }
-};
+//         return {
+//             message: 'User registered successfully',
+//             userId
+//         }
+// };
 
 const me = async (userId) => {
 
@@ -72,4 +72,4 @@ const me = async (userId) => {
         full_name: user.Full_name
     };
 };
-module.exports = { login, register, me };
+module.exports = { login, me };

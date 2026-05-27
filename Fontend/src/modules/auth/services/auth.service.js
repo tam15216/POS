@@ -1,5 +1,5 @@
 import { loginApi } from "../api/auth.api";
-import { registerApi } from "../api/auth.api";
+
 
 export const loginService = async (data) => {
 
@@ -11,9 +11,3 @@ export const loginService = async (data) => {
     return { user, token };
 }
 
-export const registerService = async (data) => {
-
-    const res = await registerApi(data);
-
-    return res.data;
-};

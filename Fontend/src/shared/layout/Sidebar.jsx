@@ -10,6 +10,7 @@ export default function Sidebar() {
     { name: "Stock", to: "/stock", roles: ["admin", "stock"] },
     { name: "Orders", to: "/orders", roles: ["admin", "cashier"] },
     { name: "Reports", to: "/reports", roles: ["admin"] },
+    { name: "User", to: "/users" , roles:["admin"] },
   ];
 
   const allowedMenus = menus.filter((menu) => menu.roles.includes(user?.role));
