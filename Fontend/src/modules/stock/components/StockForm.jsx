@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { validateStockForm }from "../validations/stock.validation";
 
 export default function StockForm({ products = [], onSubmit, submitText }) {
   const [form, setForm] = useState({
     product_id: "",
     qty: "",
   });
+
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setForm({
@@ -15,6 +18,12 @@ export default function StockForm({ products = [], onSubmit, submitText }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationError = validateStockForm(form);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setError("");
     onSubmit(form);
 
     setForm({
@@ -67,6 +76,12 @@ export default function StockForm({ products = [], onSubmit, submitText }) {
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
         />
       </div>
+      {/* Error */}
+      {error && (
+        <div className="px-4 py-3 text-sm text-red-700 border border-red-200 bg-red-50 rounded-xl">
+          {error}
+        </div>
+      )}
 
       {/* Submit */}
       <button
