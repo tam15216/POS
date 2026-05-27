@@ -16,6 +16,7 @@ import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MianLayout';
 
 import Categories from './modules/categories/pages/Categories';
+import Stock from './modules/stock/pages/Stock';
 
 
 
@@ -28,6 +29,7 @@ export default function App() {
                 <Route path ="/dashboard" element={ <PrivateRoute> <MainLayout><Dashboard /></MainLayout> </PrivateRoute> } />
                 <Route path ="/products" element={ <PrivateRoute> <MainLayout><Products /></MainLayout> </PrivateRoute> } />
                 <Route path ="/categories" element={ <PrivateRoute> <MainLayout><Categories /></MainLayout> </PrivateRoute> } />
+                <Route path ="/stock" element={ <PrivateRoute> <MainLayout><Stock /></MainLayout> </PrivateRoute> } />
             </Routes>
 
         </BrowserRouter>
