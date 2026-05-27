@@ -18,7 +18,6 @@ const getUsers = async () => {
   return rows;
 };
 
-
 const createUser = async (data) => {
   await db.query(
     `
@@ -33,6 +32,31 @@ const createUser = async (data) => {
         `,
     [data.username, data.password_hash, data.full_name, data.role],
   );
+};
+
+const countActiveAdmins = async () => {
+  const [rows] = await db.query(
+    `
+        SELECT COUNT(*) AS total
+        FROM User
+        WHERE Role = 'admin'
+        AND is_active = 1
+        `,
+  );
+  return rows[0].total;
+};
+
+const findById = async (id) => {
+  const [rows] = await db.query(
+    `
+    SELECT *
+    FROM User
+    WHERE User_id = ?
+    `,
+    [id],
+  );
+
+  return rows[0];
 };
 
 const toggleUser = async (id) => {
@@ -50,4 +74,6 @@ module.exports = {
   getUsers,
   createUser,
   toggleUser,
+  findById,
+  countActiveAdmins
 };

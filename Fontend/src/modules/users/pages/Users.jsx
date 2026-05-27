@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import CreateUserForm from "../components/UserForm";
 import UserTable from "../components/UserTable";
 
-import { getUsers } from "../services/user.service";
+import { getUsers, toggleUser } from "../services/user.service";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     loadUsers();
@@ -29,18 +30,27 @@ export default function Users() {
     }
   };
 
-   return (
+  const handleToggle = async (id) => {
+    try {
+      setError("");
+      await toggleUser(id);
 
+      loadUsers();
+    } catch (err) {
+      setError(err.response?.data?.error);
+    }
+  };
+
+  return (
     <div className="space-y-8">
+      <CreateUserForm onSuccess={loadUsers} />
 
-      <CreateUserForm
-        onSuccess={loadUsers}
-      />
-
-      <UserTable
-        users={users}
-      />
-
+      {error && (
+        <div className="px-4 py-3 text-sm text-red-700 border border-red-200 bg-red-50 rounded-xl">
+          {error}
+        </div>
+      )}
+      <UserTable users={users} onToggle={handleToggle} />
     </div>
   );
 }

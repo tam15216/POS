@@ -29,6 +29,17 @@ const createUser = async (data) => {
 };
 
 const toggleUser = async (id) => {
+  const user = await repo.findById(id);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+  if (user.Role === "admin" && user.is_active) {
+    const totalAdmins = await repo.countActiveAdmins();
+    if (totalAdmins <= 1) {
+      throw new Error("Cannot disable last admin");
+    }
+  }
   return await repo.toggleUser(id);
 };
 
