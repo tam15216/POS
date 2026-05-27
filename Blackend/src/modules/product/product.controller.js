@@ -39,7 +39,7 @@ const getProductById = async (req , res) =>{
     }
 };
 
-const deleteProduct = async (req, res) => {
+const toggleProduct = async (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -47,7 +47,7 @@ const deleteProduct = async (req, res) => {
     }
 
     try {
-        const deleted = await productService.deleteProduct(id);
+        const deleted = await productService.toggleProduct(id);
         if (!deleted) {
             return res.status(404).json({ error: 'Product not found' });
         }
@@ -73,6 +73,6 @@ module.exports = {
     getProducts,
     createProduct,
     getProductById,
-    deleteProduct,
+    toggleProduct,
     updateProduct
 };

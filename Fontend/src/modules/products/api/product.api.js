@@ -12,7 +12,7 @@ export const updateProductApi = (id, data) => {
     return api.put(`/products/${id}`, data);
 };
 
-export const deleteProductApi = (id) => {
-    return api.delete(`/products/${id}`);
+export const toggleProductApi = (id) => {
+    return api.patch(`/products/${id}`);
 };
 

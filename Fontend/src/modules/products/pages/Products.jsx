@@ -16,7 +16,7 @@ export default function Products() {
     products,
     loading,
     addProduct,
-    removeProduct,
+    toggleProducts,
     search,
     setSearch,
     filteredProducts,
@@ -74,7 +74,7 @@ export default function Products() {
         ) : (
           <ProductTable
             products={displayProducts}
-            onDelete={removeProduct}
+            onDelete={toggleProducts}
             onEdit={handleEditProduct}
           />
         )}

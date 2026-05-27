@@ -9,17 +9,17 @@ const getAllProducts = async () =>{
             p.Product_code,
             p.Product_price,
             c.Category_name,
-            c.Category_id
+            c.Category_id,
+            p.status
         FROM Product p
         LEFT JOIN Category c ON p.Category_id = c.Category_id
-        WHERE p.status = '1'
         `);
         return rows;
 };
 
 const getProductById = async (id) => {
     const [rows] = await db.query(
-        'SELECT * FROM Product WHERE Product_id = ? AND status = 1',
+        'SELECT * FROM Product WHERE Product_id = ? ',
         [id]
     );
     return rows[0] || null; 
@@ -40,9 +40,9 @@ const createProduct = async (data) => {
 };
 
 // ลบสินค้า
-const deleteProduct = async (id) => {
+const toggleProduct = async (id) => {
     const [result] = await db.query(
-        'UPDATE Product SET status = 0 WHERE Product_id = ?',
+        'UPDATE Product SET status = NOT status WHERE Product_id = ?',
         [id]
     );
     return result;
@@ -65,6 +65,6 @@ module.exports = {
     getAllProducts,
     createProduct,
     getProductById,
-    deleteProduct,
+    toggleProduct ,
     updateProduct
 };

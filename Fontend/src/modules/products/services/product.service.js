@@ -3,7 +3,7 @@ import {
     getProductsApi,
     createProductApi,
     updateProductApi,
-    deleteProductApi,
+    toggleProductApi,
 } from '../api/product.api';
 
 export const getProducts =  async () => {
@@ -21,7 +21,7 @@ export const updateProduct = async (id, data) => {
     return res.data;
 };
 
-export const deleteProduct = async (id) => {
-    const res = await deleteProductApi(id);
+export const toggleProduct = async (id) => {
+    const res = await toggleProductApi(id);
     return res.data;
 };

@@ -3,7 +3,7 @@ import { useEffect , useState } from "react";
 import {
     getProducts,
     createProduct,
-    deleteProduct,
+    toggleProduct,
     updateProduct
 } from '../services/product.service';
 
@@ -38,9 +38,9 @@ export default function useProducts() {
         }
     };
 
-    const removeProduct = async (id) => {
+    const toggleProducts = async (id) => {
         try {
-            await deleteProduct(id);
+            await toggleProduct(id);
             loadProducts();
         }catch (err) {
             console.error(err);
@@ -69,7 +69,7 @@ export default function useProducts() {
         products,
         loading,
         addProduct,
-        removeProduct,
+        toggleProducts,
         editProduct,
         search,
         setSearch,

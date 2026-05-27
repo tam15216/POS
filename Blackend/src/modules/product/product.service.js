@@ -22,8 +22,7 @@ const addProduct = async (data) => {
     return await productRepo.createProduct(data);
 };
 
-// ลบสินค้า
-const deleteProduct = async (id) => {
+const toggleProduct = async (id) => {
     if (!id) {
         throw new Error('Product ID is required');
     }
@@ -32,7 +31,7 @@ const deleteProduct = async (id) => {
     if (!product) {
         throw new Error('Product not found');
     }
-    return await productRepo.deleteProduct(id);
+    return await productRepo.toggleProduct(id);
 }
 
 // อัพเดตสินค้า
@@ -60,7 +59,7 @@ module.exports = {
     getProducts,
     addProduct,
     getProductByid,
-    deleteProduct,
+    toggleProduct,
     updateProduct
 };
 
