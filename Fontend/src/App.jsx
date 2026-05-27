@@ -31,8 +31,6 @@ export default function App() {
                 <Route path ="/categories" element={ <PrivateRoute> <MainLayout><Categories /></MainLayout> </PrivateRoute> } />
                 <Route path ="/stock" element={ <PrivateRoute> <MainLayout><Stock /></MainLayout> </PrivateRoute> } />
             </Routes>
-
         </BrowserRouter>
     )
-
 }

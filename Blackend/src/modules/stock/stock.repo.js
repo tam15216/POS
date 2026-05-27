@@ -53,12 +53,12 @@ const stockOut = async (product_id, qty) => {
 };  
 
 const getStocks = async () => {
-    const [rows] = await db.query('SELEcT s.Stock_id, s.Product_id, p.Product_name, s.Qty FROM stock s JOIN product p ON s.Product_id = p.Product_id ORDER BY p.Product_name ASC');
+    const [rows] = await db.query('SELEcT s.Stock_id, s.Product_id, p.Product_name, s.Qty FROM stock s JOIN product p ON s.Product_id = p.Product_id WHERE p.status = 1 ORDER BY p.Product_name ASC');
     return rows;
 };
 
 const getStockHistory = async () => {
-    const [rows] = await db.query('SELECT sl.Stock_log_id , sl.Product_id, p.Product_name, sl.Ref_type, sl.Qty_change, sl.Created_at FROM stock_log sl JOIN product p ON sl.Product_id = p.Product_id ORDER BY sl.Created_at DESC');
+    const [rows] = await db.query('SELECT sl.Stock_log_id , sl.Product_id, p.Product_name, sl.Ref_type, sl.Qty_change, sl.Created_at FROM stock_log sl JOIN product p ON sl.Product_id = p.Product_id WHERE p.status = 1 ORDER BY sl.Created_at DESC');
     return rows;
 };
 

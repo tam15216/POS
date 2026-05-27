@@ -25,13 +25,13 @@ export default function ProductTable({ products, onDelete , onEdit }) {
 
             <td className="px-6 py-4 text-center">
               <ConfirmButton
-                title="Delete Product?"
-                text="This action cannot be undone"
+                title="ปิดใช้งานสินค้า"
+                text="ต้องการปิดใช้งานสินค้านี้หรือไม่"
                 icon="warning"
                 onConfirm={() => onDelete(item.Product_id)}
                 className="px-4 py-2 text-sm font-medium text-white transition bg-red-500 rounded-xl hover:bg-red-600"
               >
-                ลบ
+                ปิดใช้งานสินค้า
               </ConfirmButton>
               
               <button

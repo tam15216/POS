@@ -2,6 +2,7 @@ import { use, useEffect, useState } from "react";
 import useCategories from "../../categories/hooks/useCategories";
 import { validateProduct } from "../validations/product.schema";
 import { confirmProductAction } from "../../../shared/utils/confirm";
+import ProductCategory from "../components/ProductCategory";
 export default function ProductForm({
   onSubmit,
   initialData = {},
@@ -23,6 +24,13 @@ export default function ProductForm({
   };
 
   const [errors, setError] = useState({});
+
+  const handleCategoryChange = (value) => {
+    setform({
+      ...form,
+      category_id: value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,20 +99,11 @@ export default function ProductForm({
           หมวดหมู่
         </label>
 
-        <select
-          name="category_id"
+        <ProductCategory
           value={form.category_id}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border rounded-xl"
-        >
-          <option value="">เลือกหมวดหมู่</option>
-
-          {categories.map((item) => (
-            <option key={item.Category_id} value={item.Category_id}>
-              {item.Category_name}
-            </option>
-          ))}
-        </select>
+          onChange={handleCategoryChange}
+          categories={categories}
+        />
 
         {errors.category_id && (
           <p className="mt-1 text-sm text-red-500">{errors.category_id}</p>

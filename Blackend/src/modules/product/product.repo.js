@@ -19,7 +19,7 @@ const getAllProducts = async () =>{
 
 const getProductById = async (id) => {
     const [rows] = await db.query(
-        'SELECT * FROM Product WHERE Product_id = ?',
+        'SELECT * FROM Product WHERE Product_id = ? AND status = 1',
         [id]
     );
     return rows[0] || null; 
@@ -42,7 +42,7 @@ const createProduct = async (data) => {
 // ลบสินค้า
 const deleteProduct = async (id) => {
     const [result] = await db.query(
-        'DELETE FROM Product WHERE Product_id = ?',
+        'UPDATE Product SET status = 0 WHERE Product_id = ?',
         [id]
     );
     return result;
