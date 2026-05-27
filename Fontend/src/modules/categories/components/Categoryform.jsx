@@ -1,10 +1,18 @@
 import { useState } from "react";
-
+import { validateCategoryForm } from "../validations/categoryies.validation";
 export default function Categoryform({ onSubmit }) {
   const [name, setName] = useState("");
+   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const validationError = validateCategoryForm({ category_name: name.trim() });
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setError("");
 
     onSubmit({
       category_name: name,
@@ -31,6 +39,7 @@ export default function Categoryform({ onSubmit }) {
       >
         เพิ่มหมวดหมู่
       </button>
+      {error && <p className="text-red-500">{error}</p>}
     </form>
   );
 }
