@@ -6,7 +6,7 @@ const createOrder = async (data) => {
         await conn.beginTransaction();
         const { items, payment_method, user_id } = data;
         let total = 0;
-        
+
         //  1. เช็ค stock + lock
         for (const item of items) {
             const [rows] = await conn.query(
@@ -14,11 +14,11 @@ const createOrder = async (data) => {
                 [item.product_id]
             );
 
-            if (rows.length === 0){
+            if (rows.length === 0) {
                 throw new Error(`Product ${item.product_id} has no stock`);
             }
 
-            if (rows[0].Qty < item.qty){
+            if (rows[0].Qty < item.qty) {
                 throw new Error(`Stock not enough for product ${item.product_id}`);
             }
         }
@@ -31,7 +31,7 @@ const createOrder = async (data) => {
 
         const saleId = saleResult.insertId;
         //3. วนสินค้า
-        for( const item of items){
+        for (const item of items) {
             const [product] = await conn.query(
                 'SELECT Product_price FROM Product WHERE Product_id = ?',
                 [item.product_id]
@@ -50,12 +50,21 @@ const createOrder = async (data) => {
             );
 
             // ลด stock
-            await conn.query(
+            // await conn.query(
+            //     'UPDATE Stock SET Qty = Qty - ? WHERE Product_id = ? AND Qty >= ?',
+            //     [item.qty ,item.product_id, item.qty]
+            // );
+
+            // if (conn.affectedRows === 0){
+            //     throw new Error(`Failed to update stock for product ${item.product_id}`);
+            // }
+            
+            const [updateResult] = await conn.query(
                 'UPDATE Stock SET Qty = Qty - ? WHERE Product_id = ? AND Qty >= ?',
-                [item.qty ,item.product_id, item.qty]
+                [item.qty, item.product_id, item.qty]
             );
 
-            if (conn.affectedRows === 0){
+            if (updateResult.affectedRows === 0) {
                 throw new Error(`Failed to update stock for product ${item.product_id}`);
             }
 
@@ -71,7 +80,7 @@ const createOrder = async (data) => {
         // 4.update ยอด
         await conn.query(
             `UPDATE Sale SET Total_amount = ?, Net_amount = ? WHERE Sale_id = ?`,
-            [total, total ,saleId]
+            [total, total, saleId]
         );
 
         // 5. payment
@@ -82,7 +91,7 @@ const createOrder = async (data) => {
         );
 
         await conn.commit();
-        return { message: 'Order success', saleId}
+        return { message: 'Order success', saleId }
     } catch (err) {
         await conn.rollback();
         throw err;
@@ -140,8 +149,8 @@ const cancelOrder = async (saleId) => {
 
         await conn.commit();
 
-        return { message: 'Order cancelled'};
-        
+        return { message: 'Order cancelled' };
+
     } catch (err) {
         await conn.rollback();
         throw err;
@@ -150,5 +159,5 @@ const cancelOrder = async (saleId) => {
     }
 };
 
-module.exports = { createOrder , cancelOrder  };
+module.exports = { createOrder, cancelOrder };
 
