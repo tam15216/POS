@@ -4,10 +4,16 @@ import {
     createProductApi,
     updateProductApi,
     toggleProductApi,
+    getProductsnotallApi
 } from '../api/product.api';
 
 export const getProducts =  async () => {
     const res = await getProductsApi();
+    return res.data;
+};
+
+export const getProductsnotall =  async () => {
+    const res = await getProductsnotallApi();
     return res.data;
 };
 

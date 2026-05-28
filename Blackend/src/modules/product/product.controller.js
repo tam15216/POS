@@ -10,6 +10,15 @@ const getProducts = async (req , res) => {
     }
 };
 
+const getnotallProducts = async (req , res) => {
+    try{
+        const data = await productService.getProductsnotall();
+        res.json(data);
+    } catch (err){
+        res.status(500).json({ error: err.message});
+    }
+};
+
 // POST /products
 const createProduct = async (req , res) => {
     try{
@@ -74,5 +83,6 @@ module.exports = {
     createProduct,
     getProductById,
     toggleProduct,
-    updateProduct
+    updateProduct,
+    getnotallProducts
 };

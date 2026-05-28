@@ -9,7 +9,7 @@ import Pagination from "../../../shared/components/Pagination";
 
 export default function Stock() {
   const { stocks, history, loading, addStock, removeStock } = useStock();
-  const { products } = useProducts();
+  const { productsnotall } = useProducts();
   const [openIn, setOpenIn] = useState(false);
   const [openOut, setOpenOut] = useState(false);
   const { currentPage, setCurrentPage, totalPages, paginatedData } = usePagination(history, 10);
@@ -87,7 +87,7 @@ export default function Stock() {
             </div>
 
             <StockForm
-              products={products}
+              products={productsnotall}
               onSubmit={addStock}
               submitText={"เพิ่มสต๊อก"}
             />
@@ -115,7 +115,7 @@ export default function Stock() {
             </div>
 
             <StockForm
-              products={products}
+              products={productsnotall}
               onSubmit={removeStock}
               submitText={"ลดสต๊อก"}
             />

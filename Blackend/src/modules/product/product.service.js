@@ -5,6 +5,10 @@ const getProducts = async () => {
     return await productRepo.getAllProducts();
 };
 
+const getProductsnotall = async () => {
+    return await productRepo.getnotAllProducts();
+};
+
 // ดึงสินค้าตาม ID
 const getProductByid = async (id) => {
     if (!id) {
@@ -60,6 +64,7 @@ module.exports = {
     addProduct,
     getProductByid,
     toggleProduct,
-    updateProduct
+    updateProduct,
+    getProductsnotall
 };
 

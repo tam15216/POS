@@ -4,17 +4,20 @@ import {
     getProducts,
     createProduct,
     toggleProduct,
-    updateProduct
+    updateProduct,
+    getProductsnotall
 } from '../services/product.service';
 
 export default function useProducts() {
     const [products, setProducts] = useState([]);
+    const [productsnotall, setProductsnotall] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search , setSearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
 
     useEffect(() => {
         loadProducts();
+        loadProductsnotall();
     }, []);
 
     const loadProducts = async () => {
@@ -22,6 +25,18 @@ export default function useProducts() {
             setLoading(true);
             const data = await getProducts();
             setProducts(data);  
+        }catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const loadProductsnotall = async () => {
+        try {
+            setLoading(true);
+            const data = await getProductsnotall();
+            setProductsnotall(data);  
         }catch (err) {
             console.error(err);
         } finally {
@@ -67,6 +82,7 @@ export default function useProducts() {
 
     return {
         products,
+        productsnotall,
         loading,
         addProduct,
         toggleProducts,

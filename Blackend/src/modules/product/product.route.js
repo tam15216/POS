@@ -5,7 +5,7 @@ const productController = require('./product.controller');
 const role = require('../../middleware/role');
 const auth = require('../../middleware/auth');
 
-
+router.get('/notall', auth, productController.getnotallProducts);
 router.get('/:id', auth, productController.getProductById);
 router.patch('/:id', auth, role('admin'), productController.toggleProduct);
 router.get('/', auth, productController.getProducts);

@@ -4,6 +4,11 @@ export const getProductsApi = () => {
     return api.get('/products');
 };
 
+
+export const getProductsnotallApi = () => {
+    return api.get('/products/notall');
+};
+
 export const createProductApi = (data) => {
     return api.post('/products', data);
 };

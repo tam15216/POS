@@ -17,6 +17,23 @@ const getAllProducts = async () =>{
         return rows;
 };
 
+const getnotAllProducts = async () =>{
+    const [rows] = await db.query(`
+        SELECT
+            p.Product_id,
+            p.Product_name,
+            p.Product_code,
+            p.Product_price,
+            c.Category_name,
+            c.Category_id,
+            p.status
+        FROM Product p
+        LEFT JOIN Category c ON p.Category_id = c.Category_id
+        WHERE p.status = 1
+        `);
+        return rows;
+};
+
 const getProductById = async (id) => {
     const [rows] = await db.query(
         'SELECT * FROM Product WHERE Product_id = ? ',
@@ -66,5 +83,6 @@ module.exports = {
     createProduct,
     getProductById,
     toggleProduct ,
-    updateProduct
+    updateProduct,
+    getnotAllProducts
 };
