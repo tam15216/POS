@@ -18,13 +18,22 @@ const getAllCategories = async (req, res) => {
     }
 };
 
-const deleteCategory = async (req, res) => {
+const getnotallCategories = async (req, res) => {
     try {
-        const result = await service.deleteCategory(req.params.id);
+        const categories = await service.getCategoriesnotall();
+        res.json(categories);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+const toggleCategory = async (req, res) => {
+    try {
+        const result = await service.toggleCategory(req.params.id);
         res.json(result);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };
 
-module.exports = { createCategory, getAllCategories, deleteCategory };
+module.exports = { createCategory, getAllCategories, toggleCategory , getnotallCategories };

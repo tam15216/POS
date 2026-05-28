@@ -4,7 +4,7 @@ import { useState } from "react";
 import useCategories from "../hooks/useCategories";
 
 export default function Categories() {
-  const { categories, loading, addCategory, removeCategory } = useCategories();
+  const { loading, addCategory, toggleCategorys , categories } = useCategories();
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,7 +34,7 @@ export default function Categories() {
         {loading ? (
           <div className="py-10 text-center text-gray-400">Loading...</div>
         ) : (
-          <CategoryTable categories={categories} onDelete={removeCategory} />
+          <CategoryTable categories={categories} onDelete={toggleCategorys} />
         )}
       </div>
       {open && (

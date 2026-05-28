@@ -1,3 +1,5 @@
+import ConfirmButton from "../../../shared/components/ConfirmButton";
+import StatusToggleButton from "../../../shared/components/StatusToggleButton";
 export default function UserTable({ users, onToggle }) {
   return (
     <div className="overflow-hidden bg-white border border-purple-100 shadow-sm rounded-2xl">
@@ -100,20 +102,16 @@ export default function UserTable({ users, onToggle }) {
 
                   {/* Action */}
                   <td className="px-6 py-4 text-center">
-                    <button
-                      onClick={() => onToggle(item.User_id)}
-                      className={`
-                          px-4 py-2 text-sm font-medium text-white rounded-xl transition
-
-                          ${
-                            item.is_active
-                              ? "bg-red-500 hover:bg-red-600"
-                              : "bg-green-500 hover:bg-green-600"
-                          }
-                        `}
+                    <ConfirmButton
+                      title={
+                        item.is_active ? "ปิดใช้งานผู้ใช้" : "เปิดใช้งานผู้ใช้"
+                      }
+                      text={`ต้องการ ${item.is_active ? "ปิด" : "เปิด"} ใช้งานผู้ใช้หรือไม่`}
+                      icon="warning"
+                      onConfirm={() => onToggle(item.User_id)}
                     >
-                      {item.is_active ? "Disable" : "Enable"}
-                    </button>
+                      <StatusToggleButton isActive={item.is_active} />
+                    </ConfirmButton>
                   </td>
                 </tr>
               ))

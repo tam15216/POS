@@ -1,5 +1,6 @@
 import ConfirmButton from "../../../shared/components/ConfirmButton";
-export default function ProductTable({ products, onDelete , onEdit }) {
+import StatusToggleButton from "../../../shared/components/StatusToggleButton";
+export default function ProductTable({ products, onToggle, onEdit }) {
   return (
     <table className="w-full overflow-hidden bg-white border border-gray-200 shadow-md rounded-2xl">
       <thead className="text-white bg-purple-500">
@@ -8,7 +9,7 @@ export default function ProductTable({ products, onDelete , onEdit }) {
           <th className="px-6 py-4 text-left">ชื่อสินค้า</th>
           <th className="px-6 py-4 text-left">หมวดหมู่</th>
           <th className="px-6 py-4 text-left">ราคา</th>
-          <th className="px-6 py-4 text-center"> ลบ | เเก้ไข </th>
+          <th className="px-6 py-4 text-center"> จัดการ</th>
         </tr>
       </thead>
 
@@ -25,15 +26,14 @@ export default function ProductTable({ products, onDelete , onEdit }) {
 
             <td className="px-6 py-4 text-center">
               <ConfirmButton
-                title="ปิดใช้งานสินค้า"
-                text="ต้องการปิดใช้งานสินค้านี้หรือไม่"
+                title={item.status ? "ปิดใช้งานสินค้า" : "เปิดใช้งานสินค้า"}
+                text={`ต้องการ ${item.status ? "ปิด" : "เปิด"} ใช้งานสินค้าหรือไม่`}
                 icon="warning"
-                onConfirm={() => onDelete(item.Product_id)}
-                className="px-4 py-2 text-sm font-medium text-white transition bg-red-500 rounded-xl hover:bg-red-600"
+                onConfirm={() => onToggle(item.Product_id)}
               >
-                ปิดใช้งานสินค้า
+                <StatusToggleButton isActive={item.status} />
               </ConfirmButton>
-              
+
               <button
                 onClick={() => onEdit(item)}
                 className="px-4 py-2 ml-2 text-sm font-medium text-white transition bg-blue-500 rounded-xl hover:bg-blue-600"

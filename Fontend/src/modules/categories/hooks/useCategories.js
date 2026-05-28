@@ -3,15 +3,18 @@ import {useEffect, useState} from 'react';
 import {
     getCategories,
     createCategory,
-    deleteCategory
+    toggleCategory,
+    getCategories_notall
 } from '../services/category.service';
 
 export default function useCategories() {
     const [categories, setCategories] = useState([]);
+    const [categories_notall, setCategories_notall] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         loadCategories();
+        loadCategories_notall();
     }, []);
 
     const loadCategories = async () => {
@@ -26,6 +29,20 @@ export default function useCategories() {
         }
     };
 
+    const loadCategories_notall = async () => {
+        try {
+            setLoading(true);
+            const data = await getCategories_notall();
+            setCategories_notall(data);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
     const addCategory = async (data) => {
         try {
             await createCategory(data);
@@ -35,9 +52,9 @@ export default function useCategories() {
         }
     };
 
-    const removeCategory = async (id) => {
+    const toggleCategorys = async (id) => {
         try {
-            await deleteCategory(id);
+            await toggleCategory(id);
             loadCategories();
         } catch (err) {
             console.log(err);
@@ -48,6 +65,9 @@ export default function useCategories() {
         categories,
         loading,
         addCategory,
-        removeCategory
+        toggleCategorys,
+        loadCategories_notall,
+        categories_notall
+        
     };
 }

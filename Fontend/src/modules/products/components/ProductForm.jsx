@@ -14,7 +14,7 @@ export default function ProductForm({
     category_id: "",
   });
 
-  const { categories, loading } = useCategories();
+  const { categories_notall , loading } = useCategories();
 
   const handleChange = (e) => {
     setform({
@@ -102,7 +102,7 @@ export default function ProductForm({
         <ProductCategory
           value={form.category_id}
           onChange={handleCategoryChange}
-          categories={categories}
+          categories={categories_notall}
         />
 
         {errors.category_id && (

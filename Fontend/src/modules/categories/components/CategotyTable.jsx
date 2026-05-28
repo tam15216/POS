@@ -1,4 +1,6 @@
 import ConfirmButton from "../../../shared/components/ConfirmButton";
+import StatusToggleButton from "../../../shared/components/StatusToggleButton";
+
 export default function CategoryTable({ categories, onDelete }) {
   return (
     <div className="overflow-hidden border border-purple-100 rounded-2xl">
@@ -27,13 +29,13 @@ export default function CategoryTable({ categories, onDelete }) {
 
               <td className="px-6 py-4 text-center">
                 <ConfirmButton
-                  title="ลบหมวดหมู่"
-                  text="คุณต้องการลบหมวดหมู่นี้หรือไม่"
-                  icon="question"
-                  onClick={() => onDelete(item.Category_id)}
-                  className="px-4 py-2 text-sm font-medium text-white transition bg-red-500 shadow-sm rounded-xl hover:bg-red-600"
+                  title={item.Status ? "ปิดใช้งานหมวดหมู่" : "เปิดใช้งานหมวดหมู่"}
+                  text={`ต้องการ ${item.Status ? "ปิด" : "เปิด"} ใช้งานหมวดหมู่หรือไม่`}
+                  icon="warning"
+                  onConfirm={() => onDelete(item.Category_id)}
+                  
                 >
-                  ลบ
+                  <StatusToggleButton isActive={item.Status} />
                 </ConfirmButton>
               </td>
             </tr>

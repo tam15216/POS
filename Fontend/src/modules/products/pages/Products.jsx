@@ -10,7 +10,8 @@ import useCategories from "../../categories/hooks/useCategories";
 
 export default function Products() {
   const [open, setOpen] = useState(false);
-  const { categories } = useCategories();
+  const { categories_notall } = useCategories();
+  
 
   const {
     products,
@@ -51,7 +52,7 @@ export default function Products() {
             <ProductCategory
               value={selectedCategory}
               onChange={setSelectedCategory}
-              categories={categories}
+              categories={categories_notall}
             />
           </div>
 
@@ -74,7 +75,7 @@ export default function Products() {
         ) : (
           <ProductTable
             products={displayProducts}
-            onDelete={toggleProducts}
+            onToggle={toggleProducts}
             onEdit={handleEditProduct}
           />
         )}

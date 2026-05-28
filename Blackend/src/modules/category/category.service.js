@@ -9,9 +9,13 @@ const getCategories = async () => {
     return await repo.getAllCategories();
 };
 
-const deleteCategory = async (id) => {
+const getCategoriesnotall = async () => {
+    return await repo.getnotAllCategories();
+};
+
+const toggleCategory = async (id) => {
     if(!id) throw new Error('Category id required');
-    return await repo.deleteCategory(id);
+    return await repo.toggleCategory(id);
 }
 
-module.exports = { addCategory, getCategories, deleteCategory }; 
+module.exports = { addCategory, getCategories, toggleCategory, getCategoriesnotall }; 

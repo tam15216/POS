@@ -1,11 +1,17 @@
 import{
     getCategoriesApi,
     createCategoryApi,
-    deleteCategoryApi
+    toggleCategoryApi,
+    getCategories_notallApi
 } from '../api/category.api';
 
 export const getCategories =  async () => {
     const res = await getCategoriesApi();
+    return res.data;
+};
+
+export const getCategories_notall =  async () => {
+    const res = await getCategories_notallApi();
     return res.data;
 };
 
@@ -14,7 +20,7 @@ export const createCategory = async (data) => {
     return res.data;
 };
 
-export const deleteCategory = async (id) => {
-    const res = await deleteCategoryApi(id);
+export const toggleCategory = async (id) => {
+    const res = await toggleCategoryApi(id);
     return res.data;
 };

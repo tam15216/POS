@@ -13,12 +13,18 @@ const getAllCategories = async () => {
     return rows;
 };
 
-const deleteCategory = async (id) => {
+const getnotAllCategories = async () => {
+    const [rows] = await db.query(`SELECT Category_id , Category_name FROM Category WHERE Status = 1`);
+    return rows;
+};
+
+
+const toggleCategory = async (id) => {
     const [result] = await db.query(
-        'DELETE FROM Category WHERE Category_id = ?',
+        'UPDATE Category SET Status = NOT Status WHERE Category_id = ?',
         [id]
     );
     return result;
 };
 
-module.exports = { createCategory, getAllCategories, deleteCategory };
+module.exports = { createCategory, getAllCategories, toggleCategory , getnotAllCategories };
