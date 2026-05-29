@@ -99,5 +99,4 @@ const cancelOrder = async (saleId) => {
         conn.release();
     }
 };
-
 module.exports = { createOrder, cancelOrder };

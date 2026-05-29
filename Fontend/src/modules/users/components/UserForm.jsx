@@ -172,6 +172,8 @@ export default function CreateUserForm({onSuccess}) {
             <option value="admin">Admin</option>
 
             <option value="cashier">Cashier</option>
+
+            <option value="stock">Stock</option>
           </select>
 
           {error.role && (
