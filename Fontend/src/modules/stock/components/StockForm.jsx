@@ -39,7 +39,6 @@ export default function StockForm({ products = [], onSubmit, submitText }) {
     >
       <h2 className="text-2xl font-bold text-purple-700">{submitText}</h2>
 
-      {/* Product Select */}
       <div>
         <label className="block mb-2 text-sm font-medium text-purple-700 ">
           สินค้า
@@ -61,7 +60,6 @@ export default function StockForm({ products = [], onSubmit, submitText }) {
         </select>
       </div>
 
-      {/* Qty */}
       <div>
         <label className="block mb-2 text-sm font-medium text-purple-700 ">
           จำนวน
@@ -76,14 +74,13 @@ export default function StockForm({ products = [], onSubmit, submitText }) {
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
         />
       </div>
-      {/* Error */}
+
       {error && (
         <div className="px-4 py-3 text-sm text-red-700 border border-red-200 bg-red-50 rounded-xl">
           {error}
         </div>
       )}
 
-      {/* Submit */}
       <button
         type="submit"
         className="w-full py-3 font-medium text-white transition bg-purple-500 shadow-md rounded-xl hover:bg-purple-600"

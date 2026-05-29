@@ -27,45 +27,31 @@ export default function StockHistoryTable({ history }) {
               key={index}
               className="transition border-t border-purple-50 hover:bg-purple-50"
             >
-              {/* Product Name */}
               <td className="px-6 py-4 font-medium text-gray-700 ">
                 {item.Product_name}
               </td>
-              {/* Product Created_at */}
               <td className="px-6 py-4 font-medium text-gray-700 ">
-                {new Date(item.Created_at).toLocaleString('th-TH')}
+                {new Date(item.Created_at).toLocaleString("th-TH")}
               </td>
 
-              {/* Ref Type */}
               <td className="px-6 py-4 text-center">
                 <span
-                  className={`
-                                    inline-block
-                                    px-4
-                                    py-1.5
-                                    rounded-full
-                                    text-sm
-                                    font-semibold
-
-                                    ${
-                                      item.Ref_type === "sale"
-                                        ? "bg-red-100 text-red-600"
-                                        : item.Ref_type === "import"
-                                          ? "bg-green-100 text-green-600"
-                                          : "bg-yellow-100 text-yellow-700"
-                                    }
+                  className={` inline-block  px-4 py-1.5 rounded-full text-sm font-semibold${
+                    item.Ref_type === "sale"
+                      ? "bg-red-100 text-red-600"
+                      : item.Ref_type === "import"
+                        ? "bg-green-100 text-green-600"
+                        : "bg-yellow-100 text-yellow-700"
+                  }
                                 `}
                 >
                   {item.Ref_type}
                 </span>
               </td>
 
-              {/* Qty */}
               <td className="px-6 py-4 text-center">
                 <span
-                  className={`
-                                    font-bold
-
+                  className={` font-bold
                                     ${
                                       Number(item.Qty_change) > 0
                                         ? "text-green-600"

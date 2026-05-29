@@ -22,7 +22,6 @@ export default function Stock() {
 
   return (
     <div className="p-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-purple-700">
@@ -32,7 +31,6 @@ export default function Stock() {
           <p className="mt-1 text-gray-400">จัดการสต๊อกเข้าและสต๊อกออก</p>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex gap-3">
           <button
             onClick={() => setOpenIn(true)}
@@ -50,7 +48,6 @@ export default function Stock() {
         </div>
       </div>
 
-      {/* Stock Table */}
       <div className="p-5 mb-6 bg-white border border-purple-100 shadow-sm rounded-2xl">
         <h3 className="mb-4 text-xl font-bold text-purple-700">
           สต๊อกปัจจุบัน
@@ -63,7 +60,6 @@ export default function Stock() {
         )}
       </div>
 
-      {/* Stock History */}
       <div className="p-5 bg-white border border-purple-100 shadow-sm rounded-2xl">
         <h3 className="mb-4 text-xl font-bold text-purple-700">ประวัติสต๊อก</h3>
 
@@ -71,7 +67,6 @@ export default function Stock() {
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       </div>
 
-      {/* STOCK IN MODAL */}
       {openIn && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40 backdrop-blur-sm">
           <div className="w-full max-w-md p-6 bg-white border border-purple-100 shadow-2xl rounded-2xl">
@@ -101,7 +96,6 @@ export default function Stock() {
         </div>
       )}
 
-      {/* STOCK OUT MODAL */}
       {openOut && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40 backdrop-blur-sm">
           <div className="w-full max-w-md p-6 bg-white border border-purple-100 shadow-2xl rounded-2xl">

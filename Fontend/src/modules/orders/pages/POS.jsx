@@ -107,7 +107,6 @@ export default function POS() {
               </div>
             </div>
 
-            {/* แสดงรายการสินค้าที่ผ่านการแบ่งหน้าแล้ว */}
             <div className="flex flex-wrap gap-5">
               {currentProducts.map((item) => (
                 <POSProductCard
@@ -117,7 +116,6 @@ export default function POS() {
                 />
               ))}
             </div>
-            {/* แสดง Pagination เฉพาะกรณีที่จำนวนสินค้าทั้งหมดมากกว่าจำนวนต่อหน้า (10 ชิ้น) */}
             {productsWithStock.length > itemsPerPage && (
               <div className="pt-4 mt-6 border-t border-gray-100">
                 <Pagination

@@ -32,12 +32,10 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
               key={item.Product_id}
               className="transition border-t border-purple-50 hover:bg-purple-50"
             >
-              {/* Product */}
               <td className="px-6 py-4 font-medium text-gray-700 ">
                 {item.Product_name}
               </td>
 
-              {/* Qty */}
               <td className="px-6 py-4">
                 <div className="flex items-center justify-center gap-3">
                   <button
@@ -67,17 +65,14 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
                 </div>
               </td>
 
-              {/* Price */}
               <td className="px-6 py-4 text-center text-gray-700 ">
                 ฿{item.Product_price}
               </td>
 
-              {/* Total */}
               <td className="px-6 py-4 font-semibold text-center text-purple-700 ">
                 ฿{item.Product_price * item.qty}
               </td>
 
-              {/* Action */}
               <td className="px-6 py-4 text-center">
                 <button
                   onClick={() => onRemove(item.Product_id)}
