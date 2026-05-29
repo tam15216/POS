@@ -14,6 +14,12 @@ export default function Stock() {
   const [openOut, setOpenOut] = useState(false);
   const { currentPage, setCurrentPage, totalPages, paginatedData } = usePagination(history, 10);
 
+  const productsAvailableInStock = productsnotall.filter((product) => {
+    const stockInfo = stocks.find((item) => item.Product_id === product.Product_id);
+    const currentQty = stockInfo?.Qty || 0;
+    return currentQty > 0;
+  });
+
   return (
     <div className="p-6">
       {/* Header */}
@@ -115,7 +121,7 @@ export default function Stock() {
             </div>
 
             <StockForm
-              products={productsnotall}
+              products={productsAvailableInStock}
               onSubmit={removeStock}
               submitText={"ลดสต๊อก"}
             />

@@ -18,8 +18,10 @@ export default function useStock() {
             setLoading(true);
             const data = await getStocks();
             setStocks(data);
+            return data;
         } catch (err) {
             console.error(err);
+            return [];
         } finally {
             setLoading(false);
         }
@@ -54,7 +56,7 @@ export default function useStock() {
         }
     };
 
-    return { stocks, history, loading, addStock, removeStock };
+    return { stocks, history, loading, addStock, removeStock , loadStocks };
 
 
 };

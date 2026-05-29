@@ -18,7 +18,7 @@ import MainLayout from './layouts/MianLayout';
 import Categories from './modules/categories/pages/Categories';
 import Stock from './modules/stock/pages/Stock';
 import Users from './modules/users/pages/Users'
-
+import POS from './modules/orders/pages/POS';
 
 
 export default function App() {
@@ -31,6 +31,7 @@ export default function App() {
                 <Route path ="/products" element={ <PrivateRoute> <MainLayout><Products /></MainLayout> </PrivateRoute> } />
                 <Route path ="/categories" element={ <PrivateRoute> <MainLayout><Categories /></MainLayout> </PrivateRoute> } />
                 <Route path ="/stock" element={ <PrivateRoute> <MainLayout><Stock /></MainLayout> </PrivateRoute> } />
+                <Route path="/orders" element={<PrivateRoute><MainLayout><POS /></MainLayout></PrivateRoute>}/>
             </Routes>
         </BrowserRouter>
     )
