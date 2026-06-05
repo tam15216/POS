@@ -18,7 +18,6 @@ export default function Orders() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentOrders = orders.slice(indexOfFirstItem, indexOfLastItem);
 
-
   const handlePageChange = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
@@ -38,7 +37,11 @@ export default function Orders() {
 
   return (
     <div>
-      <h1>Order History</h1>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-purple-700">ประวัติการขาย</h1>
+
+        <p className="mt-1 text-gray-400">ดูธุรกรรมการขายทั้งหมด</p>
+      </div>
 
       {loading ? (
         <p>Loading...</p>

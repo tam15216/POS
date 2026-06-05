@@ -6,9 +6,9 @@ export default function OrderDetailModal({ order, onClose }) {
       <div className="w-full max-w-4xl overflow-hidden bg-white border border-purple-100 shadow-2xl rounded-3xl">
         <div className="flex items-center justify-between px-8 py-6 border-b border-purple-100 ">
           <div>
-            <h2 className="text-3xl font-bold text-purple-700">Bill Detail</h2>
+            <h2 className="text-3xl font-bold text-purple-700">รายละเอียดใบเสร็จ</h2>
 
-            <p className="mt-1 text-sm text-gray-400">Order Information</p>
+            <p className="mt-1 text-sm text-gray-400">ข้อมูลการสั่งซื้อ</p>
           </div>
 
           <button
@@ -21,13 +21,13 @@ export default function OrderDetailModal({ order, onClose }) {
 
         <div className="grid grid-cols-2 gap-4 p-8">
           <div className="p-4 border border-purple-100 rounded-2xl bg-purple-50">
-            <p className="mb-1 text-sm text-gray-500">Bill Number</p>
+            <p className="mb-1 text-sm text-gray-500">เลขที่ใบเสร็จ</p>
 
             <p className="font-semibold text-gray-700">{order.sale.Bill_no}</p>
           </div>
 
           <div className="p-4 border border-purple-100 rounded-2xl bg-purple-50">
-            <p className="mb-1 text-sm text-gray-500">Payment Method</p>
+            <p className="mb-1 text-sm text-gray-500">วิธีการชำระเงิน</p>
 
             <p className="font-semibold text-gray-700">
               {order.payment?.Payment_method}
@@ -35,7 +35,7 @@ export default function OrderDetailModal({ order, onClose }) {
           </div>
 
           <div className="p-4 border border-purple-100 rounded-2xl bg-purple-50">
-            <p className="mb-1 text-sm text-gray-500">Status</p>
+            <p className="mb-1 text-sm text-gray-500">สถานะ</p>
 
             <span
               className={`
@@ -57,7 +57,7 @@ export default function OrderDetailModal({ order, onClose }) {
           </div>
 
           <div className="p-4 border border-purple-100 rounded-2xl bg-purple-50">
-            <p className="mb-1 text-sm text-gray-500">Total Amount</p>
+            <p className="mb-1 text-sm text-gray-500">รวมทั้งหมด</p>
 
             <p className="text-xl font-bold text-purple-700">
               ฿{order.sale.Total_amount}
@@ -71,17 +71,17 @@ export default function OrderDetailModal({ order, onClose }) {
               <thead className="bg-purple-100">
                 <tr>
                   <th className="px-6 py-4 text-left text-purple-700">
-                    Product
+                    สินค้า
                   </th>
 
-                  <th className="px-6 py-4 text-center text-purple-700">Qty</th>
+                  <th className="px-6 py-4 text-center text-purple-700">จำนวน</th>
 
                   <th className="px-6 py-4 text-center text-purple-700">
-                    Price
+                    ราคา/หน่วย
                   </th>
 
                   <th className="px-6 py-4 text-center text-purple-700">
-                    Total
+                    รวมราคา
                   </th>
                 </tr>
               </thead>
