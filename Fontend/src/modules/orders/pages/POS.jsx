@@ -13,8 +13,8 @@ import { usePagination } from "../../../shared/hooks/usePagination";
 export default function POS() {
   const { productsnotall } = useProducts();
   const { stocks, loadStocks } = useStock();
-  const [paymentMethod, setPaymentMethod] = useState("เงินสด");
-
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  
   const {
     cartItems,
     addToCart,
@@ -35,8 +35,7 @@ export default function POS() {
     };
   });
 
-  const productsnotallPagination = usePagination(productsnotall, 9);
-
+  const productsnotallPagination = usePagination(productsWithStock, 9);
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) {

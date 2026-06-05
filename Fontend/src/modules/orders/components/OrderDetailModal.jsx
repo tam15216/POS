@@ -1,4 +1,5 @@
 import { paymentMethodText } from "../../../shared/utils/paymentMethod";
+
 export default function OrderDetailModal({ order, onClose }) {
   if (!order) return null;
 
@@ -7,8 +8,9 @@ export default function OrderDetailModal({ order, onClose }) {
       <div className="w-full max-w-4xl overflow-hidden bg-white border border-purple-100 shadow-2xl rounded-3xl">
         <div className="flex items-center justify-between px-8 py-6 border-b border-purple-100 ">
           <div>
-            <h2 className="text-3xl font-bold text-purple-700">รายละเอียดใบเสร็จ</h2>
-
+            <h2 className="text-3xl font-bold text-purple-700">
+              รายละเอียดใบเสร็จ
+            </h2>
             <p className="mt-1 text-sm text-gray-400">ข้อมูลการสั่งซื้อ</p>
           </div>
 
@@ -23,13 +25,11 @@ export default function OrderDetailModal({ order, onClose }) {
         <div className="grid grid-cols-2 gap-4 p-8">
           <div className="p-4 border border-purple-100 rounded-2xl bg-purple-50">
             <p className="mb-1 text-sm text-gray-500">เลขที่ใบเสร็จ</p>
-
             <p className="font-semibold text-gray-700">{order.sale.Bill_no}</p>
           </div>
 
           <div className="p-4 border border-purple-100 rounded-2xl bg-purple-50">
             <p className="mb-1 text-sm text-gray-500">วิธีการชำระเงิน</p>
-
             <p className="font-semibold text-gray-700">
               {paymentMethodText[order.payment?.Payment_method] || "-"}
             </p>
@@ -37,21 +37,19 @@ export default function OrderDetailModal({ order, onClose }) {
 
           <div className="p-4 border border-purple-100 rounded-2xl bg-purple-50">
             <p className="mb-1 text-sm text-gray-500">สถานะ</p>
-
             <span
               className={`
-            px-3
-            py-1
-            rounded-full
-            text-xs
-            font-semibold
-
-            ${
-              order.sale.Status === "paid"
-                ? "bg-green-100 text-green-700"
-                : "bg-yellow-100 text-yellow-700"
-            }
-          `}
+                px-3
+                py-1
+                rounded-full
+                text-xs
+                font-semibold
+                ${
+                  order.sale.Status === "paid"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-yellow-100 text-yellow-700"
+                }
+              `}
             >
               {order.sale.Status}
             </span>
@@ -59,7 +57,6 @@ export default function OrderDetailModal({ order, onClose }) {
 
           <div className="p-4 border border-purple-100 rounded-2xl bg-purple-50">
             <p className="mb-1 text-sm text-gray-500">รวมทั้งหมด</p>
-
             <p className="text-xl font-bold text-purple-700">
               ฿{order.sale.Total_amount}
             </p>
@@ -68,48 +65,45 @@ export default function OrderDetailModal({ order, onClose }) {
 
         <div className="px-8 pb-6">
           <div className="overflow-hidden border border-purple-100 rounded-2xl">
-            <table className="w-full">
-              <thead className="bg-purple-100">
-                <tr>
-                  <th className="px-6 py-4 text-left text-purple-700">
-                    สินค้า
-                  </th>
-
-                  <th className="px-6 py-4 text-center text-purple-700">จำนวน</th>
-
-                  <th className="px-6 py-4 text-center text-purple-700">
-                    ราคา/หน่วย
-                  </th>
-
-                  <th className="px-6 py-4 text-center text-purple-700">
-                    รวมราคา
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {order.items.map((item) => (
-                  <tr
-                    key={item.Sale_item_id}
-                    className="border-t border-purple-50 hover:bg-purple-50"
-                  >
-                    <td className="px-6 py-4 font-medium text-gray-700">
-                      {item.Product_name}
-                    </td>
-
-                    <td className="px-6 py-4 text-center">{item.Qty}</td>
-
-                    <td className="px-6 py-4 text-center">
-                      ฿{item.Unit_price}
-                    </td>
-
-                    <td className="px-6 py-4 font-semibold text-center text-purple-700">
-                      ฿{item.Total_price}
-                    </td>
+            {/* กำหนดการ Scroll และความสูงสูงสุด */}
+            <div className="overflow-y-auto max-h-80">
+              <table className="w-full text-left border-collapse">
+                <thead className="sticky top-0 z-10 bg-purple-100 shadow-[0_1px_0_0_rgba(243,232,255,1)]">
+                  <tr>
+                    <th className="px-6 py-4 text-purple-700">สินค้า</th>
+                    <th className="px-6 py-4 text-center text-purple-700">
+                      จำนวน
+                    </th>
+                    <th className="px-6 py-4 text-center text-purple-700">
+                      ราคา/หน่วย
+                    </th>
+                    <th className="px-6 py-4 text-center text-purple-700">
+                      รวมราคา
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody>
+                  {order.items.map((item) => (
+                    <tr
+                      key={item.Sale_item_id}
+                      className="border-t border-purple-50 hover:bg-purple-50"
+                    >
+                      <td className="px-6 py-4 font-medium text-gray-700">
+                        {item.Product_name}
+                      </td>
+                      <td className="px-6 py-4 text-center">{item.Qty}</td>
+                      <td className="px-6 py-4 text-center">
+                        ฿{item.Unit_price}
+                      </td>
+                      <td className="px-6 py-4 font-semibold text-center text-purple-700">
+                        ฿{item.Total_price}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
