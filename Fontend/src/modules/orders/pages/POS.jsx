@@ -8,10 +8,12 @@ import CartTable from "../components/CartTable";
 import { checkInsufficientStock } from "../../../shared/utils/stockValidator";
 import { createOrder } from "../services/order.service";
 import Pagination from "../../../shared/components/Pagination";
+import PaymentSelector from "../components/PaymentSelector";
 
 export default function POS() {
   const { productsnotall } = useProducts();
   const { stocks, loadStocks } = useStock();
+  const [paymentMethod, setPaymentMethod] = useState("cash");
 
   const {
     cartItems,
@@ -75,6 +77,7 @@ export default function POS() {
         })),
 
         total,
+        payment_method: paymentMethod,
       };
 
       await createOrder(payload);
@@ -145,13 +148,18 @@ export default function POS() {
               onRemove={removeFromCart}
             />
 
-            <div className="flex justify-end mt-6">
+            <div className="flex justify-end gap-4 mt-6">
+              <PaymentSelector
+                value={paymentMethod}
+                onChange={setPaymentMethod}
+              />
+
               <ConfirmButton
                 title="Confirm Checkout"
                 text="Do you want to place this order?"
                 icon="question"
                 onConfirm={handleCheckout}
-                className="w-full px-8 py-4 text-lg font-semibold text-white transition bg-purple-500 shadow-md rounded-2xl hover:bg-purple-600"
+                className="px-8 py-4 text-lg font-semibold text-white transition bg-purple-500 shadow-md rounded-2xl hover:bg-purple-600"
               >
                 Checkout
               </ConfirmButton>

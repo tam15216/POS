@@ -8,7 +8,8 @@ export default function Sidebar() {
     { name: "Products", to: "/products", roles: ["admin", "stock"] },
     { name: "Categories", to: "/categories", roles: ["admin"] },
     { name: "Stock", to: "/stock", roles: ["admin", "stock"] },
-    { name: "Orders", to: "/orders", roles: ["admin", "cashier"] },
+    { name: "Orders", to: "/orders", roles: ["admin"] },
+    { name: "POS", to: "/pos", roles: ["admin", "cashier"] },
     { name: "Reports", to: "/reports", roles: ["admin"] },
     { name: "User", to: "/users" , roles:["admin"] },
   ];

@@ -1,3 +1,4 @@
+const db = require('../../config/database');
 const checkStockForUpdate = async (conn, productId) => {
     const [rows] = await conn.query(
         'SELECT Qty FROM Stock WHERE Product_id = ? FOR UPDATE',
@@ -88,6 +89,60 @@ const updateSaleStatus = async (conn, saleId, status) => {
     );
 };
 
+const getOrders = async () => {
+    const [rows] = await db.query(`
+        SELECT *
+        FROM Sale
+        ORDER BY Sale_id DESC
+    `);
+
+    return rows;
+};
+
+const getOrderById = async (saleId) => {
+    const [rows] = await db.query(`
+        SELECT *
+        FROM Sale
+        WHERE Sale_id = ?
+    `, [saleId]);
+
+    return rows[0];
+};
+
+const getOrderDetail = async (saleId) => {
+    const [saleRows] = await db.query(`
+        SELECT *
+        FROM Sale
+        WHERE Sale_id = ?
+    `, [saleId]);
+
+    const [paymentRows] = await db.query(`
+        SELECT *
+        FROM Payment
+        WHERE Sale_id = ?
+    `, [saleId]);
+
+    const [itemRows] = await db.query(`
+        SELECT
+            si.Sale_item_id,
+            si.Product_id,
+            p.Product_name,
+            si.Qty,
+            si.Unit_price,
+            si.Total_price
+        FROM Sale_item si
+        JOIN Product p
+            ON p.Product_id = si.Product_id
+        WHERE si.Sale_id = ?
+    `, [saleId]);
+
+    return {
+        sale: saleRows[0],
+        payment: paymentRows[0],
+        items: itemRows
+    };
+};
+
 module.exports = {
     checkStockForUpdate,
     insertSale,
@@ -100,5 +155,8 @@ module.exports = {
     checkSaleStatusForUpdate,
     getSaleItems,
     updateStockIncrease,
-    updateSaleStatus
+    updateSaleStatus,
+    getOrders,
+    getOrderById,
+    getOrderDetail
 };

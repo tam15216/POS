@@ -11,3 +11,7 @@ export const getOrdersApi = () => {
 export const getOrderByIdApi = (id) => {
     return api.get(`/orders/${id}`);
 };
+
+export const getOrderDetailApi = (id) => {
+    return api.get(`/orders/detail/${id}`);
+};

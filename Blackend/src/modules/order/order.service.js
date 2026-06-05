@@ -99,4 +99,17 @@ const cancelOrder = async (saleId) => {
         conn.release();
     }
 };
-module.exports = { createOrder, cancelOrder };
+
+const getOrders = async () => {
+    return await orderRepo.getOrders();
+};
+
+const getOrderById = async (saleId) => {
+    return await orderRepo.getOrderById(saleId);
+};
+
+const getOrderDetail = async (saleId) => {
+    return await orderRepo.getOrderDetail(saleId);
+};
+
+module.exports = { createOrder, cancelOrder, getOrders, getOrderById , getOrderDetail};

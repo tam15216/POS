@@ -19,4 +19,37 @@ const cancelOrder = async (req , res) => {
     }
 };
 
-module.exports = { createOrder , cancelOrder };
+const getOrders = async (req, res) => {
+    try {
+        const data = await service.getOrders();
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+const getOrderById = async (req, res) => {
+    try {
+        const saleId = req.params.id;
+        const data = await service.getOrderById(saleId);
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+const getOrderDetail = async (req, res) => {
+    try {
+        const saleId = req.params.id;
+
+        const data = await service.getOrderDetail(saleId);
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({
+            error: err.message
+        });
+    }
+};
+
+module.exports = { createOrder , cancelOrder, getOrders, getOrderById , getOrderDetail};
