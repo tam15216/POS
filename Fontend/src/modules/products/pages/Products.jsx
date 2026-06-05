@@ -3,15 +3,15 @@ import ProductTable from "../components/ProductTable";
 import ProductSearch from "../components/ProductSearch";
 import EmptyState from "../components/EmptyState";
 import { useState } from "react";
-
+import Pagination from "../../../shared/components/Pagination";
 import useProducts from "../hooks/useProducts";
 import ProductCategory from "../components/ProductCategory";
 import useCategories from "../../categories/hooks/useCategories";
+import { usePagination } from "../../../shared/hooks/usePagination";
 
 export default function Products() {
   const [open, setOpen] = useState(false);
   const { categories_notall } = useCategories();
-  
 
   const {
     products,
@@ -26,6 +26,7 @@ export default function Products() {
     setSelectedCategory,
     displayProducts,
   } = useProducts();
+ const ProductsPagination = usePagination(displayProducts, 10);
 
   const [editingProduct, setEditingProduct] = useState(null);
 
@@ -74,11 +75,19 @@ export default function Products() {
           <EmptyState />
         ) : (
           <ProductTable
-            products={displayProducts}
+            products={ProductsPagination.paginatedData}
             onToggle={toggleProducts}
             onEdit={handleEditProduct}
           />
         )}
+      </div>
+
+      <div className="pt-4 mt-6 border-t border-gray-100">
+        <Pagination
+          currentPage={ProductsPagination.currentPage}
+          totalPages={ProductsPagination.totalPages}
+          onPageChange={ProductsPagination.setCurrentPage}
+        />
       </div>
 
       {open && (

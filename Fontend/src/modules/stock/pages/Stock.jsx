@@ -12,10 +12,13 @@ export default function Stock() {
   const { productsnotall } = useProducts();
   const [openIn, setOpenIn] = useState(false);
   const [openOut, setOpenOut] = useState(false);
-  const { currentPage, setCurrentPage, totalPages, paginatedData } = usePagination(history, 10);
+  const historyPagination = usePagination(history, 10);
+  const stockPagination = usePagination(stocks, 10);
 
   const productsAvailableInStock = productsnotall.filter((product) => {
-    const stockInfo = stocks.find((item) => item.Product_id === product.Product_id);
+    const stockInfo = stocks.find(
+      (item) => item.Product_id === product.Product_id,
+    );
     const currentQty = stockInfo?.Qty || 0;
     return currentQty > 0;
   });
@@ -56,15 +59,24 @@ export default function Stock() {
         {loading ? (
           <div className="py-10 text-center text-gray-400">Loading...</div>
         ) : (
-          <StockTable stocks={stocks} />
+          <StockTable stocks={stockPagination.paginatedData} />
         )}
+        <Pagination
+          currentPage={stockPagination.currentPage}
+          totalPages={stockPagination.totalPages}
+          onPageChange={stockPagination.setCurrentPage}
+        />
       </div>
 
       <div className="p-5 bg-white border border-purple-100 shadow-sm rounded-2xl">
         <h3 className="mb-4 text-xl font-bold text-purple-700">ประวัติสต๊อก</h3>
 
-        <StockHistoryTable history={paginatedData} />
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+        <StockHistoryTable history={historyPagination.paginatedData} />
+        <Pagination
+          currentPage={historyPagination.currentPage}
+          totalPages={historyPagination.totalPages}
+          onPageChange={historyPagination.setCurrentPage}
+        />
       </div>
 
       {openIn && (

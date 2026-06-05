@@ -7,22 +7,12 @@ import OrderDetailModal from "../components/OrderDetailModal";
 
 import { getOrderDetail } from "../services/order.service";
 import Pagination from "../../../shared/components/Pagination";
+import { usePagination } from "../../../shared/hooks/usePagination";
 
 export default function Orders() {
   const { orders, loading } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(orders.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentOrders = orders.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
+  const ordersPagination = usePagination(orders, 10);
 
   const handleView = async (order) => {
     try {
@@ -46,15 +36,13 @@ export default function Orders() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <OrdersTable orders={currentOrders} onView={handleView} />
+        <OrdersTable orders={ordersPagination.paginatedData} onView={handleView} />
       )}
-      {orders.length > itemsPerPage && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      )}
+      <Pagination
+        currentPage={ordersPagination.currentPage}
+        totalPages={ordersPagination.totalPages}
+        onPageChange={ordersPagination.setCurrentPage}
+      />
       <OrderDetailModal
         order={selectedOrder}
         onClose={() => setSelectedOrder(null)}

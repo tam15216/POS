@@ -9,7 +9,7 @@ import { checkInsufficientStock } from "../../../shared/utils/stockValidator";
 import { createOrder } from "../services/order.service";
 import Pagination from "../../../shared/components/Pagination";
 import PaymentSelector from "../components/PaymentSelector";
-
+import { usePagination } from "../../../shared/hooks/usePagination";
 export default function POS() {
   const { productsnotall } = useProducts();
   const { stocks, loadStocks } = useStock();
@@ -24,8 +24,7 @@ export default function POS() {
     clearCart,
     total,
   } = useCart();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+
 
   const productsWithStock = productsnotall.map((product) => {
     const stock = stocks.find((item) => item.Product_id === product.Product_id);
@@ -36,19 +35,8 @@ export default function POS() {
     };
   });
 
-  const totalPages = Math.ceil(productsWithStock.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProducts = productsWithStock.slice(
-    indexOfFirstItem,
-    indexOfLastItem,
-  );
+  const productsnotallPagination = usePagination(productsnotall, 9);
 
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
@@ -111,7 +99,7 @@ export default function POS() {
             </div>
 
             <div className="flex flex-wrap gap-5">
-              {currentProducts.map((item) => (
+              {productsnotallPagination.paginatedData.map((item) => (
                 <POSProductCard
                   key={item.Product_id}
                   product={item}
@@ -119,15 +107,13 @@ export default function POS() {
                 />
               ))}
             </div>
-            {productsWithStock.length > itemsPerPage && (
               <div className="pt-4 mt-6 border-t border-gray-100">
                 <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
+                  currentPage={productsnotallPagination.currentPage}
+                  totalPages={productsnotallPagination.totalPages}
+                  onPageChange={productsnotallPagination.setCurrentPage}
                 />
               </div>
-            )}
           </div>
         </div>
 
@@ -140,13 +126,14 @@ export default function POS() {
                 ฿{total}
               </div>
             </div>
-
-            <CartTable
-              items={cartItems}
-              onIncrease={increaseQty}
-              onDecrease={decreaseQty}
-              onRemove={removeFromCart}
-            />
+            <div className="max-h-[500px] overflow-y-auto border border-purple-100 rounded-2xl">
+              <CartTable
+                items={cartItems}
+                onIncrease={increaseQty}
+                onDecrease={decreaseQty}
+                onRemove={removeFromCart}
+              />
+            </div>
 
             <div className="flex justify-end gap-4 mt-6">
               <PaymentSelector
