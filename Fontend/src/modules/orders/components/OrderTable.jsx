@@ -42,7 +42,7 @@ export default function OrderTable({ orders, onView }) {
                 {item.Bill_no}
               </td>
 
-              <td className="px-6 py-4 text-gray-500">{item.Created_at}</td>
+              <td className="px-6 py-4 text-gray-500">{new Date(item.Created_at).toLocaleString("th-TH")}</td>
 
               <td className="px-6 py-4 font-semibold text-center text-purple-700">
                 ฿{item.Total_amount}
