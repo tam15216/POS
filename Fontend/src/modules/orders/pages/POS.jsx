@@ -13,7 +13,7 @@ import PaymentSelector from "../components/PaymentSelector";
 export default function POS() {
   const { productsnotall } = useProducts();
   const { stocks, loadStocks } = useStock();
-  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [paymentMethod, setPaymentMethod] = useState("เงินสด");
 
   const {
     cartItems,

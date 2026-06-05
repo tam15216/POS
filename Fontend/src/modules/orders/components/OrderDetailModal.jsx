@@ -1,3 +1,4 @@
+import { paymentMethodText } from "../../../shared/utils/paymentMethod";
 export default function OrderDetailModal({ order, onClose }) {
   if (!order) return null;
 
@@ -30,7 +31,7 @@ export default function OrderDetailModal({ order, onClose }) {
             <p className="mb-1 text-sm text-gray-500">วิธีการชำระเงิน</p>
 
             <p className="font-semibold text-gray-700">
-              {order.payment?.Payment_method}
+              {paymentMethodText[order.payment?.Payment_method] || "-"}
             </p>
           </div>
 
