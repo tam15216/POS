@@ -25,6 +25,10 @@ export default function OrderTable({ orders, onView }) {
             </th>
 
             <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
+              Seller
+            </th>
+
+            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
               Action
             </th>
           </tr>
@@ -69,6 +73,7 @@ export default function OrderTable({ orders, onView }) {
                   {item.Status}
                 </span>
               </td>
+              <td className="px-6 py-4 text-center">{item.seller_name || "ไม่ระบุ"}</td>
 
               <td className="px-6 py-4 text-center">
                 <button

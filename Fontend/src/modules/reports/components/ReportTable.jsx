@@ -21,6 +21,7 @@ export default function ReportTable({ records = [] }) {
               <th className="pb-3 text-right">ส่วนลด</th>
               <th className="pb-3 text-right">ยอดสุทธิ</th>
               <th className="pb-3 pr-2 text-center">สถานะ</th>
+              <th className="pb-3">พนักงานขาย</th>
             </tr>
           </thead>
           <tbody className="text-gray-600 divide-y divide-purple-50/50">
@@ -61,6 +62,9 @@ export default function ReportTable({ records = [] }) {
                     }`}>
                       {row.Status === 'paid' ? 'สำเร็จ' : 'ยกเลิก'}
                     </span>
+                  </td>
+                  <td className="py-3.5 pr-2">
+                    {row.seller_name || 'ไม่ระบุ'}
                   </td>
                 </tr>
               ))

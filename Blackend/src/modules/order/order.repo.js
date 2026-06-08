@@ -91,9 +91,12 @@ const updateSaleStatus = async (conn, saleId, status) => {
 
 const getOrders = async () => {
     const [rows] = await db.query(`
-        SELECT *
-        FROM Sale
-        ORDER BY Sale_id DESC
+        SELECT 
+            s.*,                 
+            u.Full_name AS seller_name  
+        FROM Sale s
+        LEFT JOIN user u ON s.Created_by = u.User_id 
+        ORDER BY s.Sale_id DESC
     `);
 
     return rows;

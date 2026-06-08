@@ -87,16 +87,17 @@ const getSalesByPeriod = async (startDate, endDate) => {
             s.Discount_amount,
             s.Net_amount,
             s.Status,
-            p.Payment_method
+            p.Payment_method,
+            u.Full_name AS seller_name 
          FROM sale s
          LEFT JOIN payment p ON s.Sale_id = p.Sale_id
+         LEFT JOIN user u ON s.Created_by = u.User_id 
          WHERE DATE(s.Sale_datetime) BETWEEN ? AND ?
          ORDER BY s.Sale_datetime DESC`,
         [startDate, endDate]
     );
     return rows;
 };
-
 const getTopProductsReport = async (startDate, endDate) => {
     const [rows] = await db.query(
         `SELECT 
