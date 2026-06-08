@@ -25,7 +25,7 @@ export default function LowStockAlert({ items = [] }) {
               <span className="relative inline-flex w-3 h-3 bg-red-500 rounded-full"></span>
             </span>
             <h3 className="text-xl font-bold text-gray-700">
-              สินค้าใกล้หมดระบบ
+              สินค้าใกล้หมดสต๊อก
             </h3>
           </div>
           <span className="px-3 py-1 text-xs font-semibold text-red-700 border border-red-100 rounded-full bg-red-50">
