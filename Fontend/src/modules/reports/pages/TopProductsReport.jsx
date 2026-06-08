@@ -65,7 +65,6 @@ export default function TopProductsReport() {
                       className="transition-colors hover:bg-purple-50/30"
                     >
                       <td className="py-3.5 pl-2 font-bold text-gray-400">
-                        {/* คำนวณอันดับให้ถูกต้องเมื่อเปลี่ยนหน้า */}
                         {(currentPage - 1) * 10 + index + 1}
                       </td>
                       <td className="py-3.5 font-mono text-sm text-gray-500">
@@ -93,7 +92,6 @@ export default function TopProductsReport() {
             </table>
           </div>
 
-          {/* แถบควบคุมหน้าข้อมูลตาราง */}
           {records.length > 0 && (
             <Pagination
               currentPage={currentPage}
