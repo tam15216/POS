@@ -5,7 +5,7 @@ const categoryRoute = require('./modules/category/category.route');
 const stockRoute = require('./modules/stock/stock.route');
 const orderRoute = require('./modules/order/order.route');
 const authRoute = require('./modules/auth/auth.route');
-const userRoute = require('./modules/report/report.route');
+const userRoute = require('./modules/user/user.route');
 const reportRoute = require('./modules/report/report.route');
 
 const app = express();
