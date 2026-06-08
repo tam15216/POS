@@ -19,6 +19,8 @@ export default function Sidebar() {
 
   const reportSubMenus = [
     { name: "รายงานยอดขาย", to: "/SalesReport", roles: ["admin"] },
+    { name: "รายงานสินค้าขายดี", to: "/top-products", roles: ["admin"] },
+    { name: "รายงานเคลื่อนไหวสต๊อก", to: "/stock-log", roles: ["admin", "stock"] }
   ];
 
   const allowedMenus = menus.filter((menu) => menu.roles.includes(user?.role));

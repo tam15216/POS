@@ -21,6 +21,8 @@ import Users from './modules/users/pages/Users'
 import POS from './modules/orders/pages/POS';
 import Orders from './modules/orders/pages/Orders';
 import SalesReport from './modules/reports/pages/SalesReport';
+import TopProductsReport from './modules/reports/pages/TopProductsReport';
+import StockMovementReport from './modules/reports/pages/StockMovementReport';
 
 
 export default function App() {
@@ -36,6 +38,8 @@ export default function App() {
                 <Route path="/pos" element={<PrivateRoute><MainLayout><POS /></MainLayout></PrivateRoute>}/>
                 <Route path="/orders" element={<PrivateRoute><MainLayout><Orders /></MainLayout></PrivateRoute>}/>
                 <Route path="/SalesReport" element={<PrivateRoute><MainLayout><SalesReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/top-products" element={<PrivateRoute><MainLayout><TopProductsReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/stock-log" element={<PrivateRoute><MainLayout><StockMovementReport /></MainLayout></PrivateRoute>}/>
             </Routes>
         </BrowserRouter>
     )

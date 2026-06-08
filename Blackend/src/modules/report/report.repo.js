@@ -97,6 +97,50 @@ const getSalesByPeriod = async (startDate, endDate) => {
     return rows;
 };
 
+const getTopProductsReport = async (startDate, endDate) => {
+    const [rows] = await db.query(
+        `SELECT 
+            p.Product_id,
+            p.Product_code,
+            p.Product_name,
+            c.Category_name,
+            p.Product_price,
+            SUM(si.Qty) AS total_qty_sold,
+            SUM(si.Total_price) AS total_revenue
+         FROM sale_item si
+         INNER JOIN product p ON si.Product_id = p.Product_id
+         LEFT JOIN category c ON p.Category_id = c.Category_id
+         INNER JOIN sale s ON si.Sale_id = s.Sale_id
+         WHERE s.Status = 'paid'
+           AND DATE(s.Sale_datetime) BETWEEN ? AND ?
+         GROUP BY p.Product_id
+         ORDER BY total_qty_sold DESC`,
+        [startDate, endDate]
+    );
+    return rows;
+};
+
+
+const getStockMovementReport = async (startDate, endDate) => {
+    const [rows] = await db.query(
+        `SELECT 
+            sl.Stock_log_id,
+            sl.Created_at,
+            p.Product_id,
+            p.Product_code,
+            p.Product_name,
+            sl.Ref_type,
+            sl.Qty_change,
+            sl.Ref_id
+         FROM stock_log sl
+         INNER JOIN product p ON sl.Product_id = p.Product_id
+         WHERE DATE(sl.Created_at) BETWEEN ? AND ?
+         ORDER BY sl.Created_at DESC`,
+        [startDate, endDate]
+    );
+    return rows;
+};
+
 
 
 module.exports = {
@@ -106,5 +150,7 @@ module.exports = {
   getTotalCategories,
   getLowStockProducts,
   getTopSellingProducts,
-  getSalesByPeriod
+  getSalesByPeriod,
+  getTopProductsReport,
+  getStockMovementReport
 };

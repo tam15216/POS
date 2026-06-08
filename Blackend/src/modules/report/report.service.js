@@ -58,7 +58,27 @@ const getSalesReport = async (query) => {
     };
 };
 
+const getTopProductsReport = async (query) => {
+    const today = new Date().toISOString().split('T')[0];
+    const startDate = query.startDate || today;
+    const endDate = query.endDate || today;
+
+    const records = await reportRepo.getTopProductsReport(startDate, endDate);
+    return { summary: { startDate, endDate }, records };
+};
+
+const getStockMovementReport = async (query) => {
+    const today = new Date().toISOString().split('T')[0];
+    const startDate = query.startDate || today;
+    const endDate = query.endDate || today;
+
+    const records = await reportRepo.getStockMovementReport(startDate, endDate);
+    return { summary: { startDate, endDate }, records };
+};
+
 module.exports = {
   getDashboardSummary,
-  getSalesReport
+  getSalesReport,
+  getTopProductsReport,
+  getStockMovementReport
 };

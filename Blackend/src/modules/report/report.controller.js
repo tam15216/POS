@@ -20,7 +20,29 @@ const getSalesReport = async (req, res) => {
     }
 };
 
+const getTopProductsReport = async (req, res) => {
+    try {
+        const data = await reportService.getTopProductsReport(req.query);
+        return res.status(200).json(data);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+const getStockMovementReport = async (req, res) => {
+    try {
+        const data = await reportService.getStockMovementReport(req.query);
+        return res.status(200).json(data);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     getDashboard,
-    getSalesReport
+    getSalesReport,
+    getTopProductsReport,
+    getStockMovementReport
 };
