@@ -23,5 +23,5 @@ app.use('/stock', stockRoute);
 app.use('/orders',orderRoute);
 app.use('/auth', authRoute);
 app.use('/users', userRoute);
-app.use('/report', reportRoute);
+app.use('/reports', reportRoute);
 module.exports = app;

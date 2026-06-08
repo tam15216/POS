@@ -76,6 +76,29 @@ const getTopSellingProducts = async (limit = 5) => {
     return rows;
 };
 
+
+const getSalesByPeriod = async (startDate, endDate) => {
+    const [rows] = await db.query(
+        `SELECT 
+            s.Sale_id,
+            s.Bill_no,
+            s.Sale_datetime,
+            s.Total_amount,
+            s.Discount_amount,
+            s.Net_amount,
+            s.Status,
+            p.Payment_method
+         FROM sale s
+         LEFT JOIN payment p ON s.Sale_id = p.Sale_id
+         WHERE DATE(s.Sale_datetime) BETWEEN ? AND ?
+         ORDER BY s.Sale_datetime DESC`,
+        [startDate, endDate]
+    );
+    return rows;
+};
+
+
+
 module.exports = {
   getTodaySalesAndOrders,
   getMonthSales,
@@ -83,4 +106,5 @@ module.exports = {
   getTotalCategories,
   getLowStockProducts,
   getTopSellingProducts,
+  getSalesByPeriod
 };

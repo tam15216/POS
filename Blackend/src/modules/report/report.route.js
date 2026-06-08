@@ -6,5 +6,6 @@ const role = require('../../middleware/role');
 const auth = require('../../middleware/auth');
 
 router.get('/dashboard', auth, role('admin'), reportController.getDashboard);
+router.get('/sales', auth, role('admin'), reportController.getSalesReport);
 
 module.exports = router;

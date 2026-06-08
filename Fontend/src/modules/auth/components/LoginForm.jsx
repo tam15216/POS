@@ -45,7 +45,7 @@ export default function LoginForm(){
 
             login(data.user, data.token);
 
-            navigate('/dashboard');
+            navigate('/pos');
 
         } catch (err){
             console.log(err);

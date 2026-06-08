@@ -1,4 +1,3 @@
-// src/services/report.service.js
 const reportRepo = require("../report/report.repo");
 
 const getDashboardSummary = async () => {
@@ -24,6 +23,42 @@ const getDashboardSummary = async () => {
   };
 };
 
+const getSalesReport = async (query) => {
+    const today = new Date().toISOString().split('T')[0];
+    const defaultStartDate = new Date();
+    defaultStartDate.setDate(defaultStartDate.getDate() - 30);
+    const thirtyDaysAgo = defaultStartDate.toISOString().split('T')[0];
+
+    const startDate = query.startDate || thirtyDaysAgo;
+    const endDate = query.endDate || today;
+
+    const salesData = await reportRepo.getSalesByPeriod(startDate, endDate);
+
+    let totalSalesVolume = 0;
+    let totalNetAmount = 0;
+    let totalDiscount = 0;
+
+    salesData.forEach(item => {
+        if (item.Status === 'paid') {
+            totalSalesVolume += 1;
+            totalNetAmount += Number(item.Net_amount);
+            totalDiscount += Number(item.Discount_amount);
+        }
+    });
+
+    return {
+        summary: {
+            startDate,
+            endDate,
+            total_orders: totalSalesVolume,
+            total_sales_amount: totalNetAmount,
+            total_discount_amount: totalDiscount
+        },
+        records: salesData
+    };
+};
+
 module.exports = {
   getDashboardSummary,
+  getSalesReport
 };
