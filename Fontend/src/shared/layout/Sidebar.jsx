@@ -4,7 +4,7 @@ export default function Sidebar() {
   const { user } = useAuth();
 
   const menus = [
-    { name: "Dashboard", to: "/dashboard", roles: ["admin", "cashier"] },
+    { name: "Dashboard", to: "/dashboard", roles: ["admin"] },
     { name: "Products", to: "/products", roles: ["admin", "stock"] },
     { name: "Categories", to: "/categories", roles: ["admin"] },
     { name: "Stock", to: "/stock", roles: ["admin", "stock"] },

@@ -16,7 +16,7 @@ export default function LowStockAlert({ items = [] }) {
   }
 
   return (
-    <div className="p-6 bg-white border border-purple-100 shadow-sm rounded-2xl">
+    <div className="w-full p-6 bg-white border border-purple-100 shadow-sm rounded-2xl">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="relative flex w-3 h-3">

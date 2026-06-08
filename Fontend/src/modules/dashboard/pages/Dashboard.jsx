@@ -1,6 +1,7 @@
 import useDashboard from "../hooks/useDashboard";
 import DashboardCard from "../components/DashboardCard";
-import LowStockAlert from "../components/LowStockAlert"; // นำเข้าคอมโพเนนต์แสดงสินค้าใกล้หมด (ปรับ path ให้ตรงกับเครื่องคุณ)
+import LowStockAlert from "../components/LowStockAlert";
+import TopSellingProducts from "../components/TopSellingProducts";
 
 export default function Dashboard() {
   const { dashboard, loading } = useDashboard();
@@ -44,11 +45,13 @@ export default function Dashboard() {
           <DashboardCard title="Low Stock" value={dashboard.low_stock} />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
-          <div className="xl:col-span-6">
+        <div className="grid items-stretch grid-cols-1 gap-6 xl:grid-cols-12">
+          <div className="flex xl:col-span-6">
             <LowStockAlert items={dashboard.low_stock_items || []} />
           </div>
-
+          <div className="flex xl:col-span-6">
+            <TopSellingProducts items={dashboard.top_selling_products || []} />
+          </div>
         </div>
       </div>
     </div>

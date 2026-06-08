@@ -52,10 +52,35 @@ const getLowStockProducts = async (limit = 10) => {
   return rows; 
 };
 
+
+const getTopSellingProducts = async (limit = 5) => {
+    const [rows] = await db.query(
+        `SELECT 
+            p.Product_id,
+            p.Product_name,
+            p.Product_code,
+            p.Product_price,
+            SUM(si.Qty) AS total_qty_sold,
+            SUM(si.Total_price) AS total_revenue
+         FROM sale_item si
+         INNER JOIN product p ON si.Product_id = p.Product_id
+         INNER JOIN sale s ON si.Sale_id = s.Sale_id
+         WHERE s.Status = 'paid'
+           AND YEAR(s.Sale_datetime) = YEAR(CURDATE())
+           AND MONTH(s.Sale_datetime) = MONTH(CURDATE())
+         GROUP BY p.Product_id
+         ORDER BY total_qty_sold DESC
+         LIMIT ?`,
+        [limit]
+    );
+    return rows;
+};
+
 module.exports = {
   getTodaySalesAndOrders,
   getMonthSales,
   getTotalProducts,
   getTotalCategories,
   getLowStockProducts,
+  getTopSellingProducts,
 };
