@@ -2,13 +2,13 @@
 const reportRepo = require("../report/report.repo");
 
 const getDashboardSummary = async () => {
-  const [todayData, monthSales, totalProducts, totalCategories, lowStock] =
+  const [todayData, monthSales, totalProducts, totalCategories, lowStockItems] =
     await Promise.all([
       reportRepo.getTodaySalesAndOrders(),
       reportRepo.getMonthSales(),
       reportRepo.getTotalProducts(),
       reportRepo.getTotalCategories(),
-      reportRepo.getLowStockCount(10),
+      reportRepo.getLowStockProducts(10),
     ]);
 
   return {
@@ -17,7 +17,8 @@ const getDashboardSummary = async () => {
     today_orders: Number(todayData.today_orders),
     total_products: Number(totalProducts),
     total_categories: Number(totalCategories),
-    low_stock: Number(lowStock),
+    low_stock: lowStockItems.length, 
+    low_stock_items: lowStockItems  
   };
 };
 
