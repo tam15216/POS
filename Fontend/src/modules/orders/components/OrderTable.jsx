@@ -13,23 +13,23 @@ export default function OrderTable({ orders, onView }) {
             </th>
 
             <th className="px-6 py-4 text-sm font-semibold text-left text-purple-700 ">
-              Date
+              วันที่ - เวลา
             </th>
 
             <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
-              Total
+              ยอดรวม
             </th>
 
             <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
-              Status
+              สถานะ
             </th>
 
             <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
-              Seller
+              ผู้ทำรายการ
             </th>
 
             <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
-              Action
+              เพิ่มเติม
             </th>
           </tr>
         </thead>
@@ -80,7 +80,7 @@ export default function OrderTable({ orders, onView }) {
                   onClick={() => onView(item)}
                   className="px-4 py-2 text-sm font-medium text-white transition bg-purple-500 rounded-xl hover:bg-purple-600"
                 >
-                  View
+                  เพิ่มเติม
                 </button>
               </td>
             </tr>

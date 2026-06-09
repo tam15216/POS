@@ -65,7 +65,6 @@ export default function OrderDetailModal({ order, onClose }) {
 
         <div className="px-8 pb-6">
           <div className="overflow-hidden border border-purple-100 rounded-2xl">
-            {/* กำหนดการ Scroll และความสูงสูงสุด */}
             <div className="overflow-y-auto max-h-80">
               <table className="w-full text-left border-collapse">
                 <thead className="sticky top-0 z-10 bg-purple-100 shadow-[0_1px_0_0_rgba(243,232,255,1)]">
@@ -112,7 +111,7 @@ export default function OrderDetailModal({ order, onClose }) {
             onClick={onClose}
             className="px-6 py-3 text-white transition bg-red-500 rounded-xl hover:bg-red-600"
           >
-            Close
+            ปิด
           </button>
         </div>
       </div>

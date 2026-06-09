@@ -111,7 +111,7 @@ export default function POS() {
         <div className="col-span-7">
           <div className="p-6 bg-white border border-purple-100 shadow-sm rounded-2xl">
             <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="text-2xl font-bold text-gray-700">Products</h2>
+              <h2 className="text-2xl font-bold text-gray-700">สินค้า</h2>
 
               <div className="flex flex-wrap items-center gap-3">
                 <ProductSearch value={searchQuery} onChange={onSearch} />
@@ -157,7 +157,7 @@ export default function POS() {
         <div className="col-span-5">
           <div className="sticky p-6 bg-white border border-purple-100 shadow-sm rounded-2xl top-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-700">Cart</h2>
+              <h2 className="text-2xl font-bold text-gray-700">ตะกร้าสินค้า</h2>
               <div className="px-5 py-3 text-xl font-bold text-purple-700 bg-purple-100 rounded-2xl">
                 ฿{total}
               </div>
@@ -178,13 +178,13 @@ export default function POS() {
               />
 
               <ConfirmButton
-                title="Confirm Checkout"
-                text="Do you want to place this order?"
+                title="ยืนยันการชำระเงิน"
+                text="ต้องการยืนยันการชำระเงินสำหรับรายการนี้หรื่อไม่?"
                 icon="question"
                 onConfirm={handleCheckout}
                 className="px-8 py-4 text-lg font-semibold text-white transition bg-purple-500 shadow-md rounded-2xl hover:bg-purple-600"
               >
-                Checkout
+                ชำระเงิน
               </ConfirmButton>
             </div>
           </div>

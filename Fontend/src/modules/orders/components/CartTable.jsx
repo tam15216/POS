@@ -5,23 +5,23 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
         <thead className="sticky top-0 z-10 bg-purple-100 shadow-[0_1px_0_0_rgba(233,213,255,1)]">
           <tr>
             <th className="px-3 py-3 text-sm font-semibold text-left text-purple-700">
-              Product
+              สินค้า
             </th>
 
             <th className="w-24 px-2 py-3 text-sm font-semibold text-center text-purple-700">
-              Qty
+              จำนวน
             </th>
 
             <th className="w-20 px-2 py-3 text-sm font-semibold text-center text-purple-700">
-              Price
+              ราคา/หน่วย
             </th>
 
             <th className="w-24 px-2 py-3 text-sm font-semibold text-center text-purple-700">
-              Total
+              รวมราคา
             </th>
 
             <th className="w-24 px-2 py-3 text-sm font-semibold text-center text-purple-700">
-              Action
+              เเก้ไข
             </th>
           </tr>
         </thead>
@@ -73,7 +73,7 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
                   onClick={() => onRemove(item.Product_id)}
                   className="px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-lg hover:bg-red-600"
                 >
-                  Remove
+                  ลบ
                 </button>
               </td>
             </tr>

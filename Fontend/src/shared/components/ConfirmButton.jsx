@@ -16,8 +16,8 @@ export default function ConfirmButton({
             text,
             icon,
             showCancelButton: true,
-            confirmButtonText: 'Confirm',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก',
             confirmButtonColor: '#ef4444'
         });
 
