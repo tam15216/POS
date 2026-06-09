@@ -24,25 +24,25 @@ export default function Dashboard() {
       <div className="space-y-6">
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           <DashboardCard
-            title="Sales Today"
+            title="ยอดขายวันนี้"
             value={`฿${dashboard.today_sales}`}
           />
 
           <DashboardCard
-            title="Sales Month"
+            title="ยอดขายเดือนนี้"
             value={`฿${dashboard.month_sales}`}
           />
 
-          <DashboardCard title="Orders Today" value={dashboard.today_orders} />
+          <DashboardCard title="ออเดอร์วันนี้" value={dashboard.today_orders} />
 
-          <DashboardCard title="Products" value={dashboard.total_products} />
+          <DashboardCard title="สินค้าทั้งหมด" value={dashboard.total_products} />
 
           <DashboardCard
-            title="Categories"
+            title="หมวดหมู่"
             value={dashboard.total_categories}
           />
 
-          <DashboardCard title="Low Stock" value={dashboard.low_stock} />
+          <DashboardCard title="สินค้าคงคลังต่ำ" value={dashboard.low_stock} />
         </div>
 
         <div className="grid items-stretch grid-cols-1 gap-6 xl:grid-cols-12">

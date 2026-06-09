@@ -1,20 +1,28 @@
+import { useState } from "react";
 import useProducts from "../../products/hooks/useProducts";
 import ConfirmButton from "../../../shared/components/ConfirmButton";
 import useCart from "../hooks/useCart";
 import useStock from "../../stock/hooks/useStock";
-import { useState } from "react";
+import useCategories from "../../categories/hooks/useCategories";
+
 import POSProductCard from "../components/POSProductCard";
 import CartTable from "../components/CartTable";
+import ProductSearch from "../../products/components/ProductSearch";
+import ProductCategory from "../../products/components/ProductCategory";
+import PaymentSelector from "../components/PaymentSelector";
+
 import { checkInsufficientStock } from "../../../shared/utils/stockValidator";
 import { createOrder } from "../services/order.service";
 import Pagination from "../../../shared/components/Pagination";
-import PaymentSelector from "../components/PaymentSelector";
 import { usePagination } from "../../../shared/hooks/usePagination";
+import usePOSFilter from "../hooks/usePOSFilter";
+
 export default function POS() {
   const { productsnotall } = useProducts();
   const { stocks, loadStocks } = useStock();
+  const { categories } = useCategories(); 
   const [paymentMethod, setPaymentMethod] = useState("cash");
-  
+
   const {
     cartItems,
     addToCart,
@@ -25,17 +33,33 @@ export default function POS() {
     total,
   } = useCart();
 
-
   const productsWithStock = productsnotall.map((product) => {
     const stock = stocks.find((item) => item.Product_id === product.Product_id);
-
     return {
       ...product,
       stock_qty: stock?.Qty || 0,
     };
   });
 
-  const productsnotallPagination = usePagination(productsWithStock, 9);
+  const {
+    searchQuery,
+    selectedCategory,
+    filteredProducts,
+    handleSearchChange,
+    handleCategoryChange,
+  } = usePOSFilter(productsWithStock);
+
+  const productsnotallPagination = usePagination(filteredProducts, 9);
+
+  const onSearch = (value) => {
+    handleSearchChange(value);
+    productsnotallPagination.setCurrentPage(1);
+  };
+
+  const onCategorySelect = (value) => {
+    handleCategoryChange(value);
+    productsnotallPagination.setCurrentPage(1);
+  };
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
@@ -62,7 +86,6 @@ export default function POS() {
           qty: item.qty,
           price: item.Product_price,
         })),
-
         total,
         payment_method: paymentMethod,
       };
@@ -73,7 +96,6 @@ export default function POS() {
       await loadStocks();
     } catch (err) {
       console.error(err);
-
       alert("Checkout Failed");
     }
   };
@@ -82,30 +104,45 @@ export default function POS() {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="mb-2 text-4xl font-bold text-purple-700">ขายสินค้า</h1>
-
         <p className="text-gray-400">ระบบขายสินค้า</p>
       </div>
 
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-7">
           <div className="p-6 bg-white border border-purple-100 shadow-sm rounded-2xl">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-2xl font-bold text-gray-700">Products</h2>
 
-              <div className="px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 rounded-xl">
-                {productsWithStock.length} Products
+              <div className="flex flex-wrap items-center gap-3">
+                <ProductSearch value={searchQuery} onChange={onSearch} />
+
+                <div className="w-48">
+                  <ProductCategory
+                    value={selectedCategory}
+                    onChange={onCategorySelect}
+                    categories={categories || []}
+                  />
+                </div>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-5">
-              {productsnotallPagination.paginatedData.map((item) => (
-                <POSProductCard
-                  key={item.Product_id}
-                  product={item}
-                  onAdd={addToCart}
-                />
-              ))}
+              {filteredProducts.length === 0 ? (
+                <div className="w-full py-12 font-medium text-center text-gray-400">
+                  ไม่พบรายการสินค้าที่ตรงตามเงื่อนไขค้นหา
+                </div>
+              ) : (
+                productsnotallPagination.paginatedData.map((item) => (
+                  <POSProductCard
+                    key={item.Product_id}
+                    product={item}
+                    onAdd={addToCart}
+                  />
+                ))
+              )}
             </div>
+
+            {filteredProducts.length > 0 && (
               <div className="pt-4 mt-6 border-t border-gray-100">
                 <Pagination
                   currentPage={productsnotallPagination.currentPage}
@@ -113,6 +150,7 @@ export default function POS() {
                   onPageChange={productsnotallPagination.setCurrentPage}
                 />
               </div>
+            )}
           </div>
         </div>
 
@@ -120,7 +158,6 @@ export default function POS() {
           <div className="sticky p-6 bg-white border border-purple-100 shadow-sm rounded-2xl top-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-700">Cart</h2>
-
               <div className="px-5 py-3 text-xl font-bold text-purple-700 bg-purple-100 rounded-2xl">
                 ฿{total}
               </div>
