@@ -1,8 +1,8 @@
 export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
   return (
-    <div className="overflow-hidden bg-white border border-purple-100 shadow-sm rounded-2xl">
-      <table className="w-full table-fixed">
-        <thead className="bg-purple-100">
+    <div className="w-full bg-white border-purple-100 rounded-2xl ">
+      <table className="w-full border-collapse table-fixed">
+        <thead className="sticky top-0 z-10 bg-purple-100 shadow-[0_1px_0_0_rgba(233,213,255,1)]">
           <tr>
             <th className="px-3 py-3 text-sm font-semibold text-left text-purple-700">
               Product
