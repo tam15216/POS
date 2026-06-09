@@ -55,13 +55,15 @@ const getSalesReport = async (query) => {
 
   let totalSalesVolume = 0;
   let totalNetAmount = 0;
-  let totalDiscount = 0;
+  let totalProfitAmount = 0; 
 
   salesData.forEach((item) => {
     if (item.Status === "paid") {
       totalSalesVolume += 1;
       totalNetAmount += Number(item.Net_amount);
-      totalDiscount += Number(item.Discount_amount);
+      
+      const billProfit = Number(item.Net_amount) - Number(item.bill_total_cost);
+      totalProfitAmount += billProfit;
     }
   });
 
@@ -71,7 +73,7 @@ const getSalesReport = async (query) => {
       endDate,
       total_orders: totalSalesVolume,
       total_sales_amount: totalNetAmount,
-      total_discount_amount: totalDiscount,
+      total_profit_amount: totalProfitAmount, 
     },
     records: salesData,
   };

@@ -100,24 +100,31 @@ const getTopSellingProducts = async (limit = 5) => {
 const getSalesByPeriod = async (startDate, endDate) => {
   const [rows] = await db.query(
     `SELECT 
-            s.Sale_id,
-            s.Bill_no,
-            s.Sale_datetime,
-            s.Total_amount,
-            s.Discount_amount,
-            s.Net_amount,
-            s.Status,
-            p.Payment_method,
-            u.Full_name AS seller_name 
-         FROM sale s
-         LEFT JOIN payment p ON s.Sale_id = p.Sale_id
-         LEFT JOIN user u ON s.Created_by = u.User_id 
-         WHERE DATE(s.Sale_datetime) BETWEEN ? AND ?
-         ORDER BY s.Sale_datetime DESC`,
+        s.Sale_id,
+        s.Bill_no,
+        s.Sale_datetime,
+        s.Total_amount,
+        s.Discount_amount,
+        s.Net_amount,
+        s.Status,
+        p.Payment_method,
+        u.Full_name AS seller_name,
+        COALESCE((
+          SELECT SUM(p.Cost_price * si.Qty) 
+          FROM sale_item si
+          INNER JOIN product p ON si.Product_id = p.Product_id
+          WHERE si.Sale_id = s.Sale_id
+        ), 0) AS bill_total_cost
+     FROM sale s
+     LEFT JOIN payment p ON s.Sale_id = p.Sale_id
+     LEFT JOIN user u ON s.Created_by = u.User_id 
+     WHERE DATE(s.Sale_datetime) BETWEEN ? AND ?
+     ORDER BY s.Sale_datetime DESC`,
     [startDate, endDate],
   );
   return rows;
 };
+
 const getTopProductsReport = async (startDate, endDate) => {
   const [rows] = await db.query(
     `SELECT 
