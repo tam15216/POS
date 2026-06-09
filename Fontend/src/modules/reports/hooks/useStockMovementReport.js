@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
-import { getStockMovementReportApi } from '../../reports/api/report.api';
+import { useState, useEffect } from "react";
+import { getStockMovementReportApi } from "../../reports/api/report.api";
 
 export default function useStockMovementReport() {
-  const todayStr = new Date().toISOString().split('T')[0];
-  const [startDate, setStartDate] = useState(todayStr);
+  const todayStr = new Date().toISOString().split("T")[0];
+  const defaultStart = new Date();
+  defaultStart.setDate(defaultStart.getDate() - 30);
+  const thirtyDaysAgoStr = defaultStart.toISOString().split("T")[0];
+  const [startDate, setStartDate] = useState(thirtyDaysAgoStr);
   const [endDate, setEndDate] = useState(todayStr);
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,8 +23,8 @@ export default function useStockMovementReport() {
     }
   };
 
-  useEffect(() => { 
-    loadData(); 
+  useEffect(() => {
+    loadData();
   }, [startDate, endDate]);
 
   return {
@@ -31,6 +34,6 @@ export default function useStockMovementReport() {
     setEndDate,
     records,
     loading,
-    refresh: loadData
+    refresh: loadData,
   };
 }

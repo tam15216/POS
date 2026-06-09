@@ -132,9 +132,11 @@ const getStockMovementReport = async (startDate, endDate) => {
             p.Product_name,
             sl.Ref_type,
             sl.Qty_change,
-            sl.Ref_id
+            sl.Ref_id,
+            s.Bill_no 
          FROM stock_log sl
          INNER JOIN product p ON sl.Product_id = p.Product_id
+         LEFT JOIN Sale s ON sl.Ref_id = s.Sale_id AND sl.Ref_type = 'sale'
          WHERE DATE(sl.Created_at) BETWEEN ? AND ?
          ORDER BY sl.Created_at DESC`,
         [startDate, endDate]

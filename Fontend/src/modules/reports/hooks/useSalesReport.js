@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { getSalesReportApi } from '../../reports/api/report.api';
 
 export default function useSalesReport() {
-    // ตั้งค่าเริ่มต้นย้อนหลัง 30 วัน
     const todayStr = new Date().toISOString().split('T')[0];
     const defaultStart = new Date();
     defaultStart.setDate(defaultStart.getDate() - 30);

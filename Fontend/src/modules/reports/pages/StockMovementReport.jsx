@@ -1,4 +1,4 @@
-import useStockMovementReport from "../hooks/useStockMovementReport"; // นำเข้า hook ใหม่
+import useStockMovementReport from "../hooks/useStockMovementReport"; 
 import ReportFilter from "../components/ReportFilter";
 import { usePagination } from "../../../shared/hooks/usePagination";
 import Pagination from "../../../shared/components/Pagination";
@@ -97,7 +97,7 @@ export default function StockMovementReport() {
                         ชิ้น
                       </td>
                       <td className="py-3.5 text-right pr-2 text-sm text-gray-400 font-mono">
-                        {row.Ref_id ? `ID: ${row.Ref_id}` : "-"}
+                        {row.Bill_no ? `${row.Bill_no}` : '-'}
                       </td>
                     </tr>
                   ))

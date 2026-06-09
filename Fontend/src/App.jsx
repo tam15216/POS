@@ -37,9 +37,9 @@ export default function App() {
                 <Route path ="/stock" element={ <PrivateRoute> <MainLayout><Stock /></MainLayout> </PrivateRoute> } />
                 <Route path="/pos" element={<PrivateRoute><MainLayout><POS /></MainLayout></PrivateRoute>}/>
                 <Route path="/orders" element={<PrivateRoute><MainLayout><Orders /></MainLayout></PrivateRoute>}/>
-                <Route path="/SalesReport" element={<PrivateRoute><MainLayout><SalesReport /></MainLayout></PrivateRoute>}/>
-                <Route path="/top-products" element={<PrivateRoute><MainLayout><TopProductsReport /></MainLayout></PrivateRoute>}/>
-                <Route path="/stock-log" element={<PrivateRoute><MainLayout><StockMovementReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/reports/SalesReport" element={<PrivateRoute><MainLayout><SalesReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/reports/top-products" element={<PrivateRoute><MainLayout><TopProductsReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/reports/stock-log" element={<PrivateRoute><MainLayout><StockMovementReport /></MainLayout></PrivateRoute>}/>
             </Routes>
         </BrowserRouter>
     )
