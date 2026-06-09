@@ -39,7 +39,7 @@ export default function Sidebar() {
   }, [currentPath]);
 
   return (
-    <div className="w-[240px] min-h-screen bg-white border-r border-purple-100 shadow-sm p-6">
+    <div className="w-[240px] h-screen sticky top-0 bg-white border-r border-purple-100 shadow-sm p-6 overflow-y-auto">
       <div className="flex flex-col items-center mb-6">
         <div className="flex items-center justify-center shadow-sm w-14 h-14 rounded-2xl bg-purple-50">
           <img
