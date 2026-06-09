@@ -41,7 +41,7 @@ export default function ProductCategory({ value, onChange, categories = [] }) {
     <div className="relative w-full" ref={containerRef}>
       <input
         type="text"
-        placeholder="เลือกหมวดหมู่..."
+        placeholder="เลือกหมวดหมู่"
         value={searchTerm}
         onChange={(e) => {
           setSearchTerm(e.target.value);
