@@ -1,6 +1,5 @@
 import { useState } from "react";
-
-export default function usePOSFilter(productsWithStock, productsPagination) {
+export default function usePOSFilter(productsWithStock) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -17,12 +16,10 @@ export default function usePOSFilter(productsWithStock, productsPagination) {
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);
-    productsPagination.setCurrentPage(1); 
   };
 
   const handleCategoryChange = (value) => {
     setSelectedCategory(value);
-    productsPagination.setCurrentPage(1); 
   };
 
   return {
