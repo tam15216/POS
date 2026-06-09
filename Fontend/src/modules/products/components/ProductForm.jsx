@@ -1,8 +1,9 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useCategories from "../../categories/hooks/useCategories";
 import { validateProduct } from "../validations/product.schema";
 import { confirmProductAction } from "../../../shared/utils/confirm";
 import ProductCategory from "../components/ProductCategory";
+
 export default function ProductForm({
   onSubmit,
   initialData = {},
@@ -10,11 +11,13 @@ export default function ProductForm({
 }) {
   const [form, setform] = useState({
     name: "",
-    price: "",
+    cost_price: "", 
+    price: "", 
     category_id: "",
   });
 
-  const { categories_notall , loading } = useCategories();
+  const { categories_notall, loading } = useCategories();
+  const [errors, setError] = useState({});
 
   const handleChange = (e) => {
     setform({
@@ -22,8 +25,6 @@ export default function ProductForm({
       [e.target.name]: e.target.value,
     });
   };
-
-  const [errors, setError] = useState({});
 
   const handleCategoryChange = (value) => {
     setform({
@@ -46,10 +47,11 @@ export default function ProductForm({
 
     onSubmit(form);
   };
-
+  
   useEffect(() => {
     setform({
       name: initialData.Product_name || "",
+      cost_price: initialData.Cost_price || "", 
       price: initialData.Product_price || "",
       category_id: initialData.Category_id || "",
     });
@@ -61,7 +63,6 @@ export default function ProductForm({
         <label className="block mb-2 text-sm font-medium text-purple-700">
           ชื่อสินค้า
         </label>
-
         <input
           type="text"
           name="name"
@@ -70,7 +71,6 @@ export default function ProductForm({
           onChange={handleChange}
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
         />
-
         {errors.name && (
           <p className="mt-1 text-sm text-red-500">{errors.name}</p>
         )}
@@ -78,13 +78,29 @@ export default function ProductForm({
 
       <div>
         <label className="block mb-2 text-sm font-medium text-purple-700">
-          ราคา
+          ราคาต้นทุน
         </label>
+        <input
+          type="number"
+          name="cost_price"
+          placeholder="ราคาต้นทุน"
+          value={form.cost_price}
+          onChange={handleChange}
+          className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+        />
+        {errors.cost_price && (
+          <p className="mt-1 text-sm text-red-500">{errors.cost_price}</p>
+        )}
+      </div>
 
+      <div>
+        <label className="block mb-2 text-sm font-medium text-purple-700">
+          ราคาขาย
+        </label>
         <input
           type="number"
           name="price"
-          placeholder="ราคา"
+          placeholder="ราคาขาย"
           value={form.price}
           onChange={handleChange}
           className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
@@ -98,13 +114,11 @@ export default function ProductForm({
         <label className="block mb-2 text-sm font-medium text-purple-700">
           หมวดหมู่
         </label>
-
         <ProductCategory
           value={form.category_id}
           onChange={handleCategoryChange}
           categories={categories_notall}
         />
-
         {errors.category_id && (
           <p className="mt-1 text-sm text-red-500">{errors.category_id}</p>
         )}

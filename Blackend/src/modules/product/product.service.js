@@ -20,8 +20,8 @@ const getProductByid = async (id) => {
 
 // เพิ่มสินค้า
 const addProduct = async (data) => {
-    if (!data.name || !data.price || !data.category_id) {
-        throw new Error ('Product name, price, and category are required');
+    if (!data.name || !data.price || !data.category_id || !data.cost_price) {
+        throw new Error ('Product name, price, cost price, and category are required');
     }
     return await productRepo.createProduct(data);
 };
@@ -49,8 +49,8 @@ const updateProduct = async (id, data) => {
         throw new Error('Product not found');
     }
 
-    if (!data.name || !data.price || !data.category_id) {
-        throw new Error('Product name, price, and category are required');
+    if (!data.name || !data.price || !data.category_id || !data.cost_price) {
+        throw new Error('Product name, price, cost price, and category are required');
     }
 
     await productRepo.updateProduct(id, data);

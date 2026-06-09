@@ -11,6 +11,28 @@ const getTodaySalesAndOrders = async () => {
   return rows[0];
 };
 
+const getMonthProfitReport = async () => {
+  const [rows] = await db.query(
+    `SELECT 
+        COALESCE(SUM(si.Unit_price * si.Qty), 0) AS total_sales,
+        
+        COALESCE(SUM(p.Cost_price * si.Qty), 0) AS total_cost,
+        
+        COALESCE(SUM(s.Discount_amount), 0) AS total_discount,
+        
+        (COALESCE(SUM(si.Unit_price * si.Qty), 0) - COALESCE(SUM(p.Cost_price * si.Qty), 0) - COALESCE(SUM(s.Discount_amount), 0)) AS net_profit
+        
+     FROM sale s
+     INNER JOIN sale_item si ON s.Sale_id = si.Sale_id
+     INNER JOIN product p ON si.Product_id = p.Product_id
+     WHERE s.Status = 'paid'
+       AND YEAR(s.Sale_datetime) = YEAR(CURDATE())
+       AND MONTH(s.Sale_datetime) = MONTH(CURDATE())`,
+  );
+
+  return rows[0];
+};
+
 const getMonthSales = async () => {
   const [rows] = await db.query(
     `SELECT 
@@ -49,13 +71,12 @@ const getLowStockProducts = async (limit = 10) => {
          WHERE s.Qty <= ? AND p.status = 1`,
     [limit],
   );
-  return rows; 
+  return rows;
 };
 
-
 const getTopSellingProducts = async (limit = 5) => {
-    const [rows] = await db.query(
-        `SELECT 
+  const [rows] = await db.query(
+    `SELECT 
             p.Product_id,
             p.Product_name,
             p.Product_code,
@@ -71,15 +92,14 @@ const getTopSellingProducts = async (limit = 5) => {
          GROUP BY p.Product_id
          ORDER BY total_qty_sold DESC
          LIMIT ?`,
-        [limit]
-    );
-    return rows;
+    [limit],
+  );
+  return rows;
 };
 
-
 const getSalesByPeriod = async (startDate, endDate) => {
-    const [rows] = await db.query(
-        `SELECT 
+  const [rows] = await db.query(
+    `SELECT 
             s.Sale_id,
             s.Bill_no,
             s.Sale_datetime,
@@ -94,13 +114,13 @@ const getSalesByPeriod = async (startDate, endDate) => {
          LEFT JOIN user u ON s.Created_by = u.User_id 
          WHERE DATE(s.Sale_datetime) BETWEEN ? AND ?
          ORDER BY s.Sale_datetime DESC`,
-        [startDate, endDate]
-    );
-    return rows;
+    [startDate, endDate],
+  );
+  return rows;
 };
 const getTopProductsReport = async (startDate, endDate) => {
-    const [rows] = await db.query(
-        `SELECT 
+  const [rows] = await db.query(
+    `SELECT 
             p.Product_id,
             p.Product_code,
             p.Product_name,
@@ -116,15 +136,14 @@ const getTopProductsReport = async (startDate, endDate) => {
            AND DATE(s.Sale_datetime) BETWEEN ? AND ?
          GROUP BY p.Product_id
          ORDER BY total_qty_sold DESC`,
-        [startDate, endDate]
-    );
-    return rows;
+    [startDate, endDate],
+  );
+  return rows;
 };
 
-
 const getStockMovementReport = async (startDate, endDate) => {
-    const [rows] = await db.query(
-        `SELECT 
+  const [rows] = await db.query(
+    `SELECT 
             sl.Stock_log_id,
             sl.Created_at,
             p.Product_id,
@@ -136,15 +155,13 @@ const getStockMovementReport = async (startDate, endDate) => {
             s.Bill_no 
          FROM stock_log sl
          INNER JOIN product p ON sl.Product_id = p.Product_id
-         LEFT JOIN Sale s ON sl.Ref_id = s.Sale_id AND sl.Ref_type = 'sale'
+         LEFT JOIN sale s ON sl.Ref_id = s.Sale_id AND sl.Ref_type = 'sale'
          WHERE DATE(sl.Created_at) BETWEEN ? AND ?
          ORDER BY sl.Created_at DESC`,
-        [startDate, endDate]
-    );
-    return rows;
+    [startDate, endDate],
+  );
+  return rows;
 };
-
-
 
 module.exports = {
   getTodaySalesAndOrders,
@@ -155,5 +172,6 @@ module.exports = {
   getTopSellingProducts,
   getSalesByPeriod,
   getTopProductsReport,
-  getStockMovementReport
+  getStockMovementReport,
+  getMonthProfitReport
 };

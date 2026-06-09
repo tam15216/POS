@@ -8,6 +8,7 @@ const getAllProducts = async () =>{
             p.Product_name,
             p.Product_code,
             p.Product_price,
+            p.Cost_price,
             c.Category_name,
             c.Category_id,
             p.status
@@ -44,14 +45,14 @@ const getProductById = async (id) => {
 
 // เพิ่มสินค้า
 const createProduct = async (data) => {
-    const { name ,code , price, category_id} = data;
+    const { name ,code , price, category_id, cost_price } = data;
 
      const [result] = await db.query(
         `INSERT INTO Product
-        (Product_name , Product_code , Product_price , Category_id)
-        VALUES (?,?,?,?)
+        (Product_name , Product_code , Product_price , Category_id , Cost_price)
+        VALUES (?,?,?,?,?)
         `,
-        [name , code, price , category_id]
+        [name , code, price , category_id, cost_price]
      );
      return result;
 };
@@ -67,13 +68,13 @@ const toggleProduct = async (id) => {
 
 // อัพเดตสินค้า
 const updateProduct = async (id, data) => {
-    const { name, code, price, category_id } = data;
+    const { name, code, price, category_id, cost_price } = data;
 
     const [result] = await db.query(
         `UPDATE Product
-        SET Product_name = ?, Product_code = ?, Product_price = ?, Category_id = ?
+        SET Product_name = ?, Product_code = ?, Product_price = ?, Category_id = ?, Cost_price = ?
         WHERE Product_id = ?`,
-        [name, code, price, category_id, id]
+        [name, code, price, category_id, cost_price, id]
     );
     return result;
 };

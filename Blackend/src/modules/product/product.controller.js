@@ -1,6 +1,5 @@
 const productService = require('./product.service');
 
-// GET /prodycts
 const getProducts = async (req , res) => {
     try{
         const data = await productService.getProducts();
@@ -19,7 +18,6 @@ const getnotallProducts = async (req , res) => {
     }
 };
 
-// POST /products
 const createProduct = async (req , res) => {
     try{
         const result = await productService.addProduct(req.body);
@@ -29,7 +27,6 @@ const createProduct = async (req , res) => {
     }
 };
 
-// GET /prodycts/:id
 const getProductById = async (req , res) =>{
     const { id } = req.params;
 

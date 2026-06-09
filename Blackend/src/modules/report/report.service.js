@@ -8,6 +8,7 @@ const getDashboardSummary = async () => {
     totalCategories,
     lowStockItems,
     topSelling,
+    monthProfitData,
   ] = await Promise.all([
     reportRepo.getTodaySalesAndOrders(),
     reportRepo.getMonthSales(),
@@ -15,6 +16,7 @@ const getDashboardSummary = async () => {
     reportRepo.getTotalCategories(),
     reportRepo.getLowStockProducts(10),
     reportRepo.getTopSellingProducts(5),
+    reportRepo.getMonthProfitReport(),
   ]);
 
   return {
@@ -26,6 +28,7 @@ const getDashboardSummary = async () => {
     low_stock: lowStockItems.length,
     low_stock_items: lowStockItems,
     top_selling_products: topSelling,
+    month_profit: Number(monthProfitData?.net_profit || 0),
   };
 };
 
