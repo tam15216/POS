@@ -29,7 +29,7 @@ export default function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/login" element={<AuthLayout><Login /></AuthLayout>} />
+                <Route path="/" element={<AuthLayout><Login /></AuthLayout>} />
                 <Route path="/users" element={<PrivateRoute><MainLayout><Users /></MainLayout></PrivateRoute>} />
                 <Route path ="/dashboard" element={ <PrivateRoute> <MainLayout><Dashboard /></MainLayout> </PrivateRoute> } />
                 <Route path ="/products" element={ <PrivateRoute> <MainLayout><Products /></MainLayout> </PrivateRoute> } />
