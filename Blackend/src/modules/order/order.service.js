@@ -9,46 +9,86 @@ const createOrder = async (data) => {
         const { items, payment_method, user_id } = data;
         let total = 0;
 
-        // 1. เช็ค stock + lock
+        // 1. ตรวจสอบสต๊อกสินค้าและวัตถุดิบ (พร้อมล็อกแถวข้อมูลเพื่อป้องกัน Race Condition)
         for (const item of items) {
-            const rows = await orderRepo.checkStockForUpdate(conn, item.product_id);
+            // เช็กสูตรการผลิตก่อนเพื่อจำแนกประเภทสินค้า
+            const recipe = await orderRepo.getProductRecipe(conn, item.product_id);
 
-            if (rows.length === 0) {
-                throw new Error(`Product ${item.product_id} has no stock`);
-            }
+            if (recipe.length > 0) {
+                // ---> กรณีสินค้ากลุ่มน้ำชา: วนลูปตรวจสอบสต๊อกวัตถุดิบดิบย่อยในคลัง
+                for (const ing of recipe) {
+                    const totalRequired = ing.Quantity_used * item.qty;
+                    
+                    // สมมติว่าสร้างฟังก์ชัน checkIngredientStockForUpdate ไว้รองรับการ FOR UPDATE ตารางวัตถุดิบ
+                    // หากยังไม่มี ให้สร้างคิวรีลักษณะเดียวกับของตารางสินค้าปกติ
+                    const [ingRows] = await conn.query(
+                        'SELECT Stock_qty FROM ingredient WHERE Ingredient_id = ? FOR UPDATE',
+                        [ing.Ingredient_id]
+                    );
 
-            if (rows[0].Qty < item.qty) {
-                throw new Error(`Stock not enough for product ${item.product_id}`);
+                    if (ingRows.length === 0) {
+                        throw new Error(`Ingredient ${ing.Ingredient_id} not found`);
+                    }
+
+                    if (ingRows[0].Stock_qty < totalRequired) {
+                        throw new Error(`Ingredient stock not enough for product ${item.product_id}`);
+                    }
+                }
+            } else {
+                // ---> กรณีสินค้าสำเร็จรูปปกติ: ตรวจสอบสต๊อกสินค้าสำเร็จรูปตรงๆ
+                const rows = await orderRepo.checkStockForUpdate(conn, item.product_id);
+
+                if (rows.length === 0) {
+                    throw new Error(`Product ${item.product_id} has no stock`);
+                }
+
+                if (rows[0].Qty < item.qty) {
+                    throw new Error(`Stock not enough for product ${item.product_id}`);
+                }
             }
         }
 
-        // 2. สร้าง Sale
+        // 2. สร้างโครงสร้างข้อมูลการขาย (Sale)
         const billNo = `BILL-${Date.now()}`;
         const saleId = await orderRepo.insertSale(conn, billNo, user_id);
 
-        // 3. วนสินค้า
+        // 3. วนลูปบันทึกรายการสินค้าและทำหักยอดคลังสินค้าจริง
         for (const item of items) {
             const price = await orderRepo.getProductPrice(conn, item.product_id);
             const totalPrice = price * item.qty;
             total += totalPrice;
 
-            // sale item
+            // บันทึกข้อมูลลงตารางรายการสินค้าขาย (sale_item)
             await orderRepo.insertSaleItem(conn, saleId, item, price, totalPrice);
             
-            // update stock
-            const isUpdated = await orderRepo.updateStockDecrease(conn, item.product_id, item.qty);
-            if (!isUpdated) {
-                throw new Error(`Failed to update stock for product ${item.product_id}`);
-            }
+            // เช็กสูตรการผลิตซ้ำอีกครั้งเพื่อทำเรื่องหักสต๊อกให้ถูกตาราง
+            const recipe = await orderRepo.getProductRecipe(conn, item.product_id);
 
-            // log
-            await orderRepo.insertStockLog(conn, item.product_id, 'sale', saleId, -item.qty);
+            if (recipe.length > 0) {
+                // กรณีสินค้าประเภทน้ำชา -> หักลดสต๊อกตารางวัตถุดิบย่อย (ingredient)
+                for (const ing of recipe) {
+                    const totalIngredientUsed = ing.Quantity_used * item.qty;
+                    await orderRepo.updateIngredientDecrease(conn, ing.Ingredient_id, totalIngredientUsed);
+                    
+                    // บันทึก Log ของฝั่งวัตถุดิบ (ตัวแปรจำนวนเป็นค่าติดลบเนื่องจากเป็นการขายออก)
+                    await orderRepo.insertIngredientStockLog(conn, ing.Ingredient_id, 'sale', saleId, -totalIngredientUsed);
+                }
+            } else {
+                // กรณีสินค้าสำเร็จรูปปกติ -> หักลดสต๊อกตารางสต๊อกสินค้าสำเร็จรูป (stock)
+                const isUpdated = await orderRepo.updateStockDecrease(conn, item.product_id, item.qty);
+                if (!isUpdated) {
+                    throw new Error(`Failed to update stock for product ${item.product_id}`);
+                }
+
+                // บันทึก Log ของฝั่งสินค้าปกติ
+                await orderRepo.insertStockLog(conn, item.product_id, 'sale', saleId, -item.qty);
+            }
         }
 
-        // 4. update ยอด
+        // 4. บันทึกยอดเงินรวมสุทธิเข้าบิลขาย
         await orderRepo.updateSaleTotal(conn, saleId, total);
 
-        // 5. payment
+        // 5. บันทึกข้อมูลประวัติการรับชำระเงิน (Payment)
         await orderRepo.insertPayment(conn, saleId, payment_method, total);
 
         await conn.commit();
@@ -66,28 +106,30 @@ const cancelOrder = async (saleId) => {
     try {
         await conn.beginTransaction();
 
-        // 1. เช็คสถานนะ order
         const saleRows = await orderRepo.checkSaleStatusForUpdate(conn, saleId);
+        if (saleRows.length === 0) throw new Error('Order not found');
+        if (saleRows[0].Status === 'cancelled') throw new Error('Order already cancelled');
 
-        if (saleRows.length === 0) {
-            throw new Error('Order not found');
-        }
-
-        if (saleRows[0].Status === 'cancelled') {
-            throw new Error('Order already cancelled');
-        }
-
-        // 2. ดึงรายการสินค้า
         const items = await orderRepo.getSaleItems(conn, saleId);
 
-        // 3. คืน stock
         for (const item of items) {
-            await orderRepo.updateStockIncrease(conn, item.Product_id, item.Qty);
-            // log
-            await orderRepo.insertStockLog(conn, item.Product_id, 'cancel', saleId, item.Qty);
+            // ตรวจสอบสูตรการผลิตจากตารางเชื่อมโยง
+            const recipe = await orderRepo.getProductRecipe(conn, item.Product_id);
+
+            if (recipe.length > 0) {
+                // คืนสต๊อกวัตถุดิบตามสูตร
+                for (const ing of recipe) {
+                    const totalIngredientReturned = ing.Quantity_used * item.Qty;
+                    await orderRepo.updateIngredientIncrease(conn, ing.Ingredient_id, totalIngredientReturned);
+                    await orderRepo.insertIngredientStockLog(conn, ing.Ingredient_id, 'cancel', saleId, totalIngredientReturned);
+                }
+            } else {
+                // คืนสต๊อกสินค้าต่อชิ้นสำเร็จรูปปกติ
+                await orderRepo.updateStockIncrease(conn, item.Product_id, item.Qty);
+                await orderRepo.insertStockLog(conn, item.Product_id, 'cancel', saleId, item.Qty);
+            }
         }
 
-        // 4. update status
         await orderRepo.updateSaleStatus(conn, saleId, 'cancelled');
 
         await conn.commit();

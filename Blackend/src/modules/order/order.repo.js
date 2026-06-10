@@ -146,6 +146,39 @@ const getOrderDetail = async (saleId) => {
     };
 };
 
+
+// ฟังก์ชันสำหรับการจัดการสูตรอาหารและวัตถุดิบ
+const getProductRecipe = async (conn, productId) => {
+    const [rows] = await conn.query(
+        'SELECT Ingredient_id, Quantity_used FROM product_ingredient WHERE Product_id = ?',
+        [productId]
+    );
+    return rows;
+};
+
+const updateIngredientDecrease = async (conn, ingredientId, qty) => {
+    await conn.query(
+        'UPDATE ingredient SET Stock_qty = Stock_qty - ? WHERE Ingredient_id = ?',
+        [qty, ingredientId]
+    );
+};
+
+const updateIngredientIncrease = async (conn, ingredientId, qty) => {
+    await conn.query(
+        'UPDATE ingredient SET Stock_qty = Stock_qty + ? WHERE Ingredient_id = ?',
+        [qty, ingredientId]
+    );
+};
+
+const insertIngredientStockLog = async (conn, ingredientId, refType, refId, qtyChange) => {
+    await conn.query(
+        `INSERT INTO ingredient_stock_log (Ingredient_id, Ref_type, Ref_id, Qty_change) VALUES (?, ?, ?, ?)`,
+        [ingredientId, refType, refId, qtyChange]
+      );
+};
+
+
+
 module.exports = {
     checkStockForUpdate,
     insertSale,
@@ -161,5 +194,9 @@ module.exports = {
     updateSaleStatus,
     getOrders,
     getOrderById,
-    getOrderDetail
+    getOrderDetail,
+    getProductRecipe,
+    updateIngredientDecrease,
+    updateIngredientIncrease,
+    insertIngredientStockLog
 };

@@ -1,23 +1,24 @@
-import api from '../../../shared/api/axios';
+import api from "../../../shared/api/axios";
 
 export const getProductsApi = () => {
-    return api.get('/products');
+  return api.get("/products");
 };
 
-
 export const getProductsnotallApi = () => {
-    return api.get('/products/notall');
+  return api.get("/products/notall");
 };
 
 export const createProductApi = (data) => {
-    return api.post('/products', data);
+  return api.post("/products", data);
 };
 
 export const updateProductApi = (id, data) => {
-    return api.put(`/products/${id}`, data);
+  return api.put(`/products/${id}`, data);
 };
 
 export const toggleProductApi = (id) => {
-    return api.patch(`/products/${id}`);
+  return api.patch(`/products/${id}`);
 };
 
+export const getProductsByTypeApi = (type) =>
+  api.get(`/products/type?type=${type}`);

@@ -11,9 +11,10 @@ export default function ProductForm({
 }) {
   const [form, setform] = useState({
     name: "",
-    cost_price: "", 
-    price: "", 
+    cost_price: "",
+    price: "",
     category_id: "",
+    product_type: "ready_made",
   });
 
   const { categories_notall, loading } = useCategories();
@@ -47,13 +48,14 @@ export default function ProductForm({
 
     onSubmit(form);
   };
-  
+
   useEffect(() => {
     setform({
       name: initialData.Product_name || "",
-      cost_price: initialData.Cost_price || "", 
+      cost_price: initialData.Cost_price || "",
       price: initialData.Product_price || "",
       category_id: initialData.Category_id || "",
+      product_type: initialData.Product_type || "ready_made",
     });
   }, [initialData]);
 
@@ -73,6 +75,27 @@ export default function ProductForm({
         />
         {errors.name && (
           <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block mb-2 text-sm font-medium text-purple-700">
+          ประเภทสินค้า
+        </label>
+        <select
+          name="product_type"
+          value={form.product_type}
+          onChange={handleChange}
+          className="w-full px-4 py-3 text-gray-700 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+          required
+        >
+          <option value="ready_made">สินค้าสำเร็จรูป (นับสต๊อกเป็นชิ้น)</option>
+          <option value="made_to_order">
+            สินค้าสั่งทำ/น้ำชง (หักตามสูตรวัตถุดิบ)
+          </option>
+        </select>
+        {errors.product_type && (
+          <p className="mt-1 text-sm text-red-500">{errors.product_type}</p>
         )}
       </div>
 

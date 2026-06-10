@@ -4,7 +4,8 @@ import {
     createProductApi,
     updateProductApi,
     toggleProductApi,
-    getProductsnotallApi
+    getProductsnotallApi,
+    getProductsByTypeApi
 } from '../api/product.api';
 
 export const getProducts =  async () => {
@@ -29,5 +30,10 @@ export const updateProduct = async (id, data) => {
 
 export const toggleProduct = async (id) => {
     const res = await toggleProductApi(id);
+    return res.data;
+};
+
+export const getProductsByType = async (type) => {
+    const res = await getProductsByTypeApi(type);
     return res.data;
 };

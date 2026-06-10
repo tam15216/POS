@@ -75,11 +75,22 @@ const updateProduct = async (req, res) => {
     }
 };
 
+const getProductsByType = async (req, res) => {
+    try {
+        const { type } = req.query; 
+        const data = await productService.getProductsByType(type);
+        res.json(data);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
 module.exports = {
     getProducts,
     createProduct,
     getProductById,
     toggleProduct,
     updateProduct,
-    getnotallProducts
+    getnotallProducts,
+    getProductsByType
 };

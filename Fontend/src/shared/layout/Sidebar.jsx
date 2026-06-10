@@ -15,6 +15,8 @@ export default function Sidebar() {
     { name: "Orders", to: "/orders", roles: ["admin"] },
     { name: "POS", to: "/pos", roles: ["admin", "cashier"] },
     { name: "User", to: "/users", roles: ["admin"] },
+    { name: "Ingredients", to: "/ingredients", roles: ["admin"] },
+    { name: "Recipes", to: "/recipes", roles: ["admin"] }
   ];
 
   const reportSubMenus = [

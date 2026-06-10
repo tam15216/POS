@@ -34,6 +34,14 @@ export default function POS() {
   } = useCart();
 
   const productsWithStock = productsnotall.map((product) => {
+    if (product.Product_type === "made_to_order") {
+      return {
+        ...product,
+        stock_qty: 999, 
+      };
+    }
+
+    // สินค้าสำเร็จรูปปกติ (ready_made) ดึงข้อมูลจากตาราง stock ตามปกติ
     const stock = stocks.find((item) => item.Product_id === product.Product_id);
     return {
       ...product,

@@ -5,7 +5,6 @@ import {
 } from 'react-router-dom';
 
 import Login from "./modules/auth/pages/Login";
-import Register from './modules/users/pages/Users';
 
 import Dashboard from './modules/dashboard/pages/Dashboard';
 import Products from './modules/products/pages/Products';
@@ -23,6 +22,8 @@ import Orders from './modules/orders/pages/Orders';
 import SalesReport from './modules/reports/pages/SalesReport';
 import TopProductsReport from './modules/reports/pages/TopProductsReport';
 import StockMovementReport from './modules/reports/pages/StockMovementReport';
+import Recipes from './modules/recipes/pages/Recipes';
+import Ingredients from './modules/ingredients/pages/Ingredients';
 
 
 export default function App() {
@@ -40,6 +41,8 @@ export default function App() {
                 <Route path="/reports/SalesReport" element={<PrivateRoute><MainLayout><SalesReport /></MainLayout></PrivateRoute>}/>
                 <Route path="/reports/top-products" element={<PrivateRoute><MainLayout><TopProductsReport /></MainLayout></PrivateRoute>}/>
                 <Route path="/reports/stock-log" element={<PrivateRoute><MainLayout><StockMovementReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/recipes" element={<PrivateRoute><MainLayout><Recipes /></MainLayout></PrivateRoute>}/>
+                <Route path="/ingredients" element={<PrivateRoute><MainLayout><Ingredients /></MainLayout></PrivateRoute>}/>
             </Routes>
         </BrowserRouter>
     )

@@ -7,6 +7,8 @@ const orderRoute = require('./modules/order/order.route');
 const authRoute = require('./modules/auth/auth.route');
 const userRoute = require('./modules/user/user.route');
 const reportRoute = require('./modules/report/report.route');
+const ingredientRoute = require('./modules/ingredient/ingredient.route');
+const recipeRoute = require('./modules/recipe/recipe.route');
 
 const app = express();
 
@@ -24,4 +26,6 @@ app.use('/orders',orderRoute);
 app.use('/auth', authRoute);
 app.use('/users', userRoute);
 app.use('/reports', reportRoute);
+app.use('/ingredients', ingredientRoute);
+app.use('/recipes', recipeRoute);
 module.exports = app;
