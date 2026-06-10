@@ -22,5 +22,5 @@ export default function useOrders(){
         }
     };
 
-    return { orders, loading };
+    return { orders, loading , refresh: loadOrders};
 }

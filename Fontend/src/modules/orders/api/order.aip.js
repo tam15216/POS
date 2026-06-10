@@ -15,3 +15,7 @@ export const getOrderByIdApi = (id) => {
 export const getOrderDetailApi = (id) => {
     return api.get(`/orders/detail/${id}`);
 };
+
+export const cancelOrderApi = (id) => {
+    return api.post(`/orders/cancel/${id}`);
+};

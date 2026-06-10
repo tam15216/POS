@@ -8,7 +8,7 @@ import Pagination from "../../../shared/components/Pagination";
 import { usePagination } from "../../../shared/hooks/usePagination";
 
 export default function Orders() {
-  const { orders, loading } = useOrders();
+  const { orders, loading, refresh } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [searchBill, setSearchBill] = useState("");
 
@@ -67,6 +67,7 @@ export default function Orders() {
       <OrderDetailModal
         order={selectedOrder}
         onClose={() => setSelectedOrder(null)}
+        onCancelSuccess={refresh}
       />
     </div>
   );

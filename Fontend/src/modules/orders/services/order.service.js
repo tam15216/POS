@@ -1,7 +1,12 @@
-import {createOrderApi , getOrdersApi , getOrderByIdApi , getOrderDetailApi} from '../api/order.aip';
+import {createOrderApi , getOrdersApi , getOrderByIdApi , getOrderDetailApi , cancelOrderApi} from '../api/order.aip';
 
 export const createOrder = async (data) => {
     const res = await createOrderApi(data);
+    return res.data;
+};
+
+export const cancelOrder = async (id) => {
+    const res = await cancelOrderApi(id);
     return res.data;
 };
 
