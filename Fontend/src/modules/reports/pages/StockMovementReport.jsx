@@ -7,6 +7,7 @@ const refTypeMovements = {
   sale: "ขายสินค้า",
   import: "รับสินค้าเข้า",
   adjust: "ปรับปรุงสต๊อกมือ",
+  cancel : "ยกเลิกการขาย"
 };
 
 export default function StockMovementReport() {
