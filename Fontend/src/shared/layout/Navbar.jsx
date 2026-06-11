@@ -22,7 +22,7 @@ export default function Navbar({ onToggleSidebar }) {
           className="p-2 text-purple-600 transition-colors bg-purple-50 rounded-xl hover:bg-purple-100 focus:outline-none"
           title="เปิด/ปิด เมนูข้าง"
         >
-          <span className="flex items-center justify-center block w-6 h-6 text-xl font-bold">
+          <span className="flex items-center justify-center w-6 h-6 text-xl font-bold">
             ☰
           </span>
         </button>

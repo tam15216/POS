@@ -41,7 +41,6 @@ export default function POS() {
       };
     }
 
-    // สินค้าสำเร็จรูปปกติ (ready_made) ดึงข้อมูลจากตาราง stock ตามปกติ
     const stock = stocks.find((item) => item.Product_id === product.Product_id);
     return {
       ...product,
@@ -57,7 +56,7 @@ export default function POS() {
     handleCategoryChange,
   } = usePOSFilter(productsWithStock);
 
-  const productsnotallPagination = usePagination(filteredProducts, 9);
+  const productsnotallPagination = usePagination(filteredProducts, 8);
 
   const onSearch = (value) => {
     handleSearchChange(value);
