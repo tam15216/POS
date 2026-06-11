@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../modules/auth/hooks/useAuth";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, setIsOpen }) {
   const { user } = useAuth();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -16,13 +16,21 @@ export default function Sidebar() {
     { name: "POS", to: "/pos", roles: ["admin", "cashier"] },
     { name: "User", to: "/users", roles: ["admin"] },
     { name: "Ingredients", to: "/ingredients", roles: ["admin"] },
-    { name: "Recipes", to: "/recipes", roles: ["admin"] }
+    { name: "Recipes", to: "/recipes", roles: ["admin"] },
   ];
 
   const reportSubMenus = [
     { name: "รายงานยอดขาย", to: "/reports/SalesReport", roles: ["admin"] },
-    { name: "รายงานสินค้าขายดี", to: "/reports/top-products", roles: ["admin"] },
-    { name: "รายงานเคลื่อนไหวสต๊อก", to: "/reports/stock-log", roles: ["admin"] }
+    {
+      name: "รายงานสินค้าขายดี",
+      to: "/reports/top-products",
+      roles: ["admin"],
+    },
+    {
+      name: "รายงานเคลื่อนไหวสต๊อก",
+      to: "/reports/stock-log",
+      roles: ["admin"],
+    },
   ];
 
   const allowedMenus = menus.filter((menu) => menu.roles.includes(user?.role));
@@ -41,23 +49,27 @@ export default function Sidebar() {
   }, [currentPath]);
 
   return (
-    <div className="w-[240px] h-screen sticky top-0 bg-white border-r border-purple-100 shadow-sm p-6 overflow-y-auto">
-      <div className="flex flex-col items-center mb-6">
-        <div className="flex items-center justify-center shadow-sm w-14 h-14 rounded-2xl bg-purple-50">
-          <img
-            src="/speexx.ico"
-            alt="POS SYSTEM"
-            className="flex items-center justify-center border border-purple-100 rounded-full shadow-sm w-14 h-14 bg-purple-50"
-          />
+    <div
+      className={`h-screen sticky top-0 bg-white border-r border-purple-100 shadow-sm p-6 overflow-y-auto transition-all duration-300 flex flex-col ${
+        isOpen
+          ? "w-[240px] opacity-100"
+          : "w-0 p-0 opacity-0 pointer-events-none border-none"
+      }`}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 shadow-sm rounded-xl bg-purple-50">
+            <img src="/speexx.ico" alt="POS" className="w-8 h-8 rounded-full" />
+          </div>
+          <h2 className="text-sm font-bold tracking-wide text-purple-700">
+            POS SYSTEM
+          </h2>
         </div>
-        <h2 className="mt-3 text-sm font-bold tracking-wide text-purple-700">
-          POS SYSTEM
-        </h2>
       </div>
 
       <div className="mb-6 border-b border-purple-100"></div>
 
-      <ul className="space-y-2">
+      <ul className="flex-1 space-y-2">
         {allowedMenus.map((menu) => {
           const isActive = currentPath === menu.to;
           return (
