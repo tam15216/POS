@@ -89,13 +89,7 @@ export default function IngredientHistoryTable({ history }) {
         </table>
       </div>
 
-      {history.length > 0 && (
-        <Pagination
-          currentPage={historyPagination.currentPage}
-          totalPages={historyPagination.totalPages}
-          onPageChange={historyPagination.setCurrentPage}
-        />
-      )}
+
     </div>
   );
 }

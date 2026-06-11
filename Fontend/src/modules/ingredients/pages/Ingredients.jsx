@@ -110,7 +110,6 @@ export default function Ingredients() {
           </p>
         </div>
 
-        {/* 💡 6. วางกล่องค้นหาคู่กับปุ่มเพิ่มวัตถุดิบใหม่ */}
         <div className="flex items-center gap-3">
           <ProductSearch value={searchTerm} onChange={setSearchTerm} />
           
@@ -127,7 +126,6 @@ export default function Ingredients() {
         <p className="text-gray-400">กำลังโหลดคลังวัตถุดิบ...</p>
       ) : (
         <div className="space-y-4">
-          {/* 💡 7. จัดการเคสกรองข้อมูลแล้วไม่พบรายการในระบบ */}
           {filteredIngredients.length === 0 ? (
             <div className="py-10 text-center text-gray-400 bg-white border border-gray-100 rounded-2xl">
               ไม่พบข้อมูลวัตถุดิบที่ค้นหา
@@ -180,7 +178,6 @@ export default function Ingredients() {
           </div>
         ) : (
           <>
-            {/* 💡 8. นำประวัติเวอร์ชันทำ Pagination มาใส่แทนเพื่อให้คิวรีไม่ยาวล้นจอหน้าจอหลัก */}
             <IngredientHistoryTable history={historyPagination.paginatedData} />
             <Pagination
               currentPage={historyPagination.currentPage}
