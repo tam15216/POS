@@ -20,21 +20,20 @@ const getIngredients = async () => {
 };
 
 const updateIngredient = async (id, data) => {
-  const { Ingredient_name, Stock_qty, Unit, Minimum_qty } = data;
+    const { Ingredient_name, Unit, Minimum_qty } = data; // 💡 ไม่ต้องดึง Stock_qty ออกมาใช้
 
-  if (!id) {
-    throw new Error("Ingredient ID is required");
-  }
-  if (!Ingredient_name || !Unit) {
-    throw new Error("Missing required fields: Ingredient_name or Unit");
-  }
+    if (!id) {
+        throw new Error('Ingredient ID is required');
+    }
+    if (!Ingredient_name || !Unit) {
+        throw new Error('Missing required fields: Ingredient_name or Unit');
+    }
 
-  return await ingredientRepo.updateIngredient(id, {
-    Ingredient_name,
-    Stock_qty: Stock_qty || 0,
-    Unit,
-    Minimum_qty: Minimum_qty || 0,
-  });
+    return await ingredientRepo.updateIngredient(id, {
+        Ingredient_name,
+        Unit,
+        Minimum_qty: Minimum_qty || 0
+    });
 };
 
 const deleteIngredient = async (id) => {

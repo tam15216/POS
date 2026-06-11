@@ -19,9 +19,9 @@ const getAllIngredients = async () => {
 const updateIngredient = async (id, data) => {
     await db.query(
         `UPDATE ingredient 
-         SET Ingredient_name = ?, Stock_qty = ?, Unit = ?, Minimum_qty = ?
+         SET Ingredient_name = ?, Unit = ?, Minimum_qty = ? 
          WHERE Ingredient_id = ?`,
-        [data.Ingredient_name, data.Stock_qty, data.Unit, data.Minimum_qty, id]
+        [data.Ingredient_name, data.Unit, data.Minimum_qty, id]
     );
     return { Ingredient_id: id, ...data };
 };

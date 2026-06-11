@@ -34,7 +34,6 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -42,7 +41,11 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
     const result = await confirmProductAction(isEditMode, "วัตถุดิบ");
 
     if (result.isConfirmed) {
-      onSave(formData);
+      let payload = { ...formData };
+      if (isEditMode) {
+        delete payload.Stock_qty;
+      }
+      onSave(payload); 
     }
   };
 
@@ -101,7 +104,12 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
                 name="Stock_qty"
                 value={formData.Stock_qty}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-xl focus:outline-purple-500"
+                className={`w-full p-3 border rounded-xl focus:outline-purple-500 transition-colors ${
+                  editData
+                    ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                    : "bg-white text-gray-800 border-gray-300"
+                }`}
+                disabled={!!editData}
                 required
               />
             </div>
