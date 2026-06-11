@@ -26,7 +26,7 @@ export default function Products() {
     setSelectedCategory,
     displayProducts,
   } = useProducts();
- const ProductsPagination = usePagination(displayProducts, 10);
+ const ProductsPagination = usePagination(displayProducts, 9);
 
   const [editingProduct, setEditingProduct] = useState(null);
 

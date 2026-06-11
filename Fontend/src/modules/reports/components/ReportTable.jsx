@@ -5,7 +5,7 @@ import { paymentMethodText } from "../../../shared/utils/paymentMethod";
 
 export default function ReportTable({ records = [] }) {
   const { currentPage, setCurrentPage, totalPages, paginatedData } =
-    usePagination(records, 10);
+    usePagination(records, 9);
 
   return (
     <div className="p-6 bg-white border border-purple-100 shadow-sm rounded-2xl">
