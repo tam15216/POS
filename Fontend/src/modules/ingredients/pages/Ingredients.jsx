@@ -4,18 +4,39 @@ import IngredientForm from "../components/IngredientForm";
 import IngredientTable from "../components/IngredientTable";
 import { usePagination } from "../../../shared/hooks/usePagination";
 import Pagination from "../../../shared/components/Pagination";
-
+import IngredientHistoryTable from "../components/IngredientHistoryTable";
+import StockTransactionModal from "../components/StockTransactionModal";
 export default function Ingredients() {
   const {
     ingredients,
     loading,
+    history,
+    changeStock,
     addIngredient,
     editIngredient,
     removeIngredient,
   } = useIngredients();
 
   const [editingItem, setEditingItem] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [stockModalOpen, setStockModalOpen] = useState(false);
+  const [selectedStockItem, setSelectedStockItem] = useState(null);
+  const handleOpenStockModal = (item) => {
+    setSelectedStockItem(item);
+    setStockModalOpen(true);
+  };
+
+  const handleStockSave = async (id, transactionData) => {
+    try {
+      await changeStock(id, transactionData);
+      alert("บันทึกข้อมูลธุรกรรมคลังสินค้าเรียบร้อย");
+      setStockModalOpen(false);
+      setSelectedStockItem(null);
+    } catch (err) {
+      alert(err.message || "เกิดข้อผิดพลาดในการทำรายการ");
+    }
+  };
 
   const ingredientPagination = usePagination(ingredients || [], 10);
 
@@ -38,7 +59,7 @@ export default function Ingredients() {
         await addIngredient(formData);
         alert("เพิ่มวัตถุดิบใหม่สำเร็จ");
       }
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
       setEditingItem(null);
     } catch (err) {
       alert(err.message || "เกิดข้อผิดพลาดในการบันทึก");
@@ -84,8 +105,18 @@ export default function Ingredients() {
         <div className="space-y-4">
           <IngredientTable
             ingredients={ingredientPagination.paginatedData}
-            onEdit={handleOpenEditModal} 
+            onEdit={handleOpenEditModal}
             onDelete={handleDelete}
+            onManageStock={handleOpenStockModal}
+          />
+          <StockTransactionModal
+            isOpen={stockModalOpen}
+            onClose={() => {
+              setStockModalOpen(false);
+              setSelectedStockItem(null);
+            }}
+            onSave={handleStockSave}
+            ingredient={selectedStockItem}
           />
 
           {ingredients.length > 0 && (
@@ -97,6 +128,23 @@ export default function Ingredients() {
           )}
         </div>
       )}
+
+      <div className="pt-8 space-y-4 border-t border-gray-100">
+        <div>
+          <h2 className="text-2xl font-bold text-purple-700">
+            ประวัติการเคลื่อนไหววัตถุดิบ
+          </h2>
+          <p className="mt-1 text-sm text-gray-400">
+            ตรวจสอบประวัติการรับเข้าวัตถุดิบ การหักยอดขายน้ำชง
+            และการปรับปรุงสต๊อกย้อนหลัง
+          </p>
+        </div>
+        {loading ? (
+          <p className="text-sm text-gray-400">กำลังโหลดข้อมูลประวัติ...</p>
+        ) : (
+          <IngredientHistoryTable history={history} />
+        )}
+      </div>
 
       <IngredientForm
         isOpen={isModalOpen}

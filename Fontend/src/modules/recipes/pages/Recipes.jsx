@@ -10,7 +10,7 @@ export default function Recipes() {
     return (
         <div className="p-6 space-y-6">
             <div>
-                <h1 className="text-3xl font-bold text-purple-700">โครงสร้างสูตรสินค้า</h1>
+                <h1 className="text-3xl font-bold text-purple-700">สูตรสินค้า</h1>
                 <p className="mt-1 text-gray-400">กำหนดวัตถุดิบและสัดส่วนการหักสต๊อกต่อหนึ่งหน่วยแก้ว</p>
             </div>
             

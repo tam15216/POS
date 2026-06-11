@@ -3,18 +3,25 @@ import {
   getIngredients,
   createIngredient,
   updateIngredient,
-  deleteIngredient
+  deleteIngredient,
+  getStockHistory,
+  updateStockQuantity
 } from "../services/ingredient.service";
 
 export default function useIngredients() {
   const [ingredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState([]);
 
   const loadIngredients = async () => {
     try {
       setLoading(true);
-      const data = await getIngredients();
-      setIngredients(data);
+      const [ingredientsData, historyData] = await Promise.all([
+        getIngredients(),
+        getStockHistory(),
+      ]);
+      setIngredients(ingredientsData);
+      setHistory(historyData);
     } catch (err) {
       console.error(err);
     } finally {
@@ -40,16 +47,24 @@ export default function useIngredients() {
     return data;
   };
 
+  const changeStock = async (id, txData) => {
+    const data = await updateStockQuantity(id, txData);
+    await loadIngredients();
+    return data;
+};
+
   useEffect(() => {
     loadIngredients();
   }, []);
 
-  return { 
-        ingredients, 
-        loading, 
-        addIngredient, 
-        editIngredient, 
-        removeIngredient, 
-        refresh: loadIngredients 
-    };
+  return {
+    ingredients,
+    history,
+    loading,
+    addIngredient,
+    editIngredient,
+    removeIngredient,
+    changeStock,
+    refresh: loadIngredients,
+  };
 }

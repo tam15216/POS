@@ -38,4 +38,26 @@ const deleteIngredient = async (req, res) => {
     }
 };
 
-module.exports = { createIngredient, getIngredients , updateIngredient , deleteIngredient};
+const getStockHistory = async (req, res) => {
+    try {
+        const data = await ingredientService.getStockHistory();
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+const updateStockQuantity = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await ingredientService.updateStockQuantity(id, req.body);
+        res.json(result);
+    } catch (err) {
+        console.error("=== ❌ DATABASE ERROR LOG ❌ ===");
+        console.error(err); 
+        console.error("=================================");
+        res.status(400).json({ error: err.message });
+    }
+};
+
+module.exports = { createIngredient, getIngredients , updateIngredient , deleteIngredient , getStockHistory , updateStockQuantity};

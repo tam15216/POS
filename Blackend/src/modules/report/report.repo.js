@@ -59,19 +59,37 @@ const getTotalCategories = async () => {
   return rows[0].total_categories;
 };
 
-const getLowStockProducts = async (limit = 10) => {
-  const [rows] = await db.query(
-    `SELECT 
-            p.Product_id,
-            p.Product_name,
-            p.Product_code,
-            s.Qty AS current_qty
-         FROM stock s
-         INNER JOIN product p ON s.Product_id = p.Product_id
-         WHERE s.Qty <= ? AND p.status = 1`,
-    [limit],
-  );
-  return rows;
+const getLowStockProducts = async (productLimit = 10) => {
+    const [rows] = await db.query(
+        `
+        SELECT 
+            'product' AS item_type,
+            p.Product_id AS item_id,
+            p.Product_name AS item_name,
+            p.Product_code AS item_code,
+            s.Qty AS current_qty,
+            ? AS min_qty,
+            'ชิ้น' AS unit
+        FROM stock s
+        INNER JOIN product p ON s.Product_id = p.Product_id
+        WHERE s.Qty <= ? AND p.status = 1
+
+        UNION ALL
+
+        SELECT 
+            'ingredient' AS item_type,
+            i.Ingredient_id AS item_id,
+            i.Ingredient_name AS item_name,
+            '-' AS item_code,
+            i.Stock_qty AS current_qty,
+            i.Minimum_qty AS min_qty,
+            i.Unit AS unit
+        FROM ingredient i
+        WHERE i.Stock_qty <= i.Minimum_qty
+        `,
+        [productLimit, productLimit]
+    );
+    return rows;
 };
 
 const getTopSellingProducts = async (limit = 5) => {

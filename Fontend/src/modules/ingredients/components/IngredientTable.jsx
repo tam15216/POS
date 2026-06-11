@@ -1,6 +1,10 @@
-import ConfirmButton from "../../../shared/components/ConfirmButton"; // ตรวจสอบเส้นทางโฟลเดอร์ให้ตรงกับโปรเจกต์จริง
-
-export default function IngredientTable({ ingredients, onEdit, onDelete }) {
+import ConfirmButton from "../../../shared/components/ConfirmButton"; 
+export default function IngredientTable({
+  ingredients,
+  onEdit,
+  onDelete,
+  onManageStock,
+}) {
   return (
     <div className="overflow-hidden border border-purple-100 shadow-sm rounded-2xl">
       <table className="w-full text-left border-collapse">
@@ -53,6 +57,13 @@ export default function IngredientTable({ ingredients, onEdit, onDelete }) {
                     className="px-3 py-1 text-xs font-semibold text-purple-700 rounded-lg bg-purple-50 hover:bg-purple-100"
                   >
                     แก้ไข
+                  </button>
+
+                  <button
+                    onClick={() => onManageStock(ing)}
+                    className="px-3 py-1 text-xs font-semibold text-green-700 rounded-lg bg-green-50 hover:bg-green-100"
+                  >
+                    ปรับสต๊อก
                   </button>
 
                   <ConfirmButton
