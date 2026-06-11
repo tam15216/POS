@@ -1,9 +1,7 @@
 import { usePagination } from "../../../shared/hooks/usePagination";
 import Pagination from "../../../shared/components/Pagination";
 
-export default function IngredientHistoryTable({ history }) {
-  const historyPagination = usePagination(history || [], 10);
-
+export default function IngredientHistoryTable({ history = [] }) {
   const formatRefType = (type) => {
     switch (type) {
       case "sale":
@@ -13,7 +11,7 @@ export default function IngredientHistoryTable({ history }) {
       case "restock":
         return "รับวัตถุดิบเข้าคลัง";
       case "adjust":
-        return "แอดมินปรับปรุงยอด"; 
+        return "แอดมินปรับปรุงยอด";
       default:
         return type;
     }
@@ -40,7 +38,7 @@ export default function IngredientHistoryTable({ history }) {
             </tr>
           </thead>
           <tbody>
-            {historyPagination.paginatedData.length === 0 ? (
+            {history.length === 0 ? (
               <tr>
                 <td
                   colSpan="4"
@@ -50,7 +48,7 @@ export default function IngredientHistoryTable({ history }) {
                 </td>
               </tr>
             ) : (
-              historyPagination.paginatedData.map((item) => (
+              history.map((item) => (
                 <tr
                   key={item.Log_id}
                   className="transition border-t border-purple-50 hover:bg-purple-50/50"
@@ -66,7 +64,7 @@ export default function IngredientHistoryTable({ history }) {
                       className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
                         item.Ref_type === "sale"
                           ? "bg-red-50 text-red-600 border border-red-100"
-                          : item.Ref_type === "import"
+                          : item.Ref_type === "restock" // 💡 ปรับสลับมาเช็กคำว่า 'restock' แทน 'import' ให้ตรงกับ ENUM คลังใหม่ของคุณครับ
                             ? "bg-green-50 text-green-600 border border-green-100"
                             : "bg-amber-50 text-amber-700 border border-amber-100"
                       }`}
@@ -88,8 +86,6 @@ export default function IngredientHistoryTable({ history }) {
           </tbody>
         </table>
       </div>
-
-
     </div>
   );
 }
