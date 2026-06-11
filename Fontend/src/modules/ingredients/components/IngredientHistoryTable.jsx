@@ -64,7 +64,7 @@ export default function IngredientHistoryTable({ history = [] }) {
                       className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
                         item.Ref_type === "sale"
                           ? "bg-red-50 text-red-600 border border-red-100"
-                          : item.Ref_type === "restock" // 💡 ปรับสลับมาเช็กคำว่า 'restock' แทน 'import' ให้ตรงกับ ENUM คลังใหม่ของคุณครับ
+                          : item.Ref_type === "restock"
                             ? "bg-green-50 text-green-600 border border-green-100"
                             : "bg-amber-50 text-amber-700 border border-amber-100"
                       }`}
