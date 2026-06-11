@@ -8,7 +8,7 @@ import Pagination from "../../../shared/components/Pagination";
 export default function Categories() {
   const { loading, addCategory, toggleCategorys , categories } = useCategories();
   const [open, setOpen] = useState(false);
-  const categoriespagination = usePagination(categories, 10);
+  const categoriespagination = usePagination(categories, 9);
 
   return (
     <div className="p-6">
