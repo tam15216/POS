@@ -96,7 +96,7 @@ export default function ProductOptionModal({
               <h4 className="text-sm font-bold text-purple-700">
                 ท็อปปิ้งเพิ่มเติม
               </h4>
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-2">
                 {toppingOptions.map((opt) => {
                   const isChecked = selectedToppings.some(
                     (t) => t.Option_id === opt.Option_id,
