@@ -1,27 +1,23 @@
 export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
   return (
-    <div className="w-full bg-white border-purple-100 rounded-2xl ">
-      <table className="w-full border-collapse table-fixed">
+    <div className="w-full overflow-x-auto bg-white border border-purple-100 shadow-sm rounded-2xl">
+      <table className="w-full border-collapse min-w-[450px]">
         <thead className="sticky top-0 z-10 bg-purple-100 shadow-[0_1px_0_0_rgba(233,213,255,1)]">
           <tr>
-            <th className="px-3 py-3 text-sm font-semibold text-left text-purple-700">
+            <th className="px-3 py-3 text-sm font-semibold text-left text-purple-700 min-w-[120px]">
               สินค้า
             </th>
-
-            <th className="w-24 px-2 py-3 text-sm font-semibold text-center text-purple-700">
+            <th className="px-2 py-3 text-sm font-semibold text-center text-purple-700 w-[110px]">
               จำนวน
             </th>
-
-            <th className="w-20 px-2 py-3 text-sm font-semibold text-center text-purple-700">
+            <th className="px-2 py-3 text-sm font-semibold text-center text-purple-700 w-[80px]">
               ราคา/หน่วย
             </th>
-
-            <th className="w-24 px-2 py-3 text-sm font-semibold text-center text-purple-700">
+            <th className="px-2 py-3 text-sm font-semibold text-center text-purple-700 w-[90px]">
               รวมราคา
             </th>
-
-            <th className="w-24 px-2 py-3 text-sm font-semibold text-center text-purple-700">
-              เเก้ไข
+            <th className="px-2 py-3 text-sm font-semibold text-center text-purple-700 w-[70px]">
+              แก้ไข
             </th>
           </tr>
         </thead>
@@ -33,45 +29,46 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
               className="transition border-t border-purple-50 hover:bg-purple-50"
             >
               <td className="px-3 py-3 text-sm font-medium text-gray-700">
-                <div className="truncate" title={item.Product_name}>
+                <div
+                  className="break-words max-w-[150px] sm:max-w-none"
+                  title={item.Product_name}
+                >
                   {item.Product_name}
                 </div>
               </td>
 
               <td className="px-2 py-3">
-                <div className="flex items-center justify-center gap-1">
+                <div className="flex items-center justify-center gap-1.5 select-none">
                   <button
                     onClick={() => onDecrease(item.Product_id)}
-                    className="w-6 h-6 text-sm font-bold text-red-600 bg-red-100 rounded"
+                    className="w-6 h-6 text-sm font-bold text-red-600 transition-transform bg-red-100 rounded active:scale-95"
                   >
                     -
                   </button>
-
-                  <span className="min-w-[20px] text-sm text-center font-semibold">
+                  <span className="min-w-[24px] text-sm text-center font-bold text-gray-800">
                     {item.qty}
                   </span>
-
                   <button
                     onClick={() => onIncrease(item.Product_id)}
-                    className="w-6 h-6 text-sm font-bold text-green-600 bg-green-100 rounded"
+                    className="w-6 h-6 text-sm font-bold text-green-600 transition-transform bg-green-100 rounded active:scale-95"
                   >
                     +
                   </button>
                 </div>
               </td>
 
-              <td className="px-2 py-3 text-sm text-center text-gray-700">
-                ฿{item.Product_price}
+              <td className="px-2 py-3 font-mono text-sm text-center text-gray-700">
+                ฿{Number(item.Product_price).toLocaleString()}
               </td>
 
-              <td className="px-2 py-3 text-sm font-semibold text-center text-purple-700">
-                ฿{item.Product_price * item.qty}
+              <td className="px-2 py-3 font-mono text-sm font-bold text-center text-purple-700">
+                ฿{Number(item.Product_price * item.qty).toLocaleString()}
               </td>
 
               <td className="px-2 py-3 text-center">
                 <button
                   onClick={() => onRemove(item.Product_id)}
-                  className="px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-lg hover:bg-red-600"
+                  className="px-3 py-1.5 text-xs font-semibold text-white bg-red-500 rounded-xl hover:bg-red-600 transition-colors shadow-sm"
                 >
                   ลบ
                 </button>

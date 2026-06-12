@@ -1,5 +1,4 @@
 export default function OrderTable({ orders, onView }) {
-  // 💡 ฟังก์ชันแปลงสถานะอังกฤษเป็นไทย
   const formatStatus = (status) => {
     switch (status) {
       case "paid":
@@ -14,10 +13,10 @@ export default function OrderTable({ orders, onView }) {
   };
 
   return (
-    <div className="overflow-hidden bg-white border border-purple-100 shadow-sm rounded-2xl">
-      <table className="w-full">
+    <div className="w-full overflow-x-auto bg-white border border-purple-100 shadow-sm rounded-2xl">
+      <table className="w-full border-collapse">
         <thead className="bg-purple-100">
-          <tr>
+          <tr className="whitespace-nowrap">
             <th className="px-6 py-4 text-sm font-semibold text-left text-purple-700">
               Sale ID
             </th>
@@ -46,7 +45,7 @@ export default function OrderTable({ orders, onView }) {
           {orders.map((item) => (
             <tr
               key={item.Sale_id}
-              className="transition border-t border-purple-50 hover:bg-purple-50"
+              className="transition border-t border-purple-50 hover:bg-purple-50/50 whitespace-nowrap"
             >
               <td className="px-6 py-4 text-gray-700">#{item.Sale_id}</td>
 
@@ -64,7 +63,7 @@ export default function OrderTable({ orders, onView }) {
 
               <td className="px-6 py-4 text-center">
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
                     item.Status === "paid"
                       ? "bg-green-100 text-green-700"
                       : item.Status === "pending"
@@ -83,7 +82,7 @@ export default function OrderTable({ orders, onView }) {
               <td className="px-6 py-4 text-center">
                 <button
                   onClick={() => onView(item)}
-                  className="px-4 py-2 text-sm font-medium text-white transition bg-purple-500 rounded-xl hover:bg-purple-600"
+                  className="px-4 py-2 text-sm font-medium text-white transition bg-purple-500 shadow-sm rounded-xl hover:bg-purple-600"
                 >
                   เพิ่มเติม
                 </button>
