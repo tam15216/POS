@@ -48,7 +48,7 @@ export default function StockMovementReport() {
               <thead>
                 <tr className="text-sm font-semibold text-purple-700 border-b border-purple-50">
                   <th className="pb-3 pl-2">วันที่-เวลา</th>
-                  <th className="pb-3">ประเภทคลัง</th>{" "}
+                  <th className="pb-3">ประเภทคลัง</th>
                   <th className="pb-3">รหัสรายการ</th>
                   <th className="pb-3">ชื่อรายการ</th>
                   <th className="pb-3">กิจกรรม</th>
