@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { saveRecipe, getRecipe } from "../services/recipe.service"; // อิมพอร์ตฟังก์ชัน getRecipe เพิ่มเข้ามา
+import { saveRecipe, getRecipe } from "../services/recipe.service";
+import ProductSearchSelect from "../components/ProductSearchSelect";
 
 export default function RecipeForm({ products, ingredients }) {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [recipeItems, setRecipeItems] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     if (!selectedProductId) {
       setRecipeItems([]);
@@ -82,23 +84,11 @@ export default function RecipeForm({ products, ingredients }) {
         <label className="block mb-2 font-semibold text-gray-700">
           1. เลือกสินค้าที่ต้องการตั้งสูตร / แก้ไขสูตร
         </label>
-        <select
+        <ProductSearchSelect
           value={selectedProductId}
-          onChange={(e) => setSelectedProductId(e.target.value)}
-          className="w-full p-3 border rounded-xl focus:outline-purple-500"
-          required
-        >
-          <option value="">-- เลือกสินค้า --</option>
-          {products.map((p) => (
-            <option key={p.Product_id} value={p.Product_id}>
-              {p.Product_name} (
-              {p.Product_type === "made_to_order"
-                ? "มีสูตรอยู่แล้ว"
-                : "สินค้าทั่วไปยังไม่มีสูตร"}
-              )
-            </option>
-          ))}
-        </select>
+          onChange={setSelectedProductId}
+          products={products}
+        />
       </div>
 
       <div className="space-y-3">
