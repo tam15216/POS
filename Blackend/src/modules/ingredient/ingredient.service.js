@@ -1,7 +1,16 @@
+// ingredient.service.js
 const ingredientRepo = require("./ingredient.repo");
 const db = require("../../config/database");
+
 const createIngredient = async (data) => {
-  const { Ingredient_name, Stock_qty, Unit, Minimum_qty } = data;
+  const {
+    Ingredient_name,
+    Stock_qty,
+    Unit,
+    Minimum_qty,
+    Buy_price,
+    Cost_per_unit,
+  } = data;
 
   if (!Ingredient_name || !Unit) {
     throw new Error("Missing required fields: Ingredient_name or Unit");
@@ -12,6 +21,8 @@ const createIngredient = async (data) => {
     Stock_qty: Stock_qty || 0,
     Unit,
     Minimum_qty: Minimum_qty || 0,
+    Buy_price: Buy_price || 0,
+    Cost_per_unit: Cost_per_unit || 0,
   });
 };
 
@@ -20,20 +31,23 @@ const getIngredients = async () => {
 };
 
 const updateIngredient = async (id, data) => {
-    const { Ingredient_name, Unit, Minimum_qty } = data; // 💡 ไม่ต้องดึง Stock_qty ออกมาใช้
+  const { Ingredient_name, Unit, Minimum_qty, Buy_price, Cost_per_unit } = data;
 
-    if (!id) {
-        throw new Error('Ingredient ID is required');
-    }
-    if (!Ingredient_name || !Unit) {
-        throw new Error('Missing required fields: Ingredient_name or Unit');
-    }
+  if (!id) {
+    throw new Error("Ingredient ID is required");
+  }
+  if (!Ingredient_name || !Unit) {
+    throw new Error("Missing required fields: Ingredient_name or Unit");
+  }
 
-    return await ingredientRepo.updateIngredient(id, {
-        Ingredient_name,
-        Unit,
-        Minimum_qty: Minimum_qty || 0
-    });
+  // 💡 ส่งไปให้ Repo ทำการ UPDATE ข้อมูลชุดใหม่
+  return await ingredientRepo.updateIngredient(id, {
+    Ingredient_name,
+    Unit,
+    Minimum_qty: Minimum_qty || 0,
+    Buy_price: Buy_price || 0,
+    Cost_per_unit: Cost_per_unit || 0,
+  });
 };
 
 const deleteIngredient = async (id) => {

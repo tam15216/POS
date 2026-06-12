@@ -7,6 +7,7 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
     Stock_qty: "",
     Unit: "",
     Minimum_qty: "",
+    Buy_price: "",
   });
 
   useEffect(() => {
@@ -16,6 +17,7 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
         Stock_qty: editData.Stock_qty ?? "",
         Unit: editData.Unit || "",
         Minimum_qty: editData.Minimum_qty ?? "",
+        Buy_price: editData.Buy_price || "",
       });
     } else {
       setFormData({
@@ -23,6 +25,7 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
         Stock_qty: "",
         Unit: "",
         Minimum_qty: "",
+        Buy_price: "",
       });
     }
   }, [editData, isOpen]);
@@ -41,11 +44,23 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
     const result = await confirmProductAction(isEditMode, "วัตถุดิบ");
 
     if (result.isConfirmed) {
-      let payload = { ...formData };
-      if (isEditMode) {
-        delete payload.Stock_qty;
+      let payload = {
+        Ingredient_name: formData.Ingredient_name,
+        Unit: formData.Unit,
+        Minimum_qty: Number(formData.Minimum_qty),
+      };
+
+      if (!isEditMode) {
+        const totalQty = Number(formData.Stock_qty) || 0;
+        const buyPrice = Number(formData.Buy_price) || 0;
+        const costPerUnit = totalQty > 0 ? buyPrice / totalQty : 0;
+
+        payload.Stock_qty = totalQty;
+        payload.Buy_price = buyPrice;
+        payload.Cost_per_unit = costPerUnit;
       }
-      onSave(payload); 
+
+      onSave(payload);
     }
   };
 
@@ -84,7 +99,7 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
             </div>
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-600">
-                หน่วยนับ
+                หน่วยนับ (เช่น กรัม, มิลลิลิตร)
               </label>
               <input
                 type="text"
@@ -95,25 +110,45 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
                 required
               />
             </div>
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-600">
-                จำนวนคงเหลือปัจจุบัน
-              </label>
-              <input
-                type="number"
-                name="Stock_qty"
-                value={formData.Stock_qty}
-                onChange={handleChange}
-                className={`w-full p-3 border rounded-xl focus:outline-purple-500 transition-colors ${
-                  editData
-                    ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
-                    : "bg-white text-gray-800 border-gray-300"
-                }`}
-                disabled={!!editData}
-                required
-              />
-            </div>
-            <div>
+            {!editData && (
+              <>
+                <div>
+                  <label className="block mb-1 text-sm font-medium text-gray-600">
+                    จำนวนที่รับเข้าคลัง ({formData.Unit || "หน่วย"})
+                  </label>
+                  <input
+                    type="number"
+                    name="Stock_qty"
+                    value={formData.Stock_qty}
+                    onChange={handleChange}
+                    className="w-full p-3 text-gray-800 bg-white border border-gray-300 rounded-xl focus:outline-purple-500"
+                    placeholder="เช่น 10"
+                    min="0"
+                    step="any"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-1 text-sm font-medium text-purple-700">
+                    ราคารวมที่ซื้อมา (บาท)
+                  </label>
+                  <input
+                    type="number"
+                    name="Buy_price"
+                    value={formData.Buy_price}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-purple-200 rounded-xl focus:outline-purple-500 bg-purple-50/20"
+                    placeholder="เช่น 100"
+                    min="0"
+                    step="any"
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            <div className={editData ? "md:col-span-2" : ""}>
               <label className="block mb-1 text-sm font-medium text-gray-600">
                 จำนวนขั้นต่ำระบบแจ้งเตือน
               </label>
@@ -123,9 +158,20 @@ export default function IngredientForm({ isOpen, onClose, onSave, editData }) {
                 value={formData.Minimum_qty}
                 onChange={handleChange}
                 className="w-full p-3 border rounded-xl focus:outline-purple-500"
+                min="0"
                 required
               />
             </div>
+
+            {!editData && formData.Stock_qty > 0 && formData.Buy_price > 0 && (
+              <div className="p-3 text-xs font-medium text-gray-500 md:col-span-2 bg-gray-50 rounded-xl">
+                💡 สรุปต้นทุนวัตถุดิบเฉลี่ย:{" "}
+                <span className="font-bold text-purple-700">
+                  {(formData.Buy_price / formData.Stock_qty).toFixed(2)}
+                </span>{" "}
+                บาท ต่อ 1 {formData.Unit || "หน่วย"}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
