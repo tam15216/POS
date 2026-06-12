@@ -13,8 +13,7 @@ export default function Navbar({ onToggleSidebar }) {
   };
 
   return (
-    <div className="h-[70px] bg-white border-b border-purple-100 shadow-sm flex items-center justify-between px-6">
-      {/* กลุ่มฝั่งซ้าย: ปุ่มเปิดเมนู + ข้อความต้อนรับ */}
+    <div className="w-full h-[70px] bg-white border-b border-purple-100 shadow-sm flex items-center justify-between px-6">
       <div className="flex items-center gap-4">
         <button
           type="button"

@@ -50,10 +50,10 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
   return (
     <div
-      className={`h-screen sticky top-0 bg-white border-r border-purple-100 shadow-sm p-6 overflow-y-auto transition-all duration-300 flex flex-col ${
+      className={`sticky top-0 bg-white border-r border-purple-100 shadow-sm transition-all duration-300 flex flex-col ${
         isOpen
-          ? "w-[240px] opacity-100"
-          : "w-0 p-0 opacity-0 pointer-events-none border-none"
+          ? "w-[240px] h-screen p-6 opacity-100"
+          : "w-0 h-0 p-0 opacity-0 pointer-events-none border-none overflow-hidden"
       }`}
     >
       <div className="flex items-center justify-between mb-6">
@@ -69,7 +69,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
       <div className="mb-6 border-b border-purple-100"></div>
 
-      <ul className="flex-1 space-y-2">
+      <ul className="flex-1 pr-1 space-y-2 overflow-y-auto">
         {allowedMenus.map((menu) => {
           const isActive = currentPath === menu.to;
           return (
