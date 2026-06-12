@@ -177,6 +177,13 @@ const insertIngredientStockLog = async (conn, ingredientId, refType, refId, qtyC
       );
 };
 
+const checkIngredientStockForUpdate = async (conn, ingredientId) => {
+    const [rows] = await conn.query(
+        'SELECT Stock_qty FROM ingredient WHERE Ingredient_id = ? FOR UPDATE',
+        [ingredientId]
+    );
+    return rows;
+};
 
 
 module.exports = {
@@ -198,5 +205,6 @@ module.exports = {
     getProductRecipe,
     updateIngredientDecrease,
     updateIngredientIncrease,
-    insertIngredientStockLog
+    insertIngredientStockLog,
+    checkIngredientStockForUpdate
 };
