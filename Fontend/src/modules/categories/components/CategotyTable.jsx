@@ -29,13 +29,21 @@ export default function CategoryTable({ categories, onDelete }) {
 
               <td className="px-6 py-4 text-center">
                 <ConfirmButton
-                  title={item.Status ? "ปิดใช้งานหมวดหมู่" : "เปิดใช้งานหมวดหมู่"}
+                  title={
+                    item.Status ? "ปิดใช้งานหมวดหมู่" : "เปิดใช้งานหมวดหมู่"
+                  }
                   text={`ต้องการ ${item.Status ? "ปิด" : "เปิด"} ใช้งานหมวดหมู่หรือไม่`}
                   icon="warning"
                   onConfirm={() => onDelete(item.Category_id)}
-                  
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                    item.Status === 1 || item.Status === true
+                      ? "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
+                      : "bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
+                  }`}
                 >
-                  <StatusToggleButton isActive={item.Status} />
+                  {item.Status === 1 || item.Status === true
+                    ? "ปิดสถานะ"
+                    : "เปิดสถานะ"}
                 </ConfirmButton>
               </td>
             </tr>

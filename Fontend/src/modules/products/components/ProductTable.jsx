@@ -30,15 +30,24 @@ export default function ProductTable({ products, onToggle, onEdit }) {
                 text={`ต้องการ ${item.status ? "ปิด" : "เปิด"} ใช้งานสินค้าหรือไม่`}
                 icon="warning"
                 onConfirm={() => onToggle(item.Product_id)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                  item.status === 1 || item.status === true
+                    ? "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
+                    : "bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
+                }`}
               >
-                <StatusToggleButton isActive={item.status} />
+                {item.status === 1 || item.status === true
+                  ? "ปิดสถานะ"
+                  : "เปิดสถานะ"}
               </ConfirmButton>
 
+              {/* 💡 ปุ่มแก้ไข: เปลี่ยนเป็นสีฟ้าจาง (Subtle Blue) ขนาดเท่ากัน */}
               <button
+                type="button"
                 onClick={() => onEdit(item)}
-                className="px-4 py-2 ml-2 text-sm font-medium text-white transition bg-blue-500 rounded-xl hover:bg-blue-600"
+                className="px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100 hover:text-blue-800 transition-colors"
               >
-                เเก้ไข
+                แก้ไข
               </button>
             </td>
           </tr>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import OptionIngredientRow from "./OptionIngredientRow";
 import useOptionRecipe from "../hooks/useOptionRecipe";
 import OptionSearchSelect from "./OptionSearchSelect";
+import { confirmProductAction } from "../../../shared/utils/confirm";
 
 export default function MapIngredientForm({
   optionsList,
@@ -45,8 +46,12 @@ export default function MapIngredientForm({
     if (hasEmptyRow) return alert("กรุณากรอกข้อมูลวัตถุดิบและปริมาณให้ถูกต้อง");
 
     try {
-      await onSaveSuccess(selectedOptionId, mappedIngredients);
-      setSelectedOptionId("");
+      const result = await confirmProductAction(true, "สูตร Option");
+
+      if (result.isConfirmed) {
+        await onSaveSuccess(selectedOptionId, mappedIngredients);
+        setSelectedOptionId("");
+      }
     } catch (err) {
       const errorMessage =
         err.response?.data?.error ||

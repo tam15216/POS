@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import useOptionsList from "../hooks/useOptionsList";
+import ConfirmButton from "../../../shared/components/ConfirmButton";
 import {
   createOption,
   updateOption,
@@ -7,12 +8,15 @@ import {
 } from "../services/option.service";
 
 import AddOptionForm from "../components/AddOptionForm";
+import Pagination from "../../../shared/components/Pagination";
+import { usePagination } from "../../../shared/hooks/usePagination";
 
 export default function OptionList() {
   const { optionsList, isLoading, error, refreshOptions } = useOptionsList();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingOption, setEditingOption] = useState(null);
+  const optionsPagination = usePagination(optionsList, 8);
 
   useEffect(() => {
     if (error) {
@@ -31,7 +35,7 @@ export default function OptionList() {
       }
       setIsAddModalOpen(false);
       setEditingOption(null);
-      refreshOptions(); 
+      refreshOptions();
     } catch (err) {
       alert("ไม่สามารถบันทึกข้อมูลได้");
       throw err;
@@ -42,7 +46,7 @@ export default function OptionList() {
     const nextStatus = currentStatus === 1 ? 0 : 1;
     try {
       await updateOptionStatus(optionId, nextStatus);
-      refreshOptions(); 
+      refreshOptions();
     } catch (err) {
       alert("ไม่สามารถเปลี่ยนสถานะได้");
     }
@@ -104,7 +108,7 @@ export default function OptionList() {
                   </td>
                 </tr>
               ) : (
-                optionsList.map((opt) => (
+                optionsPagination.paginatedData.map((opt) => (
                   <tr key={opt.Option_id} className="hover:bg-gray-50/50">
                     <td className="px-6 py-4 font-mono text-xs text-gray-400">
                       #{opt.Option_id}
@@ -134,19 +138,29 @@ export default function OptionList() {
                             setEditingOption(opt);
                             setIsAddModalOpen(true);
                           }}
-                          className="text-xs font-semibold text-purple-700 hover:underline"
+                          className="px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-50 rounded-lg hover:bg-purple-100 hover:text-purple-800 transition-colors"
                         >
                           แก้ไข
                         </button>
-                        <button
-                          type="button"
-                          onClick={() =>
+                        <ConfirmButton
+                          title={
+                            opt.Is_active === 1
+                              ? "ปิดสถานะตัวเลือก"
+                              : "เปิดสถานะตัวเลือก"
+                          }
+                          text={`ต้องการ ${opt.Is_active === 1 ? "ปิด" : "เปิด"} การใช้งาน Option นี้ในหน้าจอ POS หรือไม่?`}
+                          icon="warning"
+                          onConfirm={() =>
                             handleToggleStatus(opt.Option_id, opt.Is_active)
                           }
-                          className={`text-xs font-semibold ${opt.Is_active === 1 ? "text-red-500 hover:underline" : "text-green-600 hover:underline"}`}
+                          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                            opt.Is_active === 1
+                              ? "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
+                              : "bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
+                          }`}
                         >
                           {opt.Is_active === 1 ? "ปิดสถานะ" : "เปิดสถานะ"}
-                        </button>
+                        </ConfirmButton>
                       </div>
                     </td>
                   </tr>
@@ -155,6 +169,16 @@ export default function OptionList() {
             </tbody>
           </table>
         </div>
+
+        {!isLoading && optionsList.length > 0 && (
+          <div className="pt-4 mt-4 border-t border-gray-100">
+            <Pagination
+              currentPage={optionsPagination.currentPage}
+              totalPages={optionsPagination.totalPages}
+              onPageChange={optionsPagination.setCurrentPage}
+            />
+          </div>
+        )}
       </div>
 
       {isAddModalOpen && (

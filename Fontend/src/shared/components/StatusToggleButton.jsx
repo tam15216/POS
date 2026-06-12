@@ -15,7 +15,7 @@ export default function StatusToggleButton({
       `}
     >
 
-      {isActive ? "Disable" : "Enable"}
+      {isActive ? "ปิดใช้งาน" : "เปิดใช้งาน"}
 
     </span>
   );
