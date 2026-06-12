@@ -169,7 +169,6 @@ const getTopProductsReport = async (startDate, endDate) => {
 const getStockMovementReport = async (startDate, endDate) => {
   const [rows] = await db.query(
     `
-
     SELECT 
         sl.Stock_log_id AS log_id,
         sl.Created_at AS created_at,
