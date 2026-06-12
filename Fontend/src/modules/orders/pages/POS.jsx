@@ -4,6 +4,7 @@ import ConfirmButton from "../../../shared/components/ConfirmButton";
 import useCart from "../hooks/useCart";
 import useStock from "../../stock/hooks/useStock";
 import useCategories from "../../categories/hooks/useCategories";
+import useProductOptions from "../hooks/useProductOptions";
 
 import POSProductCard from "../components/POSProductCard";
 import CartTable from "../components/CartTable";
@@ -11,8 +12,10 @@ import ProductSearch from "../../products/components/ProductSearch";
 import ProductCategory from "../../products/components/ProductCategory";
 import PaymentSelector from "../components/PaymentSelector";
 
+import ProductOptionModal from "../components/ProductOptionModal";
+
 import { checkInsufficientStock } from "../../../shared/utils/stockValidator";
-import { createOrder } from "../services/order.service";
+import { createOrder } from "../services/order.service"; 
 import Pagination from "../../../shared/components/Pagination";
 import { usePagination } from "../../../shared/hooks/usePagination";
 import usePOSFilter from "../hooks/usePOSFilter";
@@ -20,8 +23,11 @@ import usePOSFilter from "../hooks/usePOSFilter";
 export default function POS() {
   const { productsnotall } = useProducts();
   const { stocks, loadStocks } = useStock();
-  const { categories } = useCategories(); 
+  const { categories } = useCategories();
   const [paymentMethod, setPaymentMethod] = useState("cash");
+  
+  const [isOptionModalOpen, setIsOptionModalOpen] = useState(false);
+  const [activeProduct, setActiveProduct] = useState(null);
 
   const {
     cartItems,
@@ -33,11 +39,13 @@ export default function POS() {
     total,
   } = useCart();
 
+  const { allOptions } = useProductOptions();
+
   const productsWithStock = productsnotall.map((product) => {
     if (product.Product_type === "made_to_order") {
       return {
         ...product,
-        stock_qty: 999, 
+        stock_qty: 999,
       };
     }
 
@@ -68,6 +76,20 @@ export default function POS() {
     productsnotallPagination.setCurrentPage(1);
   };
 
+  const handleProductClick = (product) => {
+    const isMadeToOrder =
+      product.Product_type?.toLowerCase() === "made_to_order" ||
+      product.Product_type?.toLowerCase() === "drink" ||
+      product.Product_type?.toLowerCase() === "beverage";
+
+    if (isMadeToOrder) {
+      setActiveProduct(product);
+      setIsOptionModalOpen(true);
+    } else {
+      addToCart(product, []);
+    }
+  };
+
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
       alert("Please add products to cart first");
@@ -91,12 +113,18 @@ export default function POS() {
         items: cartItems.map((item) => ({
           product_id: item.Product_id,
           qty: item.qty,
-          price: item.Product_price,
+          price: item.Base_price,
+          options: item.selected_options
+            ? item.selected_options.map((opt) => ({
+                option_id: opt.Option_id,
+                price: opt.Price,
+                ingredient_id: opt.Ingredient_id,
+              }))
+            : [],
         })),
         total,
         payment_method: paymentMethod,
       };
-
       await createOrder(payload);
       alert("Order Success");
       clearCart();
@@ -143,7 +171,7 @@ export default function POS() {
                   <POSProductCard
                     key={item.Product_id}
                     product={item}
-                    onAdd={addToCart}
+                    onAdd={handleProductClick}
                   />
                 ))
               )}
@@ -197,6 +225,14 @@ export default function POS() {
           </div>
         </div>
       </div>
+
+      <ProductOptionModal
+        isOpen={isOptionModalOpen}
+        onClose={() => setIsOptionModalOpen(false)}
+        product={activeProduct}
+        options={allOptions}
+        onConfirm={addToCart}
+      />
     </div>
   );
 }

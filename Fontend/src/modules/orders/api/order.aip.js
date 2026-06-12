@@ -19,3 +19,7 @@ export const getOrderDetailApi = (id) => {
 export const cancelOrderApi = (id) => {
     return api.post(`/orders/cancel/${id}`);
 };
+
+export const getOptionsApi = () => {
+    return api.get('/orders/options'); 
+};

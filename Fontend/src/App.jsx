@@ -24,6 +24,8 @@ import TopProductsReport from './modules/reports/pages/TopProductsReport';
 import StockMovementReport from './modules/reports/pages/StockMovementReport';
 import Recipes from './modules/recipes/pages/Recipes';
 import Ingredients from './modules/ingredients/pages/Ingredients';
+import OptionManagement from './modules/optionproducts/pages/OptionManagement';
+import OptionList from './modules/optionproducts/pages/OptionList';
 
 
 export default function App() {
@@ -43,6 +45,9 @@ export default function App() {
                 <Route path="/reports/stock-log" element={<PrivateRoute><MainLayout><StockMovementReport /></MainLayout></PrivateRoute>}/>
                 <Route path="/recipes" element={<PrivateRoute><MainLayout><Recipes /></MainLayout></PrivateRoute>}/>
                 <Route path="/ingredients" element={<PrivateRoute><MainLayout><Ingredients /></MainLayout></PrivateRoute>}/>
+                <Route path="/option" element={<PrivateRoute><MainLayout><OptionManagement /></MainLayout></PrivateRoute>}/>
+                <Route path="/optionlist" element={<PrivateRoute><MainLayout><OptionList /></MainLayout></PrivateRoute>}/>
+
             </Routes>
         </BrowserRouter>
     )

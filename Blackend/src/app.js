@@ -9,6 +9,7 @@ const userRoute = require('./modules/user/user.route');
 const reportRoute = require('./modules/report/report.route');
 const ingredientRoute = require('./modules/ingredient/ingredient.route');
 const recipeRoute = require('./modules/recipe/recipe.route');
+const optionsRoute = require('./modules/productoption/option.route');
 
 const app = express();
 
@@ -28,4 +29,6 @@ app.use('/users', userRoute);
 app.use('/reports', reportRoute);
 app.use('/ingredients', ingredientRoute);
 app.use('/recipes', recipeRoute);
+app.use('/options', optionsRoute)
+
 module.exports = app;

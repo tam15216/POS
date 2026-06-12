@@ -23,9 +23,9 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
         </thead>
 
         <tbody>
-          {items.map((item) => (
+          {items.map((item, index) => (
             <tr
-              key={item.Product_id}
+              key={`${item.Product_id}-${index}`}
               className="transition border-t border-purple-50 hover:bg-purple-50"
             >
               <td className="px-3 py-3 text-sm font-medium text-gray-700">
@@ -35,12 +35,26 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
                 >
                   {item.Product_name}
                 </div>
+                {item.selected_options && item.selected_options.length > 0 && (
+                  <div className="text-[11px] text-purple-600 font-normal mt-1 flex flex-wrap gap-1">
+                    {item.selected_options.map((opt) => (
+                      <span
+                        key={opt.Option_id}
+                        className="bg-purple-50 px-1.5 py-0.5 rounded-md border border-purple-100"
+                      >
+                        {opt.Option_name}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </td>
 
               <td className="px-2 py-3">
                 <div className="flex items-center justify-center gap-1.5 select-none">
                   <button
-                    onClick={() => onDecrease(item.Product_id)}
+                    onClick={() =>
+                      onDecrease(item.Product_id, item.selected_options)
+                    }
                     className="w-6 h-6 text-sm font-bold text-red-600 transition-transform bg-red-100 rounded active:scale-95"
                   >
                     -
@@ -49,7 +63,9 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
                     {item.qty}
                   </span>
                   <button
-                    onClick={() => onIncrease(item.Product_id)}
+                    onClick={() =>
+                      onIncrease(item.Product_id, item.selected_options)
+                    }
                     className="w-6 h-6 text-sm font-bold text-green-600 transition-transform bg-green-100 rounded active:scale-95"
                   >
                     +
@@ -58,16 +74,18 @@ export default function CartTable({ items, onIncrease, onDecrease, onRemove }) {
               </td>
 
               <td className="px-2 py-3 font-mono text-sm text-center text-gray-700">
-                ฿{Number(item.Product_price).toLocaleString()}
+                ฿{Number(item.Display_price).toLocaleString()}
               </td>
 
               <td className="px-2 py-3 font-mono text-sm font-bold text-center text-purple-700">
-                ฿{Number(item.Product_price * item.qty).toLocaleString()}
+                ฿{Number(item.Display_price * item.qty).toLocaleString()}
               </td>
 
               <td className="px-2 py-3 text-center">
                 <button
-                  onClick={() => onRemove(item.Product_id)}
+                  onClick={() =>
+                    onRemove(item.Product_id, item.selected_options)
+                  }
                   className="px-3 py-1.5 text-xs font-semibold text-white bg-red-500 rounded-xl hover:bg-red-600 transition-colors shadow-sm"
                 >
                   ลบ

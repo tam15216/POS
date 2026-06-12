@@ -7,6 +7,7 @@ const role = require("../../middleware/role");
 
 router.post("/", auth, controller.createOrder);
 router.get("/", auth, role("admin"), controller.getOrders);
+router.get('/options', auth,controller.getOptions);
 router.get("/:id", auth, role("admin"), controller.getOrderById);
 router.get("/detail/:id", auth, role("admin"), controller.getOrderDetail);
 router.post("/cancel/:id", auth, role("admin"), controller.cancelOrder);

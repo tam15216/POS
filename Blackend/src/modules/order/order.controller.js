@@ -52,4 +52,14 @@ const getOrderDetail = async (req, res) => {
     }
 };
 
-module.exports = { createOrder , cancelOrder, getOrders, getOrderById , getOrderDetail};
+const getOptions = async (req, res) => {
+    try {
+        const data = await service.getOptionsList();
+        res.status(200).json(data);
+    } catch (err) {
+        console.error("Controller Error (getOptions):", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+module.exports = { createOrder , cancelOrder, getOrders, getOrderById , getOrderDetail , getOptions};

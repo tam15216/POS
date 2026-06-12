@@ -17,6 +17,8 @@ export default function Sidebar({ isOpen, setIsOpen }) {
     { name: "User", to: "/users", roles: ["admin"] },
     { name: "Ingredients", to: "/ingredients", roles: ["admin"] },
     { name: "Recipes", to: "/recipes", roles: ["admin"] },
+    { name: "Option", to: "/option", roles: ["admin"] },
+    { name: "OptionList", to: "/optionlist", roles: ["admin"] }
   ];
 
   const reportSubMenus = [
