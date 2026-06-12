@@ -44,7 +44,7 @@ export default function ProductSearchSelect({
     <div className="relative w-full" ref={containerRef}>
       <input
         type="text"
-        placeholder="พิมพ์ค้นหาชื่อสินค้า..."
+        placeholder="พิมพ์ค้นหาชื่อสินค้า"
         value={searchTerm}
         onChange={(e) => {
           setSearchTerm(e.target.value);
