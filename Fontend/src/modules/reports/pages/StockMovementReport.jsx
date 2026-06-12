@@ -1,4 +1,4 @@
-import useStockMovementReport from "../hooks/useStockMovementReport"; 
+import useStockMovementReport from "../hooks/useStockMovementReport";
 import ReportFilter from "../components/ReportFilter";
 import { usePagination } from "../../../shared/hooks/usePagination";
 import Pagination from "../../../shared/components/Pagination";
@@ -6,8 +6,9 @@ import Pagination from "../../../shared/components/Pagination";
 const refTypeMovements = {
   sale: "ขายสินค้า",
   import: "รับสินค้าเข้า",
-  adjust: "ปรับปรุงสต๊อกมือ",
-  cancel : "ยกเลิกการขาย"
+  restock: "รับวัตถุดิบเข้าคลัง", 
+  adjust: "ปรับปรุงยอดสต๊อก",
+  cancel: "ยกเลิกการขาย",
 };
 
 export default function StockMovementReport() {
@@ -25,7 +26,7 @@ export default function StockMovementReport() {
             รายงานเคลื่อนไหวสต๊อก
           </h1>
           <p className="text-gray-400">
-            ตรวจสอบประวัติการอัปเดตสต๊อกสินค้าเข้าและออกคลังอย่างละเอียด
+            ตรวจสอบประวัติการอัปเดตคลังสินค้าและวัตถุดิบดิบเข้าและออกอย่างละเอียด
           </p>
         </div>
         <ReportFilter
@@ -47,10 +48,11 @@ export default function StockMovementReport() {
               <thead>
                 <tr className="text-sm font-semibold text-purple-700 border-b border-purple-50">
                   <th className="pb-3 pl-2">วันที่-เวลา</th>
-                  <th className="pb-3">รหัสสินค้า</th>
-                  <th className="pb-3">ชื่อสินค้า</th>
-                  <th className="pb-3">ประเภทกิจกรรม</th>
-                  <th className="pb-3 text-center">จำนวนการเปลี่ยนแปลง</th>
+                  <th className="pb-3">ประเภทคลัง</th>{" "}
+                  <th className="pb-3">รหัสรายการ</th>
+                  <th className="pb-3">ชื่อรายการ</th>
+                  <th className="pb-3">กิจกรรม</th>
+                  <th className="pb-3 text-center">จำนวนที่เปลี่ยน</th>
                   <th className="pb-3 pr-2 text-right">อ้างอิงเอกสาร ID</th>
                 </tr>
               </thead>
@@ -64,41 +66,67 @@ export default function StockMovementReport() {
                 ) : (
                   paginatedData.map((row) => (
                     <tr
-                      key={row.Stock_log_id}
+                      key={`${row.item_type}-${row.log_id}`}
                       className="transition-colors hover:bg-purple-50/30"
                     >
                       <td className="py-3.5 pl-2 text-sm">
-                        {new Date(row.Created_at).toLocaleString("th-TH")}
+                        {new Date(row.created_at).toLocaleString("th-TH")}
                       </td>
+
+                      <td className="py-3.5 text-sm">
+                        <span
+                          className={`inline-block px-2 py-0.5 text-[10px] font-bold rounded ${
+                            row.item_type === "product"
+                              ? "text-blue-700 bg-blue-50 border border-blue-100"
+                              : "text-purple-700 bg-purple-50 border border-purple-100"
+                          }`}
+                        >
+                          {row.item_type === "product"
+                            ? "สินค้าสำเร็จ"
+                            : "วัตถุดิบ"}
+                        </span>
+                      </td>
+
                       <td className="py-3.5 font-mono text-sm text-purple-600 font-semibold">
-                        {row.Product_code || `#${row.Product_id}`}
+                        {row.item_code && row.item_code !== "-"
+                          ? row.item_code
+                          : `#${row.item_id}`}
                       </td>
+
                       <td className="py-3.5 font-medium text-gray-700">
-                        {row.Product_name}
+                        {row.item_name}
                       </td>
+
                       <td className="py-3.5">
                         <span
                           className={`px-2 py-0.5 text-xs font-semibold rounded-md ${
-                            row.Ref_type === "sale"
+                            row.ref_type === "sale"
                               ? "text-red-700 bg-red-50"
-                              : row.Ref_type === "import"
+                              : row.ref_type === "import" ||
+                                  row.ref_type === "restock"
                                 ? "text-green-700 bg-green-50"
                                 : "text-amber-700 bg-amber-50"
                           }`}
                         >
-                          {refTypeMovements[row.Ref_type] || row.Ref_type}
+                          {refTypeMovements[row.ref_type] || row.ref_type}
                         </span>
                       </td>
+
                       <td
-                        className={`py-3.5 text-center font-bold font-mono ${row.Qty_change < 0 ? "text-red-500" : "text-green-500"}`}
+                        className={`py-3.5 text-center font-bold font-mono ${Number(row.qty_change) < 0 ? "text-red-500" : "text-green-500"}`}
                       >
-                        {row.Qty_change > 0
-                          ? `+${row.Qty_change}`
-                          : row.Qty_change}{" "}
-                        ชิ้น
+                        {Number(row.qty_change) > 0
+                          ? `+${Number(row.qty_change).toLocaleString()}`
+                          : Number(row.qty_change).toLocaleString()}{" "}
+                        {row.unit}{" "}
                       </td>
+
                       <td className="py-3.5 text-right pr-2 text-sm text-gray-400 font-mono">
-                        {row.Bill_no ? `${row.Bill_no}` : '-'}
+                        {row.bill_no
+                          ? `${row.bill_no}`
+                          : row.ref_id && row.ref_id !== 0
+                            ? `#${row.ref_id}`
+                            : "-"}
                       </td>
                     </tr>
                   ))

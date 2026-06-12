@@ -1,34 +1,42 @@
 export default function OrderTable({ orders, onView }) {
+  // 💡 ฟังก์ชันแปลงสถานะอังกฤษเป็นไทย
+  const formatStatus = (status) => {
+    switch (status) {
+      case "paid":
+        return "ชำระเงินแล้ว";
+      case "pending":
+        return "รอดำเนินการ";
+      case "cancelled":
+        return "ยกเลิกออร์เดอร์";
+      default:
+        return status;
+    }
+  };
+
   return (
     <div className="overflow-hidden bg-white border border-purple-100 shadow-sm rounded-2xl">
       <table className="w-full">
         <thead className="bg-purple-100">
           <tr>
-            <th className="px-6 py-4 text-sm font-semibold text-left text-purple-700 ">
+            <th className="px-6 py-4 text-sm font-semibold text-left text-purple-700">
               Sale ID
             </th>
-
-            <th className="px-6 py-4 text-sm font-semibold text-left text-purple-700 ">
+            <th className="px-6 py-4 text-sm font-semibold text-left text-purple-700">
               Bill No
             </th>
-
-            <th className="px-6 py-4 text-sm font-semibold text-left text-purple-700 ">
+            <th className="px-6 py-4 text-sm font-semibold text-left text-purple-700">
               วันที่ - เวลา
             </th>
-
-            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
+            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700">
               ยอดรวม
             </th>
-
-            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
+            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700">
               สถานะ
             </th>
-
-            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
+            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700">
               ผู้ทำรายการ
             </th>
-
-            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700 ">
+            <th className="px-6 py-4 text-sm font-semibold text-center text-purple-700">
               เพิ่มเติม
             </th>
           </tr>
@@ -46,34 +54,31 @@ export default function OrderTable({ orders, onView }) {
                 {item.Bill_no}
               </td>
 
-              <td className="px-6 py-4 text-gray-500">{new Date(item.Created_at).toLocaleString("th-TH")}</td>
+              <td className="px-6 py-4 text-gray-500">
+                {new Date(item.Created_at).toLocaleString("th-TH")}
+              </td>
 
               <td className="px-6 py-4 font-semibold text-center text-purple-700">
-                ฿{item.Total_amount}
+                ฿{Number(item.Total_amount).toLocaleString()}
               </td>
 
               <td className="px-6 py-4 text-center">
                 <span
-                  className={`
-                  px-3
-                  py-1
-                  rounded-full
-                  text-xs
-                  font-semibold
-
-                  ${
+                  className={`px-3 py-1 rounded-full text-xs font-semibold ${
                     item.Status === "paid"
                       ? "bg-green-100 text-green-700"
                       : item.Status === "pending"
-                        ? "bg-yellow-100 text-yellow-700"
+                        ? "bg-amber-100 text-amber-700"
                         : "bg-red-100 text-red-700"
-                  }
-                `}
+                  }`}
                 >
-                  {item.Status}
+                  {formatStatus(item.Status)}
                 </span>
               </td>
-              <td className="px-6 py-4 text-center">{item.seller_name || "ไม่ระบุ"}</td>
+
+              <td className="px-6 py-4 text-center">
+                {item.seller_name || "ไม่ระบุ"}
+              </td>
 
               <td className="px-6 py-4 text-center">
                 <button

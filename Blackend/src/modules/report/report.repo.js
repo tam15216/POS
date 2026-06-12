@@ -60,8 +60,8 @@ const getTotalCategories = async () => {
 };
 
 const getLowStockProducts = async (productLimit = 10) => {
-    const [rows] = await db.query(
-        `
+  const [rows] = await db.query(
+    `
         SELECT 
             'product' AS item_type,
             p.Product_id AS item_id,
@@ -87,9 +87,9 @@ const getLowStockProducts = async (productLimit = 10) => {
         FROM ingredient i
         WHERE i.Stock_qty <= i.Minimum_qty
         `,
-        [productLimit, productLimit]
-    );
-    return rows;
+    [productLimit, productLimit],
+  );
+  return rows;
 };
 
 const getTopSellingProducts = async (limit = 5) => {
@@ -168,22 +168,46 @@ const getTopProductsReport = async (startDate, endDate) => {
 
 const getStockMovementReport = async (startDate, endDate) => {
   const [rows] = await db.query(
-    `SELECT 
-            sl.Stock_log_id,
-            sl.Created_at,
-            p.Product_id,
-            p.Product_code,
-            p.Product_name,
-            sl.Ref_type,
-            sl.Qty_change,
-            sl.Ref_id,
-            s.Bill_no 
-         FROM stock_log sl
-         INNER JOIN product p ON sl.Product_id = p.Product_id
-         LEFT JOIN sale s ON sl.Ref_id = s.Sale_id AND sl.Ref_type = 'sale'
-         WHERE DATE(sl.Created_at) BETWEEN ? AND ?
-         ORDER BY sl.Created_at DESC`,
-    [startDate, endDate],
+    `
+
+    SELECT 
+        sl.Stock_log_id AS log_id,
+        sl.Created_at AS created_at,
+        'product' AS item_type,
+        p.Product_id AS item_id,
+        p.Product_code AS item_code,
+        p.Product_name AS item_name,
+        sl.Ref_type AS ref_type,
+        sl.Qty_change AS qty_change,
+        sl.Ref_id AS ref_id,
+        s.Bill_no AS bill_no,
+        'ชิ้น' AS unit
+     FROM stock_log sl
+     INNER JOIN product p ON sl.Product_id = p.Product_id
+     LEFT JOIN sale s ON sl.Ref_id = s.Sale_id 
+     WHERE DATE(sl.Created_at) BETWEEN ? AND ?
+
+     UNION ALL
+
+      SELECT 
+          il.Log_id AS log_id,
+          il.Log_datetime AS created_at,
+          'ingredient' AS item_type,
+          i.Ingredient_id AS item_id,
+          '-' AS item_code,
+          i.Ingredient_name AS item_name,
+          il.Ref_type AS ref_type,
+          il.Qty_change AS qty_change,
+          il.Ref_id AS ref_id,
+          s.Bill_no AS bill_no, 
+          i.Unit AS unit
+      FROM ingredient_stock_log il
+      INNER JOIN ingredient i ON il.Ingredient_id = i.Ingredient_id
+      LEFT JOIN sale s ON il.Ref_id = s.Sale_id 
+      WHERE DATE(il.Log_datetime) BETWEEN ? AND ?
+     ORDER BY created_at DESC
+    `,
+    [startDate, endDate, startDate, endDate],
   );
   return rows;
 };
@@ -198,5 +222,5 @@ module.exports = {
   getSalesByPeriod,
   getTopProductsReport,
   getStockMovementReport,
-  getMonthProfitReport
+  getMonthProfitReport,
 };
