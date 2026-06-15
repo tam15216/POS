@@ -46,7 +46,7 @@ export default function MapIngredientForm({
     if (hasEmptyRow) return alert("กรุณากรอกข้อมูลวัตถุดิบและปริมาณให้ถูกต้อง");
 
     try {
-      const result = await confirmProductAction(true, "สูตร Option");
+      const result = await confirmProductAction(false, "การบันทึกสูตร Option");
 
       if (result.isConfirmed) {
         await onSaveSuccess(selectedOptionId, mappedIngredients);
