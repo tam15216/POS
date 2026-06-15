@@ -1,4 +1,3 @@
-// usePagination.js
 import { useState, useEffect } from "react";
 
 export const usePagination = (data = [], itemsPerPage = 10) => {
