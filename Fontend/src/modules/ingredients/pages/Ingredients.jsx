@@ -7,6 +7,7 @@ import Pagination from "../../../shared/components/Pagination";
 import IngredientHistoryTable from "../components/IngredientHistoryTable";
 import StockTransactionModal from "../components/StockTransactionModal";
 import ProductSearch from "../../products/components/ProductSearch";
+import RestockFormModal from "../components/RestockFormModal";
 
 export default function Ingredients() {
   const {
@@ -16,7 +17,8 @@ export default function Ingredients() {
     changeStock,
     addIngredient,
     editIngredient,
-    removeIngredient,
+    restockIngredient,
+    changeIngredientStatus, 
   } = useIngredients();
 
   const [editingItem, setEditingItem] = useState(null);
@@ -27,9 +29,17 @@ export default function Ingredients() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [restockModalOpen, setRestockModalOpen] = useState(false);
+  const [selectedRestockItem, setSelectedRestockItem] = useState(null);
+
   const handleOpenStockModal = (item) => {
     setSelectedStockItem(item);
     setStockModalOpen(true);
+  };
+
+  const handleOpenRestockModal = (item) => {
+    setSelectedRestockItem(item);
+    setRestockModalOpen(true);
   };
 
   const handleStockSave = async (id, transactionData) => {
@@ -43,17 +53,43 @@ export default function Ingredients() {
     }
   };
 
+  const handleRestockSave = async (id, payload) => {
+    try {
+      await restockIngredient(id, payload);
+      alert("บันทึกรับเข้าคลังและคำนวณต้นทุนถัวเฉลี่ยใหม่เรียบร้อยแล้ว");
+      setRestockModalOpen(false);
+      setSelectedRestockItem(null);
+    } catch (err) {
+      alert(err.message || "เกิดข้อผิดพลาดในการทำรายการรับเข้าสต๊อก");
+    }
+  };
+
+  const handleToggleStatus = async (id, currentStatus) => {
+    try {
+      await changeIngredientStatus(id, currentStatus);
+      alert(
+        currentStatus ? "ปิดใช้งานวัตถุดิบสำเร็จ" : "เปิดใช้งานวัตถุดิบสำเร็จ",
+      );
+    } catch (err) {
+      alert(err.message || "เกิดข้อผิดพลาดในการเปลี่ยนสถานะวัตถุดิบ");
+    }
+  };
+
   const filteredIngredients = (ingredients || []).filter((ing) => {
-    return ing.Ingredient_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    return ing.Ingredient_name?.toLowerCase().includes(
+      searchTerm.toLowerCase(),
+    );
   });
 
   const filteredHistory = (history || []).filter((log) => {
-    return log.Ingredient_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    return log.Ingredient_name?.toLowerCase().includes(
+      searchTerm.toLowerCase(),
+    );
   });
 
   const ingredientPagination = usePagination(filteredIngredients, 10);
   const historyPagination = usePagination(filteredHistory, 10);
-  
+
   useEffect(() => {
     ingredientPagination.setCurrentPage(1);
     historyPagination.setCurrentPage(1);
@@ -85,21 +121,6 @@ export default function Ingredients() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (
-      !window.confirm(
-        "คุณมั่นใจใช่หรือไม่ว่าต้องการลบวัตถุดิบรายการนี้ออกจากระบบ?",
-      )
-    )
-      return;
-    try {
-      await removeIngredient(id);
-      alert("ลบรายการวัตถุดิบเรียบร้อยแล้ว");
-    } catch (err) {
-      alert("ไม่สามารถลบได้ วัตถุดิบนี้อาจถูกใช้งานอยู่ในสูตรสินค้า");
-    }
-  };
-
   return (
     <div className="p-6 space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -112,7 +133,7 @@ export default function Ingredients() {
 
         <div className="flex items-center gap-3">
           <ProductSearch value={searchTerm} onChange={setSearchTerm} />
-          
+
           <button
             onClick={handleOpenAddModal}
             className="px-5 py-2.5 font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-xl shadow-sm transition-colors whitespace-nowrap"
@@ -134,8 +155,9 @@ export default function Ingredients() {
             <IngredientTable
               ingredients={ingredientPagination.paginatedData}
               onEdit={handleOpenEditModal}
-              onDelete={handleDelete}
               onManageStock={handleOpenStockModal}
+              onRestock={handleOpenRestockModal}
+              onChangeStatus={handleToggleStatus} 
             />
           )}
 
@@ -147,6 +169,16 @@ export default function Ingredients() {
             }}
             onSave={handleStockSave}
             ingredient={selectedStockItem}
+          />
+
+          <RestockFormModal
+            isOpen={restockModalOpen}
+            onClose={() => {
+              setRestockModalOpen(false);
+              setSelectedRestockItem(null);
+            }}
+            onSave={handleRestockSave}
+            ingredient={selectedRestockItem}
           />
 
           {filteredIngredients.length > 0 && (
@@ -169,7 +201,7 @@ export default function Ingredients() {
             และการปรับปรุงสต๊อกย้อนหลัง
           </p>
         </div>
-        
+
         {loading ? (
           <p className="text-sm text-gray-400">กำลังโหลดข้อมูลประวัติ...</p>
         ) : filteredHistory.length === 0 ? (

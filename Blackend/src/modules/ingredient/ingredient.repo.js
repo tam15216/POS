@@ -13,36 +13,42 @@ const insertIngredient = async (data) => {
       data.Cost_per_unit,
     ],
   );
-  return { Ingredient_id: result.insertId, ...data };
+  return { Ingredient_id: result.insertId, ...data, Is_active: 1 };
 };
 
-const getAllIngredients = async () => {
-  const [rows] = await db.query(
-    "SELECT * FROM ingredient ORDER BY Ingredient_id DESC",
-  );
+const getAllIngredients = async (isActive = null) => {
+  let query = "SELECT * FROM ingredient";
+  const params = [];
+
+  if (isActive !== null) {
+    query += " WHERE Is_active = ?";
+    params.push(isActive);
+  }
+
+  query += " ORDER BY Ingredient_id DESC";
+
+  const [rows] = await db.query(query, params);
   return rows;
 };
 
 const updateIngredient = async (id, data) => {
   await db.query(
     `UPDATE ingredient 
-         SET Ingredient_name = ?, Unit = ?, Minimum_qty = ?, Buy_price = ?, Cost_per_unit = ? 
+         SET Ingredient_name = ?, Unit = ?, Minimum_qty = ?
          WHERE Ingredient_id = ?`,
-    [
-      data.Ingredient_name,
-      data.Unit,
-      data.Minimum_qty,
-      data.Buy_price,
-      data.Cost_per_unit,
-      id,
-    ],
+    [data.Ingredient_name, data.Unit, data.Minimum_qty, id],
   );
   return { Ingredient_id: id, ...data };
 };
 
-const deleteIngredient = async (id) => {
-  await db.query("DELETE FROM ingredient WHERE Ingredient_id = ?", [id]);
-  return { message: "Delete ingredient success" };
+const updateIngredientStatus = async (id, statusValue) => {
+  await db.query(
+    `UPDATE ingredient 
+     SET Is_active = ? 
+     WHERE Ingredient_id = ?`,
+    [statusValue, id],
+  );
+  return { Ingredient_id: id, Is_active: statusValue };
 };
 
 const getStockHistory = async () => {
@@ -88,12 +94,42 @@ const insertIngredientStockLog = async (
   );
 };
 
+const getIngredientByIdForUpdate = async (conn, id) => {
+  const [rows] = await conn.query(
+    "SELECT Stock_qty, Cost_per_unit FROM ingredient WHERE Ingredient_id = ? FOR UPDATE",
+    [id],
+  );
+  return rows[0];
+};
+
+const updateRestockData = async (conn, id, data) => {
+  await conn.query(
+    `UPDATE ingredient 
+     SET Stock_qty = Stock_qty + ?, 
+         Buy_price = ?, 
+         Cost_per_unit = ? 
+     WHERE Ingredient_id = ?`,
+    [data.qtyReceived, data.newBuyPrice, data.newCostPerUnit, id],
+  );
+};
+
+const insertIngredientStockLogWithConn = async (conn, data) => {
+  await conn.query(
+    `INSERT INTO ingredient_stock_log (Ingredient_id, Ref_type, Ref_id, Qty_change, Log_datetime)
+     VALUES (?, ?, ?, ?, NOW())`,
+    [data.id, data.action_type, data.finalRefId, data.qtyReceived],
+  );
+};
+
 module.exports = {
   insertIngredient,
   getAllIngredients,
   updateIngredient,
-  deleteIngredient,
+  updateIngredientStatus,
   getStockHistory,
   updateIngredientStockOnly,
   insertIngredientStockLog,
+  getIngredientByIdForUpdate,
+  updateRestockData,
+  insertIngredientStockLogWithConn,
 };

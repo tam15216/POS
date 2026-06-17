@@ -26,35 +26,39 @@ const createIngredient = async (data) => {
   });
 };
 
-const getIngredients = async () => {
-  return await ingredientRepo.getAllIngredients();
+const getIngredients = async (queryFilter = {}) => {
+  const { active } = queryFilter;
+
+  let isActive = null;
+  if (active !== undefined) {
+    isActive = active === "1" || active === "true" ? 1 : 0;
+  }
+
+  return await ingredientRepo.getAllIngredients(isActive);
 };
 
 const updateIngredient = async (id, data) => {
-  const { Ingredient_name, Unit, Minimum_qty, Buy_price, Cost_per_unit } = data;
+  const { Ingredient_name, Unit, Minimum_qty } = data; // 💡 ถอด Buy_price และ Cost_per_unit ออก
 
-  if (!id) {
-    throw new Error("Ingredient ID is required");
-  }
-  if (!Ingredient_name || !Unit) {
+  if (!id) throw new Error("Ingredient ID is required");
+  if (!Ingredient_name || !Unit)
     throw new Error("Missing required fields: Ingredient_name or Unit");
-  }
 
-  // 💡 ส่งไปให้ Repo ทำการ UPDATE ข้อมูลชุดใหม่
   return await ingredientRepo.updateIngredient(id, {
     Ingredient_name,
     Unit,
     Minimum_qty: Minimum_qty || 0,
-    Buy_price: Buy_price || 0,
-    Cost_per_unit: Cost_per_unit || 0,
   });
 };
 
-const deleteIngredient = async (id) => {
-  if (!id) {
-    throw new Error("Ingredient ID is required");
-  }
-  return await ingredientRepo.deleteIngredient(id);
+const toggleIngredientStatus = async (id, data) => {
+  const { is_active } = data;
+
+  if (!id) throw new Error("Ingredient ID is required");
+  if (is_active === undefined) throw new Error("Missing is_active status");
+
+  const statusValue = is_active ? 1 : 0;
+  return await ingredientRepo.updateIngredientStatus(id, statusValue);
 };
 
 const getStockHistory = async () => {
@@ -108,11 +112,70 @@ const updateStockQuantity = async (id, data) => {
   }
 };
 
+const restockIngredient = async (id, data) => {
+  const qtyReceived = Number(data.quantity_received);
+  const newBuyPrice = Number(data.buy_price);
+
+  if (isNaN(qtyReceived) || qtyReceived <= 0)
+    throw new Error("Quantity must be a positive number");
+  if (isNaN(newBuyPrice) || newBuyPrice < 0)
+    throw new Error("Buy price must be a positive number");
+
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    const ingredient = await ingredientRepo.getIngredientByIdForUpdate(
+      conn,
+      id,
+    );
+    if (!ingredient) throw new Error("Ingredient not found");
+
+    const currentStock = Number(ingredient.Stock_qty);
+    const currentCostPerUnit = Number(ingredient.Cost_per_unit);
+
+    const totalStockAfter = currentStock + qtyReceived;
+    let newCostPerUnit = currentCostPerUnit;
+
+    if (totalStockAfter > 0) {
+      const totalValueBefore = currentStock * currentCostPerUnit;
+      newCostPerUnit = (totalValueBefore + newBuyPrice) / totalStockAfter;
+    }
+
+    await ingredientRepo.updateRestockData(conn, id, {
+      qtyReceived,
+      newBuyPrice,
+      newCostPerUnit,
+    });
+
+    const finalRefId = data.ref_id ? parseInt(data.ref_id, 10) : null;
+    await ingredientRepo.insertIngredientStockLogWithConn(conn, {
+      id,
+      action_type: data.action_type || "restock",
+      finalRefId,
+      qtyReceived,
+    });
+
+    await conn.commit();
+    return {
+      success: true,
+      message: "Restock successfully",
+      new_cost: newCostPerUnit,
+    };
+  } catch (err) {
+    if (conn) await conn.rollback();
+    throw err;
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
 module.exports = {
   createIngredient,
   getIngredients,
   updateIngredient,
-  deleteIngredient,
+  toggleIngredientStatus,
   getStockHistory,
   updateStockQuantity,
+  restockIngredient,
 };

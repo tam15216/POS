@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import useOptionsList from "../hooks/useOptionsList";
-import ConfirmButton from "../../../shared/components/ConfirmButton";
 import {
   createOption,
   updateOption,
@@ -10,6 +9,7 @@ import {
 import AddOptionForm from "../components/AddOptionForm";
 import Pagination from "../../../shared/components/Pagination";
 import { usePagination } from "../../../shared/hooks/usePagination";
+import StatusToggleButton from "../../../shared/components/StatusToggleButton";
 
 export default function OptionList() {
   const { optionsList, isLoading, error, refreshOptions } = useOptionsList();
@@ -108,63 +108,55 @@ export default function OptionList() {
                   </td>
                 </tr>
               ) : (
-                optionsPagination.paginatedData.map((opt) => (
-                  <tr key={opt.Option_id} className="hover:bg-gray-50/50">
-                    <td className="px-6 py-4 font-mono text-xs text-gray-400">
-                      #{opt.Option_id}
-                    </td>
-                    <td className="px-6 py-4 font-medium text-gray-900">
-                      {opt.Option_name}
-                    </td>
-                    <td className="px-6 py-4 font-mono text-right text-gray-700">
-                      +฿{opt.Price}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span
-                        className={`px-2.5 py-1 text-xs font-semibold rounded-md ${
-                          opt.Is_active === 1
-                            ? "bg-green-50 text-green-700 border border-green-100"
-                            : "bg-red-50 text-red-400 border border-red-100"
-                        }`}
-                      >
-                        {opt.Is_active === 1 ? "เปิดขายปกติ" : "ปิดการขาย"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingOption(opt);
-                            setIsAddModalOpen(true);
-                          }}
-                          className="px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-50 rounded-lg hover:bg-purple-100 hover:text-purple-800 transition-colors"
-                        >
-                          แก้ไข
-                        </button>
-                        <ConfirmButton
-                          title={
-                            opt.Is_active === 1
-                              ? "ปิดสถานะตัวเลือก"
-                              : "เปิดสถานะตัวเลือก"
-                          }
-                          text={`ต้องการ ${opt.Is_active === 1 ? "ปิด" : "เปิด"} การใช้งาน Option นี้ในหน้าจอ POS หรือไม่?`}
-                          icon="warning"
-                          onConfirm={() =>
-                            handleToggleStatus(opt.Option_id, opt.Is_active)
-                          }
-                          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
-                            opt.Is_active === 1
-                              ? "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
-                              : "bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
+                optionsPagination.paginatedData.map((opt) => {
+                  const isActive = opt.Is_active === 1;
+
+                  return (
+                    <tr key={opt.Option_id} className="hover:bg-gray-50/50">
+                      <td className="px-6 py-4 font-mono text-xs text-gray-400">
+                        #{opt.Option_id}
+                      </td>
+                      <td className="px-6 py-4 font-medium text-gray-900">
+                        {opt.Option_name}
+                      </td>
+                      <td className="px-6 py-4 font-mono text-right text-gray-700">
+                        +฿{opt.Price}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <span
+                          className={`px-2.5 py-1 text-xs font-semibold rounded-md ${
+                            isActive
+                              ? "bg-green-50 text-green-700 border border-green-100"
+                              : "bg-red-50 text-red-400 border border-red-100"
                           }`}
                         >
-                          {opt.Is_active === 1 ? "ปิดสถานะ" : "เปิดสถานะ"}
-                        </ConfirmButton>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                          {isActive ? "เปิดขายปกติ" : "ปิดการขาย"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingOption(opt);
+                              setIsAddModalOpen(true);
+                            }}
+                            disabled={!isActive}
+                            className="px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-50 rounded-lg hover:bg-purple-100 hover:text-purple-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-purple-50 disabled:hover:text-purple-700"
+                          >
+                            แก้ไข
+                          </button>
+                          <StatusToggleButton
+                            isActive={isActive}
+                            onConfirm={() =>
+                              handleToggleStatus(opt.Option_id, opt.Is_active)
+                            }
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

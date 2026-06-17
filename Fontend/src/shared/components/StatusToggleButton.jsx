@@ -1,22 +1,22 @@
-export default function StatusToggleButton({
-  isActive,
-  onConfirm
-}) {
+import ConfirmButton from "../../shared/components/ConfirmButton"; 
 
+export default function StatusToggleButton({ isActive, onConfirm }) {
   return (
-
-    <span
-      onClick={onConfirm}
-      className={`
-        px-4 py-2 text-sm font-medium text-white rounded-xl transition
-        ${isActive
-          ? "bg-red-500 hover:bg-red-600"
-          : "bg-green-500 hover:bg-green-600"}
-      `}
+    <ConfirmButton
+      title={isActive ? "ยืนยันการปิดสถานะ" : "ยืนยันการเปิดสถานะ"}
+      text={isActive ? "คุณแน่ใจหรือไม่ที่จะปิดใช้งานรายการนี้?" : "คุณแน่ใจหรือไม่ที่จะเปิดใช้งานรายการนี้?"}
+      icon="warning"
+      onConfirm={onConfirm} 
     >
-
-      {isActive ? "ปิดใช้งาน" : "เปิดใช้งาน"}
-
-    </span>
+      <span
+        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer select-none inline-block ${
+          isActive
+            ? "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
+            : "bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
+        }`}
+      >
+        {isActive ? "ปิดสถานะ" : "เปิดสถานะ"}
+      </span>
+    </ConfirmButton>
   );
 }

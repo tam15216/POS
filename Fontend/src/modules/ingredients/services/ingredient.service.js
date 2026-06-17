@@ -1,4 +1,4 @@
-import { getIngredientsApi, createIngredientApi , updateIngredientApi , deleteIngredientApi , getStockHistoryApi , updateStockQuantityApi} from '../api/ingredient.api';
+import { getIngredientsApi, createIngredientApi , updateIngredientApi , toggleIngredientStatusApi , getStockHistoryApi , updateStockQuantityApi , restockIngredientApi} from '../api/ingredient.api';
 
 export const getIngredients = async () => {
     const res = await getIngredientsApi();
@@ -15,8 +15,8 @@ export const updateIngredient = async (id, data) => {
     return res.data;
 };
 
-export const deleteIngredient = async (id) => {
-    const res = await deleteIngredientApi(id);
+export const toggleIngredientStatus = async (id, data) => {
+    const res = await toggleIngredientStatusApi(id, data);
     return res.data;
 };
 
@@ -27,5 +27,10 @@ export const getStockHistory = async () => {
 
 export const updateStockQuantity = async (id, data) => {
     const res = await updateStockQuantityApi(id, data);
+    return res.data;
+};
+
+export const restockIngredient = async (id, data) => {
+    const res = await restockIngredientApi(id, data);
     return res.data;
 };

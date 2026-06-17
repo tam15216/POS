@@ -10,6 +10,6 @@ export const confirmProductAction = async (isEdit, itemName = "ข้อมู�
         showCancelButton: true,
         confirmButtonText: isEdit ? 'ยืนยันแก้ไข' : 'ยืนยันสร้าง',     
         cancelButtonText: 'ยกเลิก',
-        confirmButtonColor: isEdit ? '#d97706' : '#7c3aed', // สีส้มสำหรับแก้ไข / สีม่วงสำหรับเพิ่มใหม่
+        confirmButtonColor: isEdit ? '#d97706' : '#7c3aed', 
     });
 };

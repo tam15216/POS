@@ -3,9 +3,10 @@ import {
   getIngredients,
   createIngredient,
   updateIngredient,
-  deleteIngredient,
   getStockHistory,
-  updateStockQuantity
+  updateStockQuantity,
+  restockIngredient as restockIngredientApi,
+  toggleIngredientStatus as toggleIngredientStatusApi, 
 } from "../services/ingredient.service";
 
 export default function useIngredients() {
@@ -41,17 +42,26 @@ export default function useIngredients() {
     return data;
   };
 
-  const removeIngredient = async (id) => {
-    const data = await deleteIngredient(id);
-    await loadIngredients();
-    return data;
-  };
-
   const changeStock = async (id, txData) => {
     const data = await updateStockQuantity(id, txData);
     await loadIngredients();
     return data;
-};
+  };
+
+  const restockIngredient = async (id, restockData) => {
+    const data = await restockIngredientApi(id, restockData);
+    await loadIngredients();
+    return data;
+  };
+
+
+  const changeIngredientStatus = async (id, currentStatus) => {
+    const data = await toggleIngredientStatusApi(id, {
+      is_active: !currentStatus,
+    });
+    await loadIngredients(); 
+    return data;
+  };
 
   useEffect(() => {
     loadIngredients();
@@ -63,8 +73,9 @@ export default function useIngredients() {
     loading,
     addIngredient,
     editIngredient,
-    removeIngredient,
     changeStock,
+    restockIngredient,
+    changeIngredientStatus, 
     refresh: loadIngredients,
   };
 }

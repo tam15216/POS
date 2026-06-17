@@ -30,7 +30,7 @@ const deleteOptionIngredients = async (conn, optionId) => {
 
 const getIngredients = async (conn) => {
   const [rows] = await conn.query(
-    "SELECT Ingredient_id, Ingredient_name FROM ingredient",
+    "SELECT Ingredient_id, Ingredient_name FROM ingredient WHERE Is_active = 1",
   );
   return rows;
 };
