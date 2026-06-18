@@ -93,9 +93,6 @@ export default function ProductSearchSelect({
             </div>
           ) : (
             filteredProducts.map((p) => {
-              const isSelected = String(value) === String(p.Product_id);
-              const hasRecipe = p.Product_type === "made_to_order";
-
               return (
                 <button
                   key={p.Product_id}
@@ -112,15 +109,6 @@ export default function ProductSearchSelect({
                   }`}
                 >
                   <span>{p.Product_name}</span>
-                  <span
-                    className={`text-[11px] px-2 py-0.5 rounded-md font-medium ${
-                      hasRecipe
-                        ? "bg-green-50 text-green-700 border border-green-100"
-                        : "bg-gray-50 text-gray-400 border border-gray-100"
-                    }`}
-                  >
-                    {hasRecipe ? "มีสูตรแล้ว" : "ไม่มีสูตร"}
-                  </span>
                 </button>
               );
             })
