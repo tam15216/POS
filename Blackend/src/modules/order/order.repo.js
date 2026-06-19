@@ -24,12 +24,12 @@ const getProductPrice = async (conn, productId) => {
   return rows[0]?.Product_price;
 };
 
-const insertSaleItem = async (conn, saleId, item, price, totalPrice) => {
+const insertSaleItem = async (conn, saleId, item, price, totalPrice, costPerUnit) => {
   const [result] = await conn.query(
-    `INSERT INTO Sale_item (Sale_id, Product_id, Qty, Unit_price, Total_price) VALUES (?, ?, ?, ?, ?)`,
-    [saleId, item.product_id, item.qty, price, totalPrice],
+    `INSERT INTO sale_item (sale_id, product_id, qty, unit_price, total_price , cost_per_unit) VALUES (?, ?, ?, ?, ? ,?)`,
+    [saleId, item.product_id, item.qty, price, totalPrice, costPerUnit],
   );
-  return result.insertId; // 💡 คืนค่าไอดีกลับไปใช้ผูกกับตาราง sale_item_option
+  return result.insertId;
 };
 
 const updateStockDecrease = async (conn, productId, qty) => {
