@@ -186,16 +186,17 @@ const insertIngredientStockLog = async (
   refType,
   refId,
   qtyChange,
+  costAtSale
 ) => {
   await conn.query(
-    `INSERT INTO ingredient_stock_log (Ingredient_id, Ref_type, Ref_id, Qty_change) VALUES (?, ?, ?, ?)`,
-    [ingredientId, refType, refId, qtyChange],
+    `INSERT INTO ingredient_stock_log (Ingredient_id, Ref_type, Ref_id, Qty_change, Cost_at_sale) VALUES (?, ?, ?, ?, ?)`,
+    [ingredientId, refType, refId, qtyChange, costAtSale],
   );
 };
 
 const checkIngredientStockForUpdate = async (conn, ingredientId) => {
   const [rows] = await conn.query(
-    "SELECT Stock_qty FROM ingredient WHERE Ingredient_id = ? FOR UPDATE",
+    "SELECT Stock_qty , Cost_per_unit FROM ingredient WHERE Ingredient_id = ? FOR UPDATE",
     [ingredientId],
   );
   return rows;

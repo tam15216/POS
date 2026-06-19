@@ -18,13 +18,15 @@ const createOrder = async (data) => {
     await conn.beginTransaction();
     const { items, payment_method, user_id } = data;
     let total = 0;
+    const cachedRecipes = {};
+
     for (const item of items) {
       if (item.options && item.options.length > 0) {
         for (const opt of item.options) {
           const optIngredients = await orderRepo.getOptionIngredients(conn, opt.option_id);
-          
+
           for (const optIng of optIngredients) {
-            const totalOptRequired = optIng.Quantity_used * item.qty; 
+            const totalOptRequired = optIng.Quantity_used * item.qty;
             const optIngRows = await orderRepo.checkIngredientStockForUpdate(conn, optIng.Ingredient_id);
 
             if (optIngRows.length === 0) {
@@ -37,6 +39,7 @@ const createOrder = async (data) => {
         }
       }
       const recipe = await orderRepo.getProductRecipe(conn, item.product_id);
+      cachedRecipes[item.product_id] = recipe; 
 
       if (recipe.length > 0) {
         for (const ing of recipe) {
@@ -62,7 +65,6 @@ const createOrder = async (data) => {
       }
     }
 
-
     const billNo = `BILL-${Date.now()}`;
     const saleId = await orderRepo.insertSale(conn, billNo, user_id);
 
@@ -71,7 +73,17 @@ const createOrder = async (data) => {
       const totalPrice = price * item.qty;
       total += totalPrice;
 
-      const saleItemId = await orderRepo.insertSaleItem(conn, saleId, item, price, totalPrice);
+      let productPieceCost = 0;
+      const recipe = cachedRecipes[item.product_id] || [];
+
+      if (recipe.length === 0) {
+        const [productDetail] = await conn.query("SELECT cost_price FROM product WHERE product_id = ?", [item.product_id]);
+        if (productDetail && productDetail.length > 0) {
+          productPieceCost = productDetail[0].cost_price !== undefined ? productDetail[0].cost_price : (productDetail[0].Cost_price || 0);
+        }
+      }
+
+      const saleItemId = await orderRepo.insertSaleItem(conn, saleId, item, price, totalPrice, productPieceCost);
 
       if (item.options && item.options.length > 0) {
         for (const opt of item.options) {
@@ -80,22 +92,29 @@ const createOrder = async (data) => {
           total += opt.price * item.qty;
 
           const optIngredients = await orderRepo.getOptionIngredients(conn, opt.option_id);
-          
+
           for (const optIng of optIngredients) {
             const totalOptUsed = optIng.Quantity_used * item.qty;
+
+            const optIngRows = await orderRepo.checkIngredientStockForUpdate(conn, optIng.Ingredient_id);
+            const currentCostAtSale = optIngRows.length > 0 ? (optIngRows[0].Cost_per_unit || optIngRows[0].cost_per_unit || 0) : 0;
+
             await orderRepo.updateIngredientDecrease(conn, optIng.Ingredient_id, totalOptUsed);
-            await orderRepo.insertIngredientStockLog(conn, optIng.Ingredient_id, "sale", saleId, -totalOptUsed);
+
+            await orderRepo.insertIngredientStockLog(conn, optIng.Ingredient_id, "sale", saleId, -totalOptUsed, currentCostAtSale);
           }
         }
       }
-
-      const recipe = await orderRepo.getProductRecipe(conn, item.product_id);
-
       if (recipe.length > 0) {
         for (const ing of recipe) {
           const totalIngredientUsed = ing.Quantity_used * item.qty;
+
+          const ingRows = await orderRepo.checkIngredientStockForUpdate(conn, ing.Ingredient_id);
+          const currentCostAtSale = ingRows.length > 0 ? (ingRows[0].Cost_per_unit || ingRows[0].cost_per_unit || 0) : 0;
+
           await orderRepo.updateIngredientDecrease(conn, ing.Ingredient_id, totalIngredientUsed);
-          await orderRepo.insertIngredientStockLog(conn, ing.Ingredient_id, "sale", saleId, -totalIngredientUsed);
+
+          await orderRepo.insertIngredientStockLog(conn, ing.Ingredient_id, "sale", saleId, -totalIngredientUsed, currentCostAtSale);
         }
       } else {
         const isUpdated = await orderRepo.updateStockDecrease(conn, item.product_id, item.qty);
@@ -105,7 +124,6 @@ const createOrder = async (data) => {
         await orderRepo.insertStockLog(conn, item.product_id, "sale", saleId, -item.qty);
       }
     }
-
 
     await orderRepo.updateSaleTotal(conn, saleId, total);
     await orderRepo.insertPayment(conn, saleId, payment_method, total);
@@ -134,12 +152,12 @@ const cancelOrder = async (saleId) => {
     for (const item of items) {
 
       const selectedOptions = await orderRepo.getSaleItemOptions(conn, item.Sale_item_id);
-      
+
       if (selectedOptions && selectedOptions.length > 0) {
         for (const opt of selectedOptions) {
 
           const optIngredients = await orderRepo.getOptionIngredients(conn, opt.Option_id);
-          
+
           for (const optIng of optIngredients) {
             const totalOptReturned = optIng.Quantity_used * item.Qty;
             await orderRepo.updateIngredientIncrease(conn, optIng.Ingredient_id, totalOptReturned);
