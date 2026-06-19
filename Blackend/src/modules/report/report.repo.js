@@ -118,26 +118,36 @@ const getTopSellingProducts = async (limit = 5) => {
 const getSalesByPeriod = async (startDate, endDate) => {
   const [rows] = await db.query(
     `SELECT 
-        s.Sale_id,
-        s.Bill_no,
-        s.Sale_datetime,
-        s.Total_amount,
-        s.Discount_amount,
-        s.Net_amount,
-        s.Status,
-        p.Payment_method,
-        u.Full_name AS seller_name,
-        COALESCE((
-          SELECT SUM(p.Cost_price * si.Qty) 
-          FROM sale_item si
-          INNER JOIN product p ON si.Product_id = p.Product_id
-          WHERE si.Sale_id = s.Sale_id
-        ), 0) AS bill_total_cost
-     FROM sale s
-     LEFT JOIN payment p ON s.Sale_id = p.Sale_id
-     LEFT JOIN user u ON s.Created_by = u.User_id 
-     WHERE DATE(s.Sale_datetime) BETWEEN ? AND ?
-     ORDER BY s.Sale_datetime DESC`,
+    s.sale_id,
+    s.bill_no,
+    s.sale_datetime,
+    s.total_amount,
+    s.discount_amount,
+    s.net_amount,
+    s.status,
+    p.payment_method,
+    u.full_name AS seller_name,
+    COALESCE((
+      SELECT SUM(
+        CASE 
+          WHEN EXISTS (SELECT 1 FROM product_ingredient WHERE product_id = si.product_id) THEN
+            (SELECT SUM(pi.quantity_used * ing.cost_price) 
+             FROM product_ingredient pi
+             INNER JOIN ingredient ing ON pi.ingredient_id = ing.ingredient_id
+             WHERE pi.product_id = si.product_id) * si.qty
+          ELSE p.cost_price * si.qty
+        END
+      )
+      FROM sale_item si
+      INNER JOIN product p ON si.product_id = p.product_id
+      WHERE si.sale_id = s.sale_id
+    ), 0) AS bill_total_cost
+
+ FROM sale s
+ LEFT JOIN payment p ON s.sale_id = p.sale_id
+ LEFT JOIN user u ON s.created_by = u.user_id 
+ WHERE DATE(s.sale_datetime) BETWEEN ? AND ?
+ ORDER BY s.sale_datetime DESC`,
     [startDate, endDate],
   );
   return rows;
