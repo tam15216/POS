@@ -118,36 +118,38 @@ const getTopSellingProducts = async (limit = 5) => {
 const getSalesByPeriod = async (startDate, endDate) => {
   const [rows] = await db.query(
     `SELECT 
-    s.sale_id,
-    s.bill_no,
-    s.sale_datetime,
-    s.total_amount,
-    s.discount_amount,
-    s.net_amount,
-    s.status,
-    p.payment_method,
-    u.full_name AS seller_name,
-    COALESCE((
-      SELECT SUM(
-        CASE 
-          WHEN EXISTS (SELECT 1 FROM product_ingredient WHERE product_id = si.product_id) THEN
-            (SELECT SUM(pi.quantity_used * ing.cost_price) 
-             FROM product_ingredient pi
-             INNER JOIN ingredient ing ON pi.ingredient_id = ing.ingredient_id
-             WHERE pi.product_id = si.product_id) * si.qty
-          ELSE p.cost_price * si.qty
-        END
-      )
-      FROM sale_item si
-      INNER JOIN product p ON si.product_id = p.product_id
-      WHERE si.sale_id = s.sale_id
-    ), 0) AS bill_total_cost
+        s.sale_id,
+        s.bill_no,
+        s.sale_datetime,
+        s.total_amount,
+        s.discount_amount,
+        s.net_amount,
+        s.status,
+        p.payment_method,
+        u.full_name AS seller_name,
+        
+        COALESCE((
+          SELECT SUM(
+            CASE 
+              WHEN EXISTS (SELECT 1 FROM product_ingredient WHERE product_id = si.product_id) THEN
+                (SELECT SUM(pi.quantity_used * ing.Cost_per_unit) 
+                 FROM product_ingredient pi
+                 INNER JOIN ingredient ing ON pi.ingredient_id = ing.ingredient_id
+                 WHERE pi.product_id = si.product_id) * si.qty
+              
+              ELSE prod.cost_price * si.qty
+            END
+          )
+          FROM sale_item si
+          INNER JOIN product prod ON si.product_id = prod.product_id
+          WHERE si.sale_id = s.sale_id
+        ), 0) AS bill_total_cost
 
- FROM sale s
- LEFT JOIN payment p ON s.sale_id = p.sale_id
- LEFT JOIN user u ON s.created_by = u.user_id 
- WHERE DATE(s.sale_datetime) BETWEEN ? AND ?
- ORDER BY s.sale_datetime DESC`,
+     FROM sale s
+     LEFT JOIN payment p ON s.sale_id = p.sale_id
+     LEFT JOIN user u ON s.created_by = u.user_id 
+     WHERE DATE(s.sale_datetime) BETWEEN ? AND ?
+     ORDER BY s.sale_datetime DESC`,
     [startDate, endDate],
   );
   return rows;
