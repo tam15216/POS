@@ -28,7 +28,6 @@ const login = async (data) => {
         message: 'Login success',
         token,
         user: {
-            user_id: user.User_id,
             role: user.Role,
             username: user.Username
         }
@@ -66,7 +65,6 @@ const me = async (userId) => {
     }
 
     return {
-        user_id: user.User_id,
         username: user.Username,
         role: user.Role,
         full_name: user.Full_name

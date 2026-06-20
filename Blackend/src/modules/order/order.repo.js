@@ -24,12 +24,12 @@ const getProductPrice = async (conn, productId) => {
   return rows[0]?.Product_price;
 };
 
-const insertSaleItem = async (conn, saleId, item, price, totalPrice) => {
+const insertSaleItem = async (conn, saleId, item, price, totalPrice, costPerUnit) => {
   const [result] = await conn.query(
-    `INSERT INTO Sale_item (Sale_id, Product_id, Qty, Unit_price, Total_price) VALUES (?, ?, ?, ?, ?)`,
-    [saleId, item.product_id, item.qty, price, totalPrice],
+    `INSERT INTO sale_item (sale_id, product_id, qty, unit_price, total_price , cost_per_unit) VALUES (?, ?, ?, ?, ? ,?)`,
+    [saleId, item.product_id, item.qty, price, totalPrice, costPerUnit],
   );
-  return result.insertId; // 💡 คืนค่าไอดีกลับไปใช้ผูกกับตาราง sale_item_option
+  return result.insertId;
 };
 
 const updateStockDecrease = async (conn, productId, qty) => {
@@ -186,16 +186,17 @@ const insertIngredientStockLog = async (
   refType,
   refId,
   qtyChange,
+  costAtSale
 ) => {
   await conn.query(
-    `INSERT INTO ingredient_stock_log (Ingredient_id, Ref_type, Ref_id, Qty_change) VALUES (?, ?, ?, ?)`,
-    [ingredientId, refType, refId, qtyChange],
+    `INSERT INTO ingredient_stock_log (Ingredient_id, Ref_type, Ref_id, Qty_change, Cost_at_sale) VALUES (?, ?, ?, ?, ?)`,
+    [ingredientId, refType, refId, qtyChange, costAtSale],
   );
 };
 
 const checkIngredientStockForUpdate = async (conn, ingredientId) => {
   const [rows] = await conn.query(
-    "SELECT Stock_qty FROM ingredient WHERE Ingredient_id = ? FOR UPDATE",
+    "SELECT Stock_qty , Cost_per_unit FROM ingredient WHERE Ingredient_id = ? FOR UPDATE",
     [ingredientId],
   );
   return rows;
