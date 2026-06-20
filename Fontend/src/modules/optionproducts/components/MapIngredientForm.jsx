@@ -36,8 +36,8 @@ export default function MapIngredientForm({
     if (!selectedOptionId) return alert("กรุณาเลือกออปชันที่ต้องการผูกสูตร");
 
     if (mappedIngredients.length === 0) {
-      const isConfirm = window.confirm("คุณยังไม่ได้เพิ่มวัตถุดิบใน Option ");
-      if (!isConfirm) return;
+      alert("คุณยังไม่ได้เพิ่มวัตถุดิบใน Option");
+      return; 
     }
 
     const hasEmptyRow = mappedIngredients.some(
