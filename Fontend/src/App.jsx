@@ -2,6 +2,7 @@ import {
     BrowserRouter , 
     Routes,
     Route,
+    Navigate
 } from 'react-router-dom';
 
 import Login from "./modules/auth/pages/Login";
@@ -26,28 +27,29 @@ import Recipes from './modules/recipes/pages/Recipes';
 import Ingredients from './modules/ingredients/pages/Ingredients';
 import OptionManagement from './modules/optionproducts/pages/OptionManagement';
 import OptionList from './modules/optionproducts/pages/OptionList';
-
+import NotFound from './shared/components/NotFound'
 
 export default function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<AuthLayout><Login /></AuthLayout>} />
-                <Route path="/users" element={<PrivateRoute><MainLayout><Users /></MainLayout></PrivateRoute>} />
-                <Route path ="/dashboard" element={ <PrivateRoute> <MainLayout><Dashboard /></MainLayout> </PrivateRoute> } />
-                <Route path ="/products" element={ <PrivateRoute> <MainLayout><Products /></MainLayout> </PrivateRoute> } />
-                <Route path ="/categories" element={ <PrivateRoute> <MainLayout><Categories /></MainLayout> </PrivateRoute> } />
-                <Route path ="/stock" element={ <PrivateRoute> <MainLayout><Stock /></MainLayout> </PrivateRoute> } />
+                <Route path="/users" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><Users /></MainLayout></PrivateRoute>} />
+                <Route path ="/dashboard" element={ <PrivateRoute allowedRoles={["admin"]}> <MainLayout><Dashboard /></MainLayout> </PrivateRoute> } />
+                <Route path ="/products" element={ <PrivateRoute allowedRoles={["admin"]}> <MainLayout><Products /></MainLayout> </PrivateRoute> } />
+                <Route path ="/categories" element={ <PrivateRoute allowedRoles={["admin"]}> <MainLayout><Categories /></MainLayout> </PrivateRoute> } />
+                <Route path ="/stock" element={ <PrivateRoute allowedRoles={["admin"]}> <MainLayout><Stock /></MainLayout> </PrivateRoute> } />
                 <Route path="/pos" element={<PrivateRoute><MainLayout><POS /></MainLayout></PrivateRoute>}/>
-                <Route path="/orders" element={<PrivateRoute><MainLayout><Orders /></MainLayout></PrivateRoute>}/>
-                <Route path="/reports/SalesReport" element={<PrivateRoute><MainLayout><SalesReport /></MainLayout></PrivateRoute>}/>
-                <Route path="/reports/top-products" element={<PrivateRoute><MainLayout><TopProductsReport /></MainLayout></PrivateRoute>}/>
-                <Route path="/reports/stock-log" element={<PrivateRoute><MainLayout><StockMovementReport /></MainLayout></PrivateRoute>}/>
-                <Route path="/recipes" element={<PrivateRoute><MainLayout><Recipes /></MainLayout></PrivateRoute>}/>
-                <Route path="/ingredients" element={<PrivateRoute><MainLayout><Ingredients /></MainLayout></PrivateRoute>}/>
-                <Route path="/option" element={<PrivateRoute><MainLayout><OptionManagement /></MainLayout></PrivateRoute>}/>
-                <Route path="/optionlist" element={<PrivateRoute><MainLayout><OptionList /></MainLayout></PrivateRoute>}/>
-
+                <Route path="/orders" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><Orders /></MainLayout></PrivateRoute>}/>
+                <Route path="/reports/SalesReport" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><SalesReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/reports/top-products" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><TopProductsReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/reports/stock-log" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><StockMovementReport /></MainLayout></PrivateRoute>}/>
+                <Route path="/recipes" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><Recipes /></MainLayout></PrivateRoute>}/>
+                <Route path="/ingredients" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><Ingredients /></MainLayout></PrivateRoute>}/>
+                <Route path="/option" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><OptionManagement /></MainLayout></PrivateRoute>}/>
+                <Route path="/optionlist" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><OptionList /></MainLayout></PrivateRoute>}/>
+                <Route path="/404" element={<NotFound />} />
+                <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>
         </BrowserRouter>
     )

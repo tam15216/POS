@@ -1,10 +1,15 @@
 import { Navigate } from "react-router-dom";
+export default function PrivateRoute({ children, allowedRoles = [] }) {
+  const token = localStorage.getItem("token");
+  const userRole = localStorage.getItem("role"); 
 
-export default function PrivateRoute ({ children }) {
-    const token = localStorage.getItem('token');
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
 
-    if (!token) {
-        return <Navigate to="/" />;
-    }
-    return children;
+  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+    return <Navigate to="/404" replace />;
+  }
+
+  return children;
 }
