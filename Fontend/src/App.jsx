@@ -39,7 +39,7 @@ export default function App() {
                 <Route path ="/products" element={ <PrivateRoute allowedRoles={["admin"]}> <MainLayout><Products /></MainLayout> </PrivateRoute> } />
                 <Route path ="/categories" element={ <PrivateRoute allowedRoles={["admin"]}> <MainLayout><Categories /></MainLayout> </PrivateRoute> } />
                 <Route path ="/stock" element={ <PrivateRoute allowedRoles={["admin"]}> <MainLayout><Stock /></MainLayout> </PrivateRoute> } />
-                <Route path="/pos" element={<PrivateRoute><MainLayout><POS /></MainLayout></PrivateRoute>}/>
+                <Route path="/pos" element={<PrivateRoute allowedRoles={["admin" , "cashier"]}><MainLayout><POS /></MainLayout></PrivateRoute>}/>
                 <Route path="/orders" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><Orders /></MainLayout></PrivateRoute>}/>
                 <Route path="/reports/SalesReport" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><SalesReport /></MainLayout></PrivateRoute>}/>
                 <Route path="/reports/top-products" element={<PrivateRoute allowedRoles={["admin"]}><MainLayout><TopProductsReport /></MainLayout></PrivateRoute>}/>
