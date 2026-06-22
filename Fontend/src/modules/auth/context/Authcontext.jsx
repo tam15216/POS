@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     
     const [user , setuser] = useState(null);
+    const [loading , setLoading] = useState(true);
 
     const login = (userData , token ) => {
         localStorage.setItem('token' , token);
@@ -26,7 +27,12 @@ export const AuthProvider = ({ children }) => {
             .catch(() => {
             localStorage.removeItem("token");
             setuser(null);
-            });
+            })
+            .finally(() => {
+                    setLoading(false);
+                });
+        } else {
+            setLoading(false);
         }
     }, []);
 
@@ -36,6 +42,7 @@ export const AuthProvider = ({ children }) => {
             value = {{
                 user,
                 login,
+                loading,
                 logout
             }}>  
             {children}

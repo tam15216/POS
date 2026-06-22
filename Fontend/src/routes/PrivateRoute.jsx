@@ -6,6 +6,16 @@ export default function PrivateRoute({ children, allowedRoles = [] }) {
   const token = localStorage.getItem("token");
 
   const userRole = String(user?.role || user?.Role || "").toLowerCase().trim();
+  
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-sm font-semibold text-purple-600 animate-pulse">
+          กำลังตรวจสอบสิทธิ์ระบบ...
+        </div>
+      </div>
+    );
+  }
 
   if (!token) {
     return <Navigate to="/" replace />;
