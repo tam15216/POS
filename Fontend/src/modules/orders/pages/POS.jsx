@@ -13,6 +13,7 @@ import ProductCategory from "../../products/components/ProductCategory";
 import PaymentSelector from "../components/PaymentSelector";
 
 import ProductOptionModal from "../components/ProductOptionModal";
+import SuccessModal from "../components/SuccessModal";
 
 import { checkInsufficientStock } from "../../../shared/utils/stockValidator";
 import { createOrder } from "../services/order.service"; 
@@ -27,6 +28,7 @@ export default function POS() {
   const [paymentMethod, setPaymentMethod] = useState("cash");
   
   const [isOptionModalOpen, setIsOptionModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
 
   const {
@@ -126,7 +128,7 @@ export default function POS() {
         payment_method: paymentMethod,
       };
       await createOrder(payload);
-      alert("Order Success");
+      setIsSuccessModalOpen(true);
       clearCart();
       await loadStocks();
     } catch (err) {
@@ -232,6 +234,12 @@ export default function POS() {
         product={activeProduct}
         options={allOptions}
         onConfirm={addToCart}
+      />
+
+      <SuccessModal 
+        isOpen={isSuccessModalOpen} 
+        onClose={() => setIsSuccessModalOpen(false)} 
+        autoCloseTime={2500}
       />
     </div>
   );
