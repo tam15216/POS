@@ -15,11 +15,11 @@ const getMonthProfitReport = async () => {
   const [rows] = await db.query(
     `SELECT 
         COALESCE(SUM(monthly_data.total_main_sales), 0) + COALESCE(SUM(monthly_data.total_option_sales), 0) AS total_sales,
-        COALESCE(SUM(monthly_data.total_cost), 0) AS total_cost,
+        COALESCE(SUM(monthly_data.bill_total_cost), 0) AS total_cost,
         COALESCE(SUM(monthly_data.Discount_amount), 0) AS total_discount,
         (
           (COALESCE(SUM(monthly_data.total_main_sales), 0) + COALESCE(SUM(monthly_data.total_option_sales), 0))
-          - COALESCE(SUM(monthly_data.total_cost), 0)
+          - COALESCE(SUM(monthly_data.bill_total_cost), 0)
           - COALESCE(SUM(monthly_data.Discount_amount), 0)
         ) AS net_profit
      FROM (
@@ -27,25 +27,29 @@ const getMonthProfitReport = async () => {
             s.Sale_id,
             s.Discount_amount,
             COALESCE(main_data.main_sales, 0) AS total_main_sales,
-            COALESCE(main_data.main_cost, 0) AS total_cost, 
-            COALESCE(opt_data.option_sales, 0) AS total_option_sales
+            COALESCE(opt_data.option_sales, 0) AS total_option_sales,
+            (COALESCE(main_data.total_piece_cost, 0) + COALESCE(ing_data.total_ingredient_cost, 0)) AS bill_total_cost
         FROM sale s
-
         INNER JOIN (
             SELECT 
                 si.Sale_id, 
                 SUM(si.Unit_price * si.Qty) AS main_sales,
-                SUM(si.cost_per_unit * si.Qty) AS main_cost
+                SUM(si.cost_per_unit * si.Qty) AS total_piece_cost
             FROM sale_item si
             GROUP BY si.Sale_id
         ) AS main_data ON s.Sale_id = main_data.Sale_id
-      
         LEFT JOIN (
             SELECT si.Sale_id, SUM(sio.Price) AS option_sales
             FROM sale_item_option sio
             INNER JOIN sale_item si ON sio.Sale_item_id = si.Sale_item_id
             GROUP BY si.Sale_id
         ) AS opt_data ON s.Sale_id = opt_data.Sale_id
+        LEFT JOIN (
+            SELECT Ref_id, SUM(ABS(Qty_change) * cost_at_sale) AS total_ingredient_cost
+            FROM ingredient_stock_log
+            WHERE Ref_type = 'sale'
+            GROUP BY Ref_id
+        ) AS ing_data ON s.Sale_id = ing_data.Ref_id
         
         WHERE s.Status = 'paid'
           AND YEAR(s.Sale_datetime) = YEAR(CURDATE())
@@ -151,7 +155,7 @@ const getSalesByPeriod = async (startDate, endDate) => {
         s.status,
         p.payment_method,
         u.full_name AS seller_name,
-        COALESCE(main_data.main_cost, 0) AS bill_total_cost
+        COALESCE(main_data.total_piece_cost, 0) + COALESCE(ing_data.total_ingredient_cost, 0) AS bill_total_cost
 
      FROM sale s
      LEFT JOIN payment p ON s.sale_id = p.sale_id
@@ -160,17 +164,24 @@ const getSalesByPeriod = async (startDate, endDate) => {
         SELECT 
             si.Sale_id, 
             SUM(si.Unit_price * si.Qty) AS main_sales,
-            SUM(si.cost_per_unit * si.Qty) AS main_cost
+            SUM(si.cost_per_unit * si.Qty) AS total_piece_cost
         FROM sale_item si
         GROUP BY si.Sale_id
      ) AS main_data ON s.sale_id = main_data.Sale_id
-     
      LEFT JOIN (
         SELECT si.Sale_id, SUM(sio.Price) AS option_sales
         FROM sale_item_option sio
         INNER JOIN sale_item si ON sio.Sale_item_id = si.Sale_item_id
         GROUP BY si.Sale_id
      ) AS opt_data ON s.sale_id = opt_data.Sale_id
+     LEFT JOIN (
+        SELECT 
+            Ref_id, 
+            SUM(ABS(Qty_change) * cost_at_sale) AS total_ingredient_cost
+        FROM ingredient_stock_log
+        WHERE Ref_type = 'sale'
+        GROUP BY Ref_id
+     ) AS ing_data ON s.sale_id = ing_data.Ref_id
 
      WHERE DATE(s.sale_datetime) BETWEEN ? AND ?
      ORDER BY s.sale_datetime DESC
