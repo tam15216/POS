@@ -210,9 +210,31 @@ const getOrderDetail = async (saleId) => {
   const result = await orderRepo.getOrderDetail(id);
   if (!result) return null;
 
+  const rawItems = result.items || [];
+  
+  const calculatedItems = rawItems.map((item) => {
+    const optionsTotalCost = item.options && Array.isArray(item.options)
+      ? item.options.reduce((sum, opt) => sum + Number(opt.Price || opt.price || 0), 0)
+      : 0;
+
+    const qty = Number(item.Qty || item.qty || 1);
+    const baseUnitPrice = Number(item.Unit_price || item.unit_price || 0);
+
+    const newUnitPrice = baseUnitPrice + optionsTotalCost;
+    const newTotalPrice = newUnitPrice * qty;
+
+    return {
+      ...item,
+      Unit_price: newUnitPrice,
+      unit_price: newUnitPrice,
+      Total_price: newTotalPrice,
+      total_price: newTotalPrice
+    };
+  });
+
   return {
     sale: result.sale,
-    items: result.items || [],
+    items: calculatedItems,
     payment: result.payment
   };
 };
