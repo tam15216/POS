@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { paymentMethodText } from "../../../shared/utils/paymentMethod";
 import { cancelOrder } from "../services/order.service";
-// 1. อิมพอร์ต ConfirmButton เข้ามาใช้งาน (ปรับ path ให้ตรงกับที่เก็บไฟล์ของคุณ)
 import ConfirmButton from "../../../shared/components/ConfirmButton";
 
 export default function OrderDetailModal({ order, onClose, onCancelSuccess }) {
@@ -98,7 +97,22 @@ export default function OrderDetailModal({ order, onClose, onCancelSuccess }) {
                       className="border-t border-purple-50 hover:bg-purple-50"
                     >
                       <td className="px-6 py-4 font-medium text-gray-700">
-                        {item.Product_name}
+                        <div>{item.Product_name}</div>
+
+                        {item.options && item.options.length > 0 && (
+                          <div className="mt-1 space-y-0.5 pl-3 border-l-2 border-purple-200">
+                            {item.options.map((opt, index) => (
+                              <span
+                                key={opt.Sale_item_option_id || index}
+                                className="block text-xs font-normal text-purple-500"
+                              >
+                                + {opt.Option_name}
+                                {Number(opt.Price) > 0 &&
+                                  ` (฿${Number(opt.Price).toLocaleString()})`}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-center">{item.Qty}</td>
                       <td className="px-6 py-4 text-center">

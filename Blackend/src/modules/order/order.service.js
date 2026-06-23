@@ -201,7 +201,20 @@ const getOrderById = async (saleId) => {
 };
 
 const getOrderDetail = async (saleId) => {
-  return await orderRepo.getOrderDetail(saleId);
+  const id = typeof saleId === "object" ? saleId.Sale_id || saleId.sale_id : saleId;
+
+  if (!id) {
+    throw new Error("Sale ID is required for getting order details");
+  }
+
+  const result = await orderRepo.getOrderDetail(id);
+  if (!result) return null;
+
+  return {
+    sale: result.sale,
+    items: result.items || [],
+    payment: result.payment
+  };
 };
 
 module.exports = {

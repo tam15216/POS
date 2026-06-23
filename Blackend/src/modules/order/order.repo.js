@@ -125,36 +125,44 @@ const getOrderDetail = async (saleId) => {
     [saleId],
   );
 
-  const [paymentRows] = await db.query(
-    `
-        SELECT *
-        FROM Payment
-        WHERE Sale_id = ?
-    `,
-    [saleId],
-  );
+  if (saleRows.length === 0) return null;
 
   const [itemRows] = await db.query(
     `
-        SELECT
-            si.Sale_item_id,
-            si.Product_id,
-            p.Product_name,
-            si.Qty,
-            si.Unit_price,
-            si.Total_price
-        FROM Sale_item si
-        JOIN Product p
-            ON p.Product_id = si.Product_id
+        SELECT si.*, p.Product_name
+        FROM sale_item si
+        INNER JOIN product p ON si.Product_id = p.Product_id
         WHERE si.Sale_id = ?
     `,
     [saleId],
   );
 
+  for (let item of itemRows) {
+    const [optionRows] = await db.query(
+      `
+          SELECT sio.*, o.Option_name
+          FROM sale_item_option sio
+          LEFT JOIN product_option o ON sio.Option_id = o.Option_id
+          WHERE sio.Sale_item_id = ?
+      `,
+      [item.Sale_item_id]
+    );
+    
+    item.options = optionRows;
+  }
+
+  const [paymentRows] = await db.query(
+    `
+        SELECT * FROM payment 
+        WHERE Sale_id = ?
+    `,
+    [saleId]
+  );
+
   return {
     sale: saleRows[0],
-    payment: paymentRows[0],
     items: itemRows,
+    payment: paymentRows[0] || null
   };
 };
 
