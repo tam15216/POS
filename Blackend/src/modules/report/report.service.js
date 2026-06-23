@@ -55,15 +55,25 @@ const getSalesReport = async (query) => {
 
   let totalSalesVolume = 0;
   let totalNetAmount = 0;
-  let totalProfitAmount = 0; 
+  let totalProfitAmount = 0;
+  const records = Array.isArray(salesData) ? salesData : [];
 
-  salesData.forEach((item) => {
-    if (item.Status === "paid") {
+  records.forEach((item) => {
+    const status = item.status || item.Status;
+
+    if (status === "paid") {
+      const netAmount = Number(
+        item.net_amount !== undefined ? item.net_amount : item.Net_amount || 0,
+      );
+      const totalCost = Number(
+        item.bill_total_cost !== undefined
+          ? item.bill_total_cost
+          : item.Bill_total_cost || 0,
+      );
+
       totalSalesVolume += 1;
-      totalNetAmount += Number(item.Net_amount);
-      
-      const billProfit = Number(item.Net_amount) - Number(item.bill_total_cost);
-      totalProfitAmount += billProfit;
+      totalNetAmount += netAmount;
+      totalProfitAmount += (netAmount - totalCost);
     }
   });
 
@@ -73,7 +83,7 @@ const getSalesReport = async (query) => {
       endDate,
       total_orders: totalSalesVolume,
       total_sales_amount: totalNetAmount,
-      total_profit_amount: totalProfitAmount, 
+      total_profit_amount: totalProfitAmount,
     },
     records: salesData,
   };

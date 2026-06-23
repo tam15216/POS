@@ -14,20 +14,43 @@ const getTodaySalesAndOrders = async () => {
 const getMonthProfitReport = async () => {
   const [rows] = await db.query(
     `SELECT 
-        COALESCE(SUM(si.Unit_price * si.Qty), 0) AS total_sales,
+        COALESCE(SUM(monthly_data.total_main_sales), 0) + COALESCE(SUM(monthly_data.total_option_sales), 0) AS total_sales,
+        COALESCE(SUM(monthly_data.total_cost), 0) AS total_cost,
+        COALESCE(SUM(monthly_data.Discount_amount), 0) AS total_discount,
+        (
+          (COALESCE(SUM(monthly_data.total_main_sales), 0) + COALESCE(SUM(monthly_data.total_option_sales), 0))
+          - COALESCE(SUM(monthly_data.total_cost), 0)
+          - COALESCE(SUM(monthly_data.Discount_amount), 0)
+        ) AS net_profit
+     FROM (
+        SELECT 
+            s.Sale_id,
+            s.Discount_amount,
+            COALESCE(main_data.main_sales, 0) AS total_main_sales,
+            COALESCE(main_data.main_cost, 0) AS total_cost, 
+            COALESCE(opt_data.option_sales, 0) AS total_option_sales
+        FROM sale s
+
+        INNER JOIN (
+            SELECT 
+                si.Sale_id, 
+                SUM(si.Unit_price * si.Qty) AS main_sales,
+                SUM(si.cost_per_unit * si.Qty) AS main_cost
+            FROM sale_item si
+            GROUP BY si.Sale_id
+        ) AS main_data ON s.Sale_id = main_data.Sale_id
+      
+        LEFT JOIN (
+            SELECT si.Sale_id, SUM(sio.Price) AS option_sales
+            FROM sale_item_option sio
+            INNER JOIN sale_item si ON sio.Sale_item_id = si.Sale_item_id
+            GROUP BY si.Sale_id
+        ) AS opt_data ON s.Sale_id = opt_data.Sale_id
         
-        COALESCE(SUM(p.Cost_price * si.Qty), 0) AS total_cost,
-        
-        COALESCE(SUM(s.Discount_amount), 0) AS total_discount,
-        
-        (COALESCE(SUM(si.Unit_price * si.Qty), 0) - COALESCE(SUM(p.Cost_price * si.Qty), 0) - COALESCE(SUM(s.Discount_amount), 0)) AS net_profit
-        
-     FROM sale s
-     INNER JOIN sale_item si ON s.Sale_id = si.Sale_id
-     INNER JOIN product p ON si.Product_id = p.Product_id
-     WHERE s.Status = 'paid'
-       AND YEAR(s.Sale_datetime) = YEAR(CURDATE())
-       AND MONTH(s.Sale_datetime) = MONTH(CURDATE())`,
+        WHERE s.Status = 'paid'
+          AND YEAR(s.Sale_datetime) = YEAR(CURDATE())
+          AND MONTH(s.Sale_datetime) = MONTH(CURDATE())
+     ) AS monthly_data`
   );
 
   return rows[0];
@@ -117,41 +140,44 @@ const getTopSellingProducts = async (limit = 5) => {
 
 const getSalesByPeriod = async (startDate, endDate) => {
   const [rows] = await db.query(
-    `SELECT 
+    `
+    SELECT 
         s.sale_id,
         s.bill_no,
         s.sale_datetime,
-        s.total_amount,
+        COALESCE(main_data.main_sales, 0) + COALESCE(opt_data.option_sales, 0) AS total_amount,
         s.discount_amount,
         s.net_amount,
         s.status,
         p.payment_method,
         u.full_name AS seller_name,
-        
-        COALESCE((
-          SELECT SUM(
-            CASE 
-              WHEN EXISTS (SELECT 1 FROM product_ingredient WHERE product_id = si.product_id) THEN
-                (SELECT SUM(pi.quantity_used * ing.Cost_per_unit) 
-                 FROM product_ingredient pi
-                 INNER JOIN ingredient ing ON pi.ingredient_id = ing.ingredient_id
-                 WHERE pi.product_id = si.product_id) * si.qty
-              
-              ELSE prod.cost_price * si.qty
-            END
-          )
-          FROM sale_item si
-          INNER JOIN product prod ON si.product_id = prod.product_id
-          WHERE si.sale_id = s.sale_id
-        ), 0) AS bill_total_cost
+        COALESCE(main_data.main_cost, 0) AS bill_total_cost
 
      FROM sale s
      LEFT JOIN payment p ON s.sale_id = p.sale_id
      LEFT JOIN user u ON s.created_by = u.user_id 
+     LEFT JOIN (
+        SELECT 
+            si.Sale_id, 
+            SUM(si.Unit_price * si.Qty) AS main_sales,
+            SUM(si.cost_per_unit * si.Qty) AS main_cost
+        FROM sale_item si
+        GROUP BY si.Sale_id
+     ) AS main_data ON s.sale_id = main_data.Sale_id
+     
+     LEFT JOIN (
+        SELECT si.Sale_id, SUM(sio.Price) AS option_sales
+        FROM sale_item_option sio
+        INNER JOIN sale_item si ON sio.Sale_item_id = si.Sale_item_id
+        GROUP BY si.Sale_id
+     ) AS opt_data ON s.sale_id = opt_data.Sale_id
+
      WHERE DATE(s.sale_datetime) BETWEEN ? AND ?
-     ORDER BY s.sale_datetime DESC`,
+     ORDER BY s.sale_datetime DESC
+  `,
     [startDate, endDate],
   );
+
   return rows;
 };
 
