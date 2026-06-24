@@ -1,0 +1,13 @@
+รัน server.js 
+D:\Code\POS\Blackend\src>nodemon server.js   
+
+
+
+
+Username = tam15216
+Password = xxoo15216
+Role = Admin
+
+Username = tam15216za
+Password = xxoo15216
+Role = Cashier
