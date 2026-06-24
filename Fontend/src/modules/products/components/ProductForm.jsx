@@ -36,7 +36,13 @@ export default function ProductForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validateProduct(form);
+
+    const submissionForm = {
+      ...form,
+      cost_price: form.product_type === "made_to_order" ? "" : form.cost_price,
+    };
+
+    const validationErrors = validateProduct(submissionForm);
     if (Object.keys(validationErrors).length > 0) {
       setError(validationErrors);
       return;
@@ -46,7 +52,7 @@ export default function ProductForm({
     const result = await confirmProductAction(isEdit);
     if (!result.isConfirmed) return;
 
-    onSubmit(form);
+    onSubmit(submissionForm);
   };
 
   useEffect(() => {
@@ -99,22 +105,24 @@ export default function ProductForm({
         )}
       </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium text-purple-700">
-          ราคาต้นทุน
-        </label>
-        <input
-          type="number"
-          name="cost_price"
-          placeholder="ราคาต้นทุน"
-          value={form.cost_price}
-          onChange={handleChange}
-          className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
-        />
-        {errors.cost_price && (
-          <p className="mt-1 text-sm text-red-500">{errors.cost_price}</p>
-        )}
-      </div>
+      {form.product_type !== "made_to_order" && (
+        <div>
+          <label className="block mb-2 text-sm font-medium text-purple-700">
+            ราคาต้นทุน
+          </label>
+          <input
+            type="number"
+            name="cost_price"
+            placeholder="ราคาต้นทุน"
+            value={form.cost_price}
+            onChange={handleChange}
+            className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 transition border border-purple-200 outline-none rounded-xl bg-purple-50 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+          />
+          {errors.cost_price && (
+            <p className="mt-1 text-sm text-red-500">{errors.cost_price}</p>
+          )}
+        </div>
+      )}
 
       <div>
         <label className="block mb-2 text-sm font-medium text-purple-700">
