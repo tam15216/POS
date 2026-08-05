@@ -1,9 +1,3 @@
-รัน server.js 
-D:\Code\POS\Blackend\src>nodemon server.js   
-
-
-
-
 Username = tam15216
 Password = xxoo15216
 Role = Admin
