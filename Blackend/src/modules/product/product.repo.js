@@ -33,6 +33,7 @@ const getnotAllProducts = async () =>{
         FROM Product p
         LEFT JOIN Category c ON p.Category_id = c.Category_id
         WHERE p.status = 1
+        AND p.Product_type = 'product'
         `);
         return rows;
 };
