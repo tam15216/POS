@@ -10,7 +10,7 @@ import ProductSearch from "../../products/components/ProductSearch";
 
 export default function Stock() {
   const { stocks, history, loading, addStock, removeStock } = useStock();
-  const { products: productsnotall, loading: productsLoading } = useProductsByType("made_to_order");
+  const { products: productsnotall, loading: productsLoading } = useProductsByType("ready_made");
   const [openIn, setOpenIn] = useState(false);
   const [openOut, setOpenOut] = useState(false);
 
