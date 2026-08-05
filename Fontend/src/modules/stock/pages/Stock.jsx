@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import StockHistoryTable from "../components/StockHistoryTable";
 import StockForm from "../components/StockForm";
 import StockTable from "../components/StockTable";
-import useProducts from "../../products/hooks/useProducts";
+import useProductsByType from "../../products/hooks/useProductsByType";
 import { usePagination } from "../../../shared/hooks/usePagination";
 import Pagination from "../../../shared/components/Pagination";
 import ProductSearch from "../../products/components/ProductSearch";
 
 export default function Stock() {
   const { stocks, history, loading, addStock, removeStock } = useStock();
-  const { productsnotall } = useProducts();
+  const { products: productsnotall, loading: productsLoading } = useProductsByType("made_to_order");
   const [openIn, setOpenIn] = useState(false);
   const [openOut, setOpenOut] = useState(false);
 
